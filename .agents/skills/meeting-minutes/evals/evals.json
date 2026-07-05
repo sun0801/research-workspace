@@ -1,0 +1,89 @@
+{
+  "skill_name": "meeting-minutes",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "MTG終わった！議事録作って（プロジェクト: test-project, 日付: 2026-07-04, 参加者: 教授, ユーザー。当日メモにNotion URLなし）",
+      "expected_output": "プロジェクト情報確認 → コンテキスト読み込み → Rawファイル作成 → 当日メモ受信 → Notion URLなしを確認 → 議事録生成 → Raw削除 → TODO候補提示 → 採用TODOのみ反映 → README更新 → 完了報告",
+      "files": [],
+      "assertions": [
+        {
+          "name": "notion_absent_allows_generation",
+          "description": "当日メモにNotion URLがない場合、Notion export要求なしで議事録生成に進む"
+        },
+        {
+          "name": "meeting_minutes_created",
+          "description": "議事録が .research/lab/projects/test-project/meetings/2026-07-04-mtg.md に作成される"
+        },
+        {
+          "name": "raw_transcript_removed_after_save",
+          "description": "議事録保存成功後にRaw文字起こしファイルが削除される"
+        },
+        {
+          "name": "todo_requires_user_selection",
+          "description": "TODO候補は提示されるが、ユーザーが採用したものだけ .research/secretary/todos/YYYY-MM-DD.md に追加される"
+        },
+        {
+          "name": "readme_updated_by_ai",
+          "description": "READMEのsummary、last_updated、現在の状況、更新履歴が議事録内容に基づいて更新される"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "MTG終わった！議事録作って（プロジェクト: test-project, 日付: 2026-07-05, 参加者: 教授, ユーザー。当日メモにNotion URLがあり、対応するMarkdown exportはreferencesに全て存在）",
+      "expected_output": "プロジェクト情報確認 → コンテキスト読み込み → Rawファイル作成 → 当日メモ受信 → Notion URL抽出 → references照合成功 → Notion exportを読んで議事録生成 → Raw削除 → TODO候補提示 → 採用TODOのみ反映 → README更新 → 完了報告",
+      "files": [],
+      "assertions": [
+        {
+          "name": "notion_urls_extracted",
+          "description": "当日メモからNotion URLとページIDを抽出する"
+        },
+        {
+          "name": "reference_check_success",
+          "description": "references内のMarkdown exportに対応ページIDが含まれることを確認する"
+        },
+        {
+          "name": "notion_context_integrated",
+          "description": "Notion exportを研究室共有メモとして読み、議事録本文の背景・補足に統合する"
+        },
+        {
+          "name": "local_markdown_positioning",
+          "description": "ローカルMDをAI運用・個人研究文脈の正式記録として扱う"
+        },
+        {
+          "name": "readme_updated_without_user_confirmation",
+          "description": "README更新はAI判断で行われ、既存内容を壊さずsummaryや更新履歴が更新される"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "MTG終わった！議事録作って（プロジェクト: test-project, 日付: 2026-07-06, 参加者: 教授, ユーザー。当日メモにNotion URLがあるが、対応するMarkdown exportがreferencesにない）",
+      "expected_output": "プロジェクト情報確認 → コンテキスト読み込み → Rawファイル作成 → 当日メモ受信 → Notion URL抽出 → references不足検出 → 議事録生成を開始せず、ユーザーにMarkdown export保存を依頼 → 完了後に再確認",
+      "files": [],
+      "assertions": [
+        {
+          "name": "missing_reference_detected",
+          "description": "当日メモのNotion URLに対応するMarkdown exportがreferencesにないことを検出する"
+        },
+        {
+          "name": "generation_blocked_until_export",
+          "description": "Notion URLあり・reference不足の場合、議事録生成を開始しない"
+        },
+        {
+          "name": "user_asked_to_export_notion",
+          "description": "ユーザーにNotionページをMarkdown exportしてreferencesへ保存するよう依頼する"
+        },
+        {
+          "name": "raw_transcript_not_removed_before_success",
+          "description": "議事録が保存されていない段階ではRaw文字起こしファイルを削除しない"
+        },
+        {
+          "name": "recheck_required_after_completion",
+          "description": "ユーザーが完了した後にreferencesを再確認し、全て揃ってから議事録生成に進む"
+        }
+      ]
+    }
+  ]
+}

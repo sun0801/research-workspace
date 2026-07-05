@@ -1,0 +1,125 @@
+{
+  "skill_name": "meeting-materials",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "sample-research-project の 評価指標の予備実験 のspecと実験結果をもとに、次回MTGで先生に説明する資料を作って。結果の解釈と確認したいことが分かるようにして。",
+      "expected_output": "対象プロジェクトのREADME、直近議事録、関連spec、関連experimentを読み、spec/experiment結果起点として資料化する。結果をEvidence、Interpretation、Askに分け、.research/lab/projects/sample-research-project/materials/YYYY-MM-DD-topic-mtg-materials.md に保存する。README/TODO/meetings/referencesは更新しない。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "spec_experiment_context_loaded",
+          "description": "README、直近議事録、関連spec、関連experimentを読んで資料化する"
+        },
+        {
+          "name": "evidence_interpretation_ask_separated",
+          "description": "実験結果、解釈、先生に確認したいことをEvidence / Interpretation / Askとして分ける"
+        },
+        {
+          "name": "material_saved_to_materials",
+          "description": ".research/lab/projects/<project>/materials/YYYY-MM-DD-topic-mtg-materials.md に保存する"
+        },
+        {
+          "name": "no_project_state_updates",
+          "description": "README、TODO、meetings、referencesを更新しない"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "さっきのbrainstormで出した 評価方針の仮説と研究方針を、先生に相談するMTG資料にして。壁打ちログ全部ではなく、相談論点が伝わる形にして。",
+      "expected_output": "関連brainstormメモを読み、brainstorm起点として、仮説、方針候補、比較、不確実な点、Askへ蒸留する。壁打ちログ全文は貼らず、.research/lab/projects/<project>/materials/ に保存する。spec化やTODO追加は行わない。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "brainstorm_context_used",
+          "description": "関連brainstormメモを読んで資料化する"
+        },
+        {
+          "name": "brainstorm_distilled_for_advisor",
+          "description": "壁打ちログ全文ではなく、先生に相談できる仮説、方針候補、判断論点へ蒸留する"
+        },
+        {
+          "name": "no_spec_or_todo_created",
+          "description": "MTG資料化の依頼だけではspec化やTODO追加を行わない"
+        },
+        {
+          "name": "material_not_saved_to_meetings",
+          "description": "MTG前資料を meetings/ ではなく materials/ に保存する"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "ベンチマーク比較結果を先生に見せたい。既存の実験図を使いつつ、必要なら説明用の概念図も作ってMTG資料にして。",
+      "expected_output": "既存実験図の再利用を優先し、必要ならmaterials/figures/YYYY-MM-DD-topic/にMTG用再構成図または概念図を保存する。図の直前に見るべき点を書き、manifest.mdまたは資料末尾に図の出所を残す。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "figure_planning_performed",
+          "description": "図が必要か、既存図を使うか、新規生成するかを判断する"
+        },
+        {
+          "name": "existing_figures_reused_first",
+          "description": "既存実験図がある場合は再利用、選抜、注釈追加を優先する"
+        },
+        {
+          "name": "material_figures_saved_correctly",
+          "description": "MTG用図を .research/lab/projects/<project>/materials/figures/YYYY-MM-DD-topic/ に保存する"
+        },
+        {
+          "name": "figure_sources_recorded",
+          "description": "manifest.mdまたは資料末尾に図の目的、出所、元データ、生成方法を残す"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "次回MTG資料を作って。READMEと前回議事録、関連specを読んでほしい。referencesはたくさんあるけど、前回議事録でリンクされているNotion exportだけ見ればいいです。",
+      "expected_output": "README、直近議事録、関連specを読む。referencesは一覧のみ確認し、前回議事録から明示リンクされたreferenceだけ本文を読む。referencesを全文総読みしない。資料はmaterials/に保存する。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "references_list_only_by_default",
+          "description": "referencesは原則ファイル一覧のみ確認する"
+        },
+        {
+          "name": "only_linked_reference_body_read",
+          "description": "明示リンクされたreferenceだけ本文を読む"
+        },
+        {
+          "name": "no_references_bulk_read",
+          "description": "references配下の全Markdownを総読みしない"
+        },
+        {
+          "name": "reference_not_modified",
+          "description": "references内のファイルを更新しない"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "この実験結果をNotionに貼って先生に説明するためのMTG資料にして。表が横に広がりすぎないようにして、図のリンクも貼りやすくして。",
+      "expected_output": "Notion貼付を前提に、表を広げすぎず、図の直前に見るべき点を書き、図リンクは資料からの相対パスを基本にする。Notion同期は行わず、materials/のMarkdownを正本として保存する。",
+      "files": [],
+      "assertions": [
+        {
+          "name": "notion_friendly_markdown",
+          "description": "Notionに貼りやすい見出し、表、数式、図リンクで出力する"
+        },
+        {
+          "name": "wide_tables_avoided",
+          "description": "横に広すぎる表を避け、必要なら要点表や箇条書きに分ける"
+        },
+        {
+          "name": "relative_figure_links_used",
+          "description": "図リンクは資料からの相対パスを基本にする"
+        },
+        {
+          "name": "notion_not_synced",
+          "description": "Notionへ直接同期せず、materials/のMarkdownを正本として扱う"
+        }
+      ]
+    }
+  ]
+}

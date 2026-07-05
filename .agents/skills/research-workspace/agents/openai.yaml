@@ -1,0 +1,4 @@
+interface:
+  display_name: "Research Workspace"
+  short_description: "研究用Markdownワークスペースの作成と管理を支援"
+  default_prompt: "Use $research-workspace to set up and manage a Markdown research workspace."
