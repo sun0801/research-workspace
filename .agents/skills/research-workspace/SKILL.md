@@ -215,6 +215,8 @@ TODO形式:
 2. `.research/secretary/notes/brainstorm/` のファイル一覧
 3. `.research/lab/projects/*/README.md` のfrontmatter
 
+`Brainstorm Notes` の件数では、`.gitkeep` などの管理用プレースホルダファイルを数えない。
+
 出力形式:
 
 ```markdown
