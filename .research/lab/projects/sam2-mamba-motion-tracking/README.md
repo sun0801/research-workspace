@@ -16,6 +16,45 @@ SAM2 / SAMURAIベースの物体追跡において，カルマンフィルタに
 
 SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外付けする形で統合する。
 
+## 実装コードの場所
+
+### Mambaトラッカー学習リポジトリ
+`/mnt/HDD10TB-2/aburatani/2025_09_aburatani_Mamba_Trackers`
+
+| モデル | 種別 | 学習エントリ | 推論エントリ | チェックポイント |
+|---|---|---|---|---|
+| `MambaTrack` | sliding window型 | `ssm_tracker/train.py` | `ssm_tracker/track.py` | `saved_ckpts/mambatrack_dancetrack2/` (epoch1〜25) |
+| `TrackSSM` | sliding window型 | `ssm_tracker/train.py` | `ssm_tracker/track.py` | `saved_ckpts/trackssm_dancetrack_sep_scale_one_dec_layer/` (epoch10〜100) |
+| `MambaStateful` | **state carry型（独自実装）** | `ssm_tracker/train_stateful.py` | `ssm_tracker/track_stateful.py` | `saved_ckpts/mamba_stateful_dancetrack/` (epoch1〜100) |
+
+**現在の制約**（2026-07-07時点）：
+- 学習中のvalidation loopは未実装
+- `best.pth`の自動選択は未実装
+- `MambaStateful`のLRスケジューラが`none`（固定）→ 要修正
+- データセットはDanceTrack前提
+
+**学習設定のキーパラメータ**：
+
+| モデル | optimizer | LR scheduler | epochs | データ形式 | scale_factor |
+|---|---|---|---|---|---|
+| MambaTrack | SGD | transformer | 25 | bbox差分→bbox差分 | 50 |
+| TrackSSM | SGD | transformer | 25 | bbox+差分→bbox | bbox:20 / diff:50 |
+| MambaStateful | Adam | **none（固定）** | 100 | bbox→bbox差分 | bbox:1 / diff:50 |
+
+---
+
+### SAM2/SAMURAI推論・統合リポジトリ
+`/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2`
+
+現在の実装状況（ブランチ：`mot`）：
+
+| 機能 | 状態 |
+|---|---|
+| SAMURAI + sliding window型Mamba（`samurai_mamba_window`モード） | ✅ 実装済み |
+| SAMURAI + state carry型Mamba（`samurai_mamba_stateful`モード） | 🔧 インターフェース実装済み・constant-velocity fallback動作確認済み |
+| `MambaStatefulMotionFilter`の状態管理 | 🔧 実装着手中（ステップ1完了） |
+| MOT推論エントリ | `scripts/main_inference_mot.py` |
+
 ## 現在の状況
 
 **7/2 MTG後の状況**：state carry型Mambaは100エポックで収束しかけているが、LRスケジューラがほぼ固定になっており過学習の可能性が高い。TrackSSMは入力形式の違いが発覚し実験設定の見直しが必要。public validationの設計（5エポックごとのHOTA評価）が次の実装課題。
