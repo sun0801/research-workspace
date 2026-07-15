@@ -36,10 +36,50 @@ tags: [experiment, validation, profiling, mot_metrics]
 
 計測機能は通常学習時に無効化できる状態で実装できた。canonical configのepoch数・評価周期は変更していない。
 
-## 未実施
+## 残りの実施項目
 
-- 固定checkpointを使った実tracker推論時間の計測
-- 固定tracker出力を使った実TrackEval時間の計測
-- 現行設定の5〜10epoch baseline学習
-- `val_loss_period=5` / `mot_metrics_period=10`候補との比較
+- 10epochの候補周期比較（epoch1 smokeは完了）
 - 全モデル100epoch学習
+- full valでの時間確認
+
+## 実測baseline（MambaStateful、3sequence）
+
+現行設定の10epoch実験を開始したが、epoch1完了時点で主要な時間が取得できたため、epoch2途中で停止した。canonical configは変更していない。
+
+epoch1の実測:
+
+- 学習: `146.172`秒
+- val loss: `24.573`秒
+- epoch全体: `170.805`秒
+
+epoch1 checkpointを使った`mot_metrics`単独計測:
+
+- tracker推論 subprocess: `316.973`秒
+- TrackEval直接呼び出し: `3.490`秒
+- summary parse: `0.000081`秒
+- 3sequence combined HOTA: `4.7552`
+- 3sequence combined IDF1: `0.44802`
+
+判定: tracking validationの時間増加要因は、今回の部分val条件ではTrackEvalではなくtracker推論 subprocessが支配的である。val lossは約25秒、TrackEvalは約3.5秒だった。
+
+補足: epoch2途中停止のため、10epochの候補周期比較とfull valは未実施。候補設定の総時間は、今回得た1回あたり時間と評価回数から見積もり、必要な場合のみ短い追加実験を行う。
+
+## 候補周期1epoch smoke
+
+候補config（val loss 5epochごと、mot_metrics 10epochごと、`timing_enabled=true`）をepoch1だけ実行した。
+
+- 学習: `146.621`秒
+- epoch全体: `146.666`秒
+- epoch1のval loss: 実行されず
+- epoch1のmot_metrics: 実行されず
+
+候補周期の制御は期待どおり動作した。
+
+## 周期変更の概算
+
+今回の3sequence実測を単純利用すると、100epochでのvalidation部分は次の概算になる。
+
+- 現行（val毎epoch、MOT 5epochごと）: val約`41.0`分 + MOT約`105.7`分
+- 候補（val 5epochごと、MOT 10epochごと）: val約`8.2`分 + MOT約`52.8`分
+
+これは部分valでの概算であり、full valの絶対時間を保証するものではない。ただし、評価周期を半分・5分の1にすることで、総時間が大幅に減る方向は確認できた。
