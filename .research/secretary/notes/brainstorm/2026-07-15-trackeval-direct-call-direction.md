@@ -79,6 +79,22 @@ TrackEval CLI/API parity確認と、Mamba側の評価呼び出し置換を含む
 - 第1段階でsummaryファイルを比較対象に含めるか。
 - 1シーケンスのsmokeから始めるか、既存の固定val出力で全valを使うか。
 
+---
+
+## 追記 2026-07-15
+
+### 方針の収束
+
+MambaTrackers側にTrackEvalの評価コードを複製して完全内製化する案を検討したが、現時点では採用しない。
+
+- MambaTrackersから評価を実行できることは維持する。
+- 評価ロジックの正本はTrackEval側に置く。
+- Mamba側は薄いadapterとしてTrackEval APIを呼び出す。
+- TrackEvalのコード複製やmetricの再実装は、コード重複・結果乖離・保守負担が大きいため保留する。
+- 将来的に運用上の自立性が必要になった場合は、TrackEvalのcommit/version固定、依存関係の明示、起動時の存在確認を先に検討する。
+
+今回の直接関数呼び出しは、固定tracker出力25 sequenceでCLIとadapterのsummary一致まで確認済みである。このため、短期的には現在の境界を維持し、次はtracker推論時間とTrackEval評価時間のprofilingへ進む。
+
 ## 関連ファイル
 
 - `/mnt/HDD10TB-2/aburatani/TrackEval/scripts/run_mot_challenge.py`
