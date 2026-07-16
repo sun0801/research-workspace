@@ -2,7 +2,7 @@
 date: 2026-07-16
 project: sam2-mamba-motion-tracking
 source: brainstorm
-status: draft
+status: approved
 tags: [spec, diagnostic, state-carry, tracking, mot_metrics]
 ---
 
@@ -149,7 +149,7 @@ Research Workspaceには、実行結果と解釈を次のexperiment logへ保存
 - [x] 診断対象と観測範囲: epoch 10/90、`dancetrack0004`、frame 1〜7
 - [x] 変更範囲: 診断モードとログ追加のみ
 - [x] 検証方法: 同一条件比較、通常tracking非変更確認、git diff確認
-- [ ] ユーザーによる外部リポジトリ実装開始承認
+- [x] ユーザーによる外部リポジトリ実装開始承認
 
 本spec保存時点では、外部リポジトリを編集しない。
 
