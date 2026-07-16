@@ -2,7 +2,7 @@
 date: 2026-07-15
 project: sam2-mamba-motion-tracking
 source: brainstorm
-status: draft
+status: approved
 tags: [spec, experiment, validation, correlation, mot_metrics]
 ---
 
