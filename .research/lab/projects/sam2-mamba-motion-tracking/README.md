@@ -1,7 +1,7 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: State Carryの推論退化を診断済み。teacher forcing/free-runningの横断調査を統合し、次はassociation分離（P1）の実装可否を判断する。
+summary: State Carryの推論退化を診断済み。P0.5でMambaTrack・TrackSSM・MambaStatefulのDanceTrack val比較を完了し、次はP1 association分離の診断を進める。
 created: 2026-07-07
 last_updated: 2026-07-21
 ---
@@ -67,6 +67,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 **7/21 調査完了**：teacher forcing/free-runningの横断調査をBatch 4まで完了した。最優先の改善候補は、予測bboxをhard IoU matchingの主位置から外すassociation分離（P1）である。その後、confidence/match qualityによるcache freeze・reset（P2）、入力分布混合（P3）、明示的stateful unroll + TBPTT（P4）を独立に比較する。実装は未開始であり、P1だけを対象にした承認待ちとする。
 
+**7/21 P0.5完了**：既存のDanceTrack val 25系列出力を同一TrackEval条件で比較した。HOTAはMambaTrack 33.837、TrackSSM 32.783、MambaStateful 47.293。MambaStatefulが高かったが、checkpoint provenance、入力形式、モデル構造、prediction-primary associationが未分離のため、学習方式の優位性とは解釈しない。次はP1を診断用baselineとして個別に検証する。
+
 研究の問い：
 
 > MOTにおいて，state carry型Mambaのhidden stateをtrackごとに持続的に保持することは有効か？不安定な場合，その原因はhidden state contaminationなのか？それをどう検出・抑制すればよいか？
@@ -81,7 +83,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 - [x] SAMURAI+Mambaの初期実験（HOTA: SAM2=0.46, SAMURAI=0.54, SAMURAI+Mamba=0.53）
 - [x] state carry型Mambaの実装・100エポック学習（7/2時点で収束しかけ）
 - [x] `val loss` と tracking 指標ベース validation の学習導線への実装・smoke test（7/9確認）
-- [ ] MambaTrack / TrackSSM / State carry型の公平な比較実験
+- [x] MambaTrack / TrackSSM / State carry型の公平な比較実験（P0.5 as-is比較、7/21完了）
 - [ ] 入力スケーリング（bbox vs bbox delta）の根拠整理
 - [x] TrackEval 側の関数化導線を単体で検証し、統合時の問題を切り分ける
 - [x] tracking validation の命名整理（`mot_metrics` への統一）と運用方針の明確化
@@ -104,6 +106,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-07-21 | P0.5としてMambaTrack / TrackSSM / MambaStatefulのDanceTrack val 25系列as-is比較を完了。次はP1 association分離の診断へ進む。 |
 | 2026-07-21 | teacher forcing/free-running横断調査をBatch 4まで完了。association分離、cache更新ガード、入力分布混合、stateful TBPTTを段階的に検証するspec候補を作成。 |
 | 2026-07-15 | TrackEval CLI/API parityとMamba側評価adapterのfull-val parityを確認。3sequence timingでtracker推論316.973秒、TrackEval3.490秒を計測し、候補周期1epoch smokeを確認。 |
 | 2026-07-16 | MTG: state carryの推論単体検証を先行し、小規模過学習、teacher forcing/free running調査、validation頻度整理、MIRUポスター再構成を進める方針を決定。 |
