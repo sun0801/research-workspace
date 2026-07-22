@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: State Carryの推論退化を診断済み。P0.5でMambaTrack・TrackSSM・MambaStatefulのDanceTrack val比較を完了し、次はP1 association分離の診断を進める。
+summary: P1 association分離を3系列で診断し、last accepted observation matchingがprediction-primary baselineを改善。P2 cache更新制御は別spec・承認待ち。
 created: 2026-07-07
-last_updated: 2026-07-21
+last_updated: 2026-07-22
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -69,6 +69,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 **7/21 P0.5完了**：既存のDanceTrack val 25系列出力を同一TrackEval条件で比較した。HOTAはMambaTrack 33.837、TrackSSM 32.783、MambaStateful 47.293。MambaStatefulが高かったが、checkpoint provenance、入力形式、モデル構造、prediction-primary associationが未分離のため、学習方式の優位性とは解釈しない。次はP1を診断用baselineとして個別に検証する。
 
+**7/22 P1完了**：同一epoch100 checkpoint・detector入力・config・scale・lifecycle・state/cache更新・TrackEval条件で、prediction-primary A1とlast accepted observation A2を3系列比較した。A1はcorrected baseline HOTA 49.666と一致し、A2はHOTA 54.870、AssA 36.229、IDF1 53.660、IDSW 94へ改善した。predictionをhard IoU matchingのprimary位置に使うことが退化へ寄与する診断を支持するが、missing時のself-updateは未分離であり、P2は自動開始しない。
+
 研究の問い：
 
 > MOTにおいて，state carry型Mambaのhidden stateをtrackごとに持続的に保持することは有効か？不安定な場合，その原因はhidden state contaminationなのか？それをどう検出・抑制すればよいか？
@@ -84,6 +86,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 - [x] state carry型Mambaの実装・100エポック学習（7/2時点で収束しかけ）
 - [x] `val loss` と tracking 指標ベース validation の学習導線への実装・smoke test（7/9確認）
 - [x] MambaTrack / TrackSSM / State carry型の公平な比較実験（P0.5 as-is比較、7/21完了）
+- [x] prediction-primary associationとlast accepted observation associationの分離診断（P1、3系列、7/22完了）
 - [ ] 入力スケーリング（bbox vs bbox delta）の根拠整理
 - [x] TrackEval 側の関数化導線を単体で検証し、統合時の問題を切り分ける
 - [x] tracking validation の命名整理（`mot_metrics` への統一）と運用方針の明確化
@@ -106,6 +109,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-07-22 | P1 association分離を3系列で完了。A1 HOTA 49.666に対しA2 HOTA 54.870、AssA 36.229、IDF1 53.660、IDSW 94。P2 cache更新制御は別spec・承認待ち。 |
 | 2026-07-21 | P0.5としてMambaTrack / TrackSSM / MambaStatefulのDanceTrack val 25系列as-is比較を完了。次はP1 association分離の診断へ進む。 |
 | 2026-07-21 | teacher forcing/free-running横断調査をBatch 4まで完了。association分離、cache更新ガード、入力分布混合、stateful TBPTTを段階的に検証するspec候補を作成。 |
 | 2026-07-15 | TrackEval CLI/API parityとMamba側評価adapterのfull-val parityを確認。3sequence timingでtracker推論316.973秒、TrackEval3.490秒を計測し、候補周期1epoch smokeを確認。 |
