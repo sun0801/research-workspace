@@ -1,7 +1,7 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: P1 association分離を3系列で診断し、last accepted observation matchingがprediction-primary baselineを改善。P2 cache更新制御は別spec・承認待ち。
+summary: P1 association分離を25系列で検証し、last accepted observation matchingがprediction-primary baselineを改善。P2 cache更新制御の計画化へ進む。
 created: 2026-07-07
 last_updated: 2026-07-22
 ---
@@ -69,7 +69,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 **7/21 P0.5完了**：既存のDanceTrack val 25系列出力を同一TrackEval条件で比較した。HOTAはMambaTrack 33.837、TrackSSM 32.783、MambaStateful 47.293。MambaStatefulが高かったが、checkpoint provenance、入力形式、モデル構造、prediction-primary associationが未分離のため、学習方式の優位性とは解釈しない。次はP1を診断用baselineとして個別に検証する。
 
-**7/22 P1完了**：同一epoch100 checkpoint・detector入力・config・scale・lifecycle・state/cache更新・TrackEval条件で、prediction-primary A1とlast accepted observation A2を3系列比較した。A1はcorrected baseline HOTA 49.666と一致し、A2はHOTA 54.870、AssA 36.229、IDF1 53.660、IDSW 94へ改善した。predictionをhard IoU matchingのprimary位置に使うことが退化へ寄与する診断を支持するが、missing時のself-updateは未分離であり、P2は自動開始しない。
+**7/23 P1 25系列確認完了**：同一epoch100 checkpoint・detector入力・config・scale・lifecycle・state/cache更新・TrackEval条件で、prediction-primary A1とlast accepted observation A2をDanceTrack val 25系列で比較した。A1はHOTA 47.233、A2はHOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386となり、A2はA1に対してHOTA +0.677、AssA +0.936、IDF1 +1.429、IDSW -192を示した。効果は3系列より小さく系列依存もあるが、P1仮説を25系列aggregateでも支持する。P2 cache更新制御のspec化へ進む。
 
 研究の問い：
 
@@ -109,6 +109,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-07-23 | P1 association分離を25系列で確認。A1 HOTA 47.233に対しA2 HOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386。P2 cache更新制御の計画化へ進む。 |
 | 2026-07-22 | P1 association分離を3系列で完了。A1 HOTA 49.666に対しA2 HOTA 54.870、AssA 36.229、IDF1 53.660、IDSW 94。P2 cache更新制御は別spec・承認待ち。 |
 | 2026-07-21 | P0.5としてMambaTrack / TrackSSM / MambaStatefulのDanceTrack val 25系列as-is比較を完了。次はP1 association分離の診断へ進む。 |
 | 2026-07-21 | teacher forcing/free-running横断調査をBatch 4まで完了。association分離、cache更新ガード、入力分布混合、stateful TBPTTを段階的に検証するspec候補を作成。 |
