@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: P1 association分離を25系列で検証し、last accepted observation matchingがprediction-primary baselineを改善。P2 cache更新制御の計画化へ進む。
+summary: scale修正後のbaselineを固定し、SAM2/SAMURAI統合結果とMambaTrack系baselineの再現性を確認しながら、state carry学習改善へ進む段階。
 created: 2026-07-07
-last_updated: 2026-07-22
+last_updated: 2026-07-23
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -51,8 +51,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 | 機能 | 状態 |
 |---|---|
 | SAMURAI + sliding window型Mamba（`samurai_mamba_window`モード） | ✅ 実装済み |
-| SAMURAI + state carry型Mamba（`samurai_mamba_stateful`モード） | 🔧 インターフェース実装済み・constant-velocity fallback動作確認済み |
-| `MambaStatefulMotionFilter`の状態管理 | 🔧 実装着手中（ステップ1完了） |
+| SAMURAI + state carry型Mamba（`samurai_mamba_stateful`モード） | ✅ 最小版統合・25系列推論・TrackEval評価済み |
+| `MambaStatefulMotionFilter`の状態管理 | ✅ 元repo checkpointのstrict load・track別cache・state carryを実装済み |
 | MOT推論エントリ | `scripts/main_inference_mot.py` |
 
 ## 現在の状況
@@ -71,6 +71,10 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 **7/23 P1 25系列確認完了**：同一epoch100 checkpoint・detector入力・config・scale・lifecycle・state/cache更新・TrackEval条件で、prediction-primary A1とlast accepted observation A2をDanceTrack val 25系列で比較した。A1はHOTA 47.233、A2はHOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386となり、A2はA1に対してHOTA +0.677、AssA +0.936、IDF1 +1.429、IDSW -192を示した。効果は3系列より小さく系列依存もあるが、P1仮説を25系列aggregateでも支持する。P2 cache更新制御のspec化へ進む。
 
+**7/23 SAM2最小統合完了**：元repoのepoch100 `MambaStateful`をSAM2/SAMURAIへ移植し、DanceTrack val 25系列を推論・評価した。HOTA 55.520、AssA 62.482、IDF1 64.154、IDSW 1,535で、全candidate debug行でcheckpointロード済み、fallbackなしを確認した。これはepoch100固定の統合確認値であり、SAM2上の改善量やbest-HOTA checkpointの結果ではない。
+
+**7/23 P2完了**：P1 A2を固定し、B0 self-update、B1 missing freeze、B2 trusted detector match gate、B3 prolonged-untrusted resetを3系列・25系列で診断した。25系列ではB0 HOTA 47.910に対しB1 48.035で、state非有限イベントは4,515から115へ減少した。一方、B2はHOTA 46.962、B3は46.855で、AssA/IDF1が低下しIDSWが増加した。missing freezeはcontamination抑制の根拠を与えたが、単純なquality gate/resetは採用せず、P3/P4へ自動移行しない。
+
 研究の問い：
 
 > MOTにおいて，state carry型Mambaのhidden stateをtrackごとに持続的に保持することは有効か？不安定な場合，その原因はhidden state contaminationなのか？それをどう検出・抑制すればよいか？
@@ -87,6 +91,9 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 - [x] `val loss` と tracking 指標ベース validation の学習導線への実装・smoke test（7/9確認）
 - [x] MambaTrack / TrackSSM / State carry型の公平な比較実験（P0.5 as-is比較、7/21完了）
 - [x] prediction-primary associationとlast accepted observation associationの分離診断（P1、3系列、7/22完了）
+- [x] missing freeze・trusted cache update・prolonged-untrusted resetの診断（P2、3系列・25系列、7/23完了）
+- [x] 元MambaStatefulのSAM2最小統合と25系列TrackEval評価（epoch100、7/23完了）
+- [ ] MambaTrack / TrackSSM再現実装の学習設定を見直し、論文値との差を確認する
 - [ ] 入力スケーリング（bbox vs bbox delta）の根拠整理
 - [x] TrackEval 側の関数化導線を単体で検証し、統合時の問題を切り分ける
 - [x] tracking validation の命名整理（`mot_metrics` への統一）と運用方針の明確化
@@ -109,6 +116,9 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-07-23 | MTG: scale・association・state carry学習を分離して切り分ける方針を確認。SAM2統合結果とMambaTrack系baselineの再現性を優先し、その後に入力混合・quality-aware state update・TBPTTをspec化して検証する。MIRUポスターは自前の時系列結果と簡略図へ修正する。 |
+| 2026-07-23 | P2 cache更新制御を完了。B1 freezeはstate非有限イベントを抑制したが、B2/B3の単純trusted gate/resetは25系列でassociationを悪化させた。 |
+| 2026-07-23 | 元MambaStatefulをSAM2/SAMURAIへ最小統合し、25系列でHOTA 55.520、IDF1 64.154を確認。epoch100固定の統合確認値として記録した。 |
 | 2026-07-23 | P1 association分離を25系列で確認。A1 HOTA 47.233に対しA2 HOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386。P2 cache更新制御の計画化へ進む。 |
 | 2026-07-22 | P1 association分離を3系列で完了。A1 HOTA 49.666に対しA2 HOTA 54.870、AssA 36.229、IDF1 53.660、IDSW 94。P2 cache更新制御は別spec・承認待ち。 |
 | 2026-07-21 | P0.5としてMambaTrack / TrackSSM / MambaStatefulのDanceTrack val 25系列as-is比較を完了。次はP1 association分離の診断へ進む。 |
