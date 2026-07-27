@@ -1,0 +1,7 @@
+rank,sequence,gt_id,start_frame,end_frame,event_type,sam2_window_mean_iou,samurai_window_mean_iou,stateful_window_mean_iou,sam2_window_coverage50,samurai_window_coverage50,stateful_window_coverage50,stateful_true_state_rate,selection_note
+1,dancetrack0007,6,673,678,strong_stateful_improvement,0.000,0.000,0.994,0.000,0.000,1.000,1.00,"主候補: SAM2/SAMURAIが対象を見失いstatefulのみ回復"
+2,dancetrack0034,7,891,896,strong_stateful_improvement,0.000,0.098,0.989,0.000,0.000,1.000,0.75,"主候補: SAM2/SAMURAIとも局所的に失敗しstatefulが回復"
+3,dancetrack0004,1,1090,1095,strong_stateful_improvement,0.000,0.000,0.985,0.000,0.000,1.000,1.00,"主候補: 両ベースライン失敗からstatefulが回復"
+4,dancetrack0047,4,1190,1195,strong_stateful_improvement,0.007,0.003,0.985,0.000,0.000,1.000,1.00,"主候補: 両ベースライン失敗からstatefulが回復"
+5,dancetrack0034,9,348,353,strong_stateful_improvement,0.002,0.607,0.980,0.000,0.333,1.000,1.00,"比較候補: SAMURAIが部分的に追跡するがstatefulがさらに安定"
+6,dancetrack0034,13,797,802,strong_stateful_improvement,0.000,0.980,0.979,0.000,1.000,1.000,1.00,"対照候補: SAMURAIも成功しMambaの上乗せが小さい"

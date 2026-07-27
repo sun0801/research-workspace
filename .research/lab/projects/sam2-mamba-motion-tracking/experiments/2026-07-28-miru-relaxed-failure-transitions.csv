@@ -1,0 +1,6 @@
+rank,tier,sequence,gt_id,pre_start_frame,pre_end_frame,event_start_frame,event_end_frame,sam2_pre_mean_iou,samurai_pre_mean_iou,stateful_pre_mean_iou,sam2_event_mean_iou,samurai_event_mean_iou,stateful_event_mean_iou,sam2_drop,samurai_drop,stateful_true_state_rate,stateful_max_miss_count,stateful_fallback_modes,viewer_sample_frames,selection_note
+1,relaxed,dancetrack0034,9,328,335,336,341,0.759,0.717,0.819,0.154,0.193,0.928,0.605,0.524,1.00,0,none,"310,315,320,325,330,335,340,341","主候補。既存のdancetrack0034遷移を少し後ろへずらした区間"
+2,broad,dancetrack0081,12,228,235,236,241,0.539,0.537,0.702,0.082,0.096,0.953,0.456,0.440,0.95,1,none,"210,215,220,225,230,235,240,241","両ベースラインが0.1未満へ落ち、statefulは0.953"
+3,relaxed,dancetrack0079,6,743,750,751,756,0.919,0.784,0.917,0.378,0.361,0.741,0.541,0.423,0.89,1,none,"725,730,735,740,745,750,755,756","直前まで非常に良好。失敗後もstatefulが対象を保持"
+4,broad,dancetrack0019,1,330,337,338,343,0.532,0.508,0.567,0.269,0.261,0.832,0.263,0.247,1.00,0,none,"310,315,320,325,330,335,340,343","ベースライン低下後にstatefulが回復する例"
+5,relaxed,dancetrack0014,7,1190,1197,1198,1203,0.578,0.580,0.474,0.304,0.296,0.845,0.274,0.284,1.00,0,none,"1170,1175,1180,1185,1190,1195,1200,1203","statefulの回復例。直前statefulが十分でない点は補助候補"

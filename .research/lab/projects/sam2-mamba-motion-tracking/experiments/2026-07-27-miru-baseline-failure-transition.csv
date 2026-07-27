@@ -1,0 +1,2 @@
+rank,sequence,gt_id,pre_start_frame,pre_end_frame,event_start_frame,event_end_frame,sam2_pre_mean_iou,samurai_pre_mean_iou,stateful_pre_mean_iou,sam2_event_mean_iou,samurai_event_mean_iou,stateful_event_mean_iou,sam2_drop,samurai_drop,stateful_drop,stateful_true_state_rate,stateful_max_miss_count,stateful_fallback_modes,selection_note
+1,dancetrack0034,9,327,334,335,340,0.758,0.746,0.811,0.259,0.225,0.941,0.500,0.520,-0.130,1.00,0,none,"直前まで両ベースラインが成功し、335フレーム以降に両方が失敗。statefulは追跡を維持"

@@ -1,0 +1,6 @@
+rank,sequence,gt_id,start_frame,end_frame,sam2_window_mean_iou,samurai_window_mean_iou,stateful_window_mean_iou,stateful_true_state_rate,stateful_max_miss_count,stateful_fallback_modes,stateful_sequence_hota0,stateful_sequence_idf1,selection_note
+1,dancetrack0034,7,878,883,0.000,0.111,0.976,0.87,1,none,0.620,0.566,"最も条件に近い。SAMURAIは少し改善するがまだ低く、statefulは高精度"
+2,dancetrack0081,1,643,648,0.008,0.114,0.936,1.00,0,none,0.585,0.504,"SAMURAIの改善が小さく、statefulで大きく回復"
+3,dancetrack0034,11,245,250,0.005,0.109,0.925,0.93,1,none,0.620,0.566,"SAMURAIは低精度のまま、statefulは対象を安定追跡"
+4,dancetrack0041,2,864,869,0.027,0.131,0.931,1.00,0,none,0.486,0.469,"局所的には非常に明確。系列全体の難度も高い"
+5,dancetrack0004,1,1018,1023,0.000,0.162,0.946,1.00,0,none,0.741,0.695,"SAMURAIはわずかに改善するが、statefulで高精度化"
