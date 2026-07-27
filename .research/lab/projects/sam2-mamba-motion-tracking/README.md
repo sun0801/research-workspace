@@ -3,7 +3,7 @@ project: sam2-mamba-motion-tracking
 status: active
 summary: scale修正後のbaselineを固定し、SAM2/SAMURAI統合結果とMambaTrack系baselineの再現性を確認しながら、state carry学習改善へ進む段階。
 created: 2026-07-07
-last_updated: 2026-07-23
+last_updated: 2026-07-27
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -73,6 +73,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 **7/23 SAM2最小統合完了**：元repoのepoch100 `MambaStateful`をSAM2/SAMURAIへ移植し、DanceTrack val 25系列を推論・評価した。HOTA 55.520、AssA 62.482、IDF1 64.154、IDSW 1,535で、全candidate debug行でcheckpointロード済み、fallbackなしを確認した。これはepoch100固定の統合確認値であり、SAM2上の改善量やbest-HOTA checkpointの結果ではない。
 
+**7/27 checkpoint比較完了**：元repoの`best_tracking_hota.pth`（metadata上epoch20）を同じSAM2条件で評価したところ、HOTA 54.606、AssA 61.691、IDF1 62.813、IDSW 1,525となった。epoch100よりHOTAは0.914低く、元repoのbest-HOTA checkpointがSAM2上でも最良とは限らないことを確認した。
+
 **7/23 P2完了**：P1 A2を固定し、B0 self-update、B1 missing freeze、B2 trusted detector match gate、B3 prolonged-untrusted resetを3系列・25系列で診断した。25系列ではB0 HOTA 47.910に対しB1 48.035で、state非有限イベントは4,515から115へ減少した。一方、B2はHOTA 46.962、B3は46.855で、AssA/IDF1が低下しIDSWが増加した。missing freezeはcontamination抑制の根拠を与えたが、単純なquality gate/resetは採用せず、P3/P4へ自動移行しない。
 
 研究の問い：
@@ -119,6 +121,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 | 2026-07-23 | MTG: scale・association・state carry学習を分離して切り分ける方針を確認。SAM2統合結果とMambaTrack系baselineの再現性を優先し、その後に入力混合・quality-aware state update・TBPTTをspec化して検証する。MIRUポスターは自前の時系列結果と簡略図へ修正する。 |
 | 2026-07-23 | P2 cache更新制御を完了。B1 freezeはstate非有限イベントを抑制したが、B2/B3の単純trusted gate/resetは25系列でassociationを悪化させた。 |
 | 2026-07-23 | 元MambaStatefulをSAM2/SAMURAIへ最小統合し、25系列でHOTA 55.520、IDF1 64.154を確認。epoch100固定の統合確認値として記録した。 |
+| 2026-07-27 | `best_tracking_hota.pth`（metadata上epoch20）をSAM2で25系列評価。HOTA 54.606でepoch100の55.520を下回った。 |
 | 2026-07-23 | P1 association分離を25系列で確認。A1 HOTA 47.233に対しA2 HOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386。P2 cache更新制御の計画化へ進む。 |
 | 2026-07-22 | P1 association分離を3系列で完了。A1 HOTA 49.666に対しA2 HOTA 54.870、AssA 36.229、IDF1 53.660、IDSW 94。P2 cache更新制御は別spec・承認待ち。 |
 | 2026-07-21 | P0.5としてMambaTrack / TrackSSM / MambaStatefulのDanceTrack val 25系列as-is比較を完了。次はP1 association分離の診断へ進む。 |
