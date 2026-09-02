@@ -3,7 +3,7 @@ project: sam2-mamba-motion-tracking
 status: active
 summary: state carryの正しい学習、SAM2デコーダー統合、Mamba・LSTM・Transformer比較、汚染可視化を優先して次段階の実験へ進む段階。
 created: 2026-07-07
-last_updated: 2026-08-28
+last_updated: 2026-09-01
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -87,6 +87,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 詳細は [`specs/2026-07-07-state-carry-research-direction.md`](specs/2026-07-07-state-carry-research-direction.md) を参照。
 
+**9/1 P4a実装着手**：承認済みspecに従い、L0固定windowの明示entrypoint（`train_mamba_window.py`）を残したまま、GT-only stateful unroll dataset、微分可能state forward、TBPTT学習entrypoint、設定、smoke runnerをMamba_Trackersへ追加した。構文・dataset生成・CPU stubでのstate parity/backwardに加え、実Mamba・CUDA上のP4a/L0 smoke、checkpoint再load、legacy/stateful parityを確認済み。
+
 ## マイルストーン
 
 ### フェーズ1：MIRU / ポスター
@@ -128,6 +130,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 | 日付 | 内容 |
 |------|--------|
 | 2026-08-28 | MTG: state carryの正しい学習、SAM2デコーダー統合、Mamba・LSTM・Transformerの同程度GFLOPS比較、ID switchを起点にした汚染可視化、test評価を優先する方針を確認。 |
+| 2026-09-01 | P4aの承認済みspecに基づく実装に着手。L0/P4aのentrypoint・dataset・stateful forward・TBPTT smokeを追加し、実Mamba・CUDA smoke、checkpoint再load、legacy/stateful parityまで確認。 |
 | 2026-07-30 | MTG: epoch100をSAM2統合の暫定基準とし、細かな`kf_score_weight`探索よりMambaTrack再現・state carry学習見直しを優先。MIRU定性候補はViewer確認後に採用する。 |
 | 2026-07-27 | `best_tracking_hota.pth`（metadata上epoch20）をSAM2で25系列評価。HOTA 54.606でepoch100の55.520を下回った。 |
 | 2026-07-23 | P2 cache更新制御を完了。B1 freezeはstate非有限イベントを抑制したが、B2/B3の単純trusted gate/resetは25系列でassociationを悪化させた。 |
