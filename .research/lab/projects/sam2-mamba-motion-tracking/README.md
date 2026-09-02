@@ -87,6 +87,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 詳細は [`specs/2026-07-07-state-carry-research-direction.md`](specs/2026-07-07-state-carry-research-direction.md) を参照。
 
+**9/2 P4a closeout / P4b初回比較完了**：P4aにL0互換train logging、train/val splitを分離したGT-only validation、horizon 1/4/8/16/32のfree rollout、checkpoint SHA256 manifestを追加した。実データepoch5でvalidation loss 0.048975、state finite rate 1.0、全rollout horizonの発散率0を確認した。P2-B1固定条件のDanceTrack val 25系列ではL0 epoch5 HOTA 53.971、P4a epoch5 HOTA 53.240で、P4aはHOTA -0.731、AssA -0.659、IDF1 -0.800、IDSW +2となった。epoch100本学習の結果とは分けて扱う。
+
 **9/1 P4a実装着手**：承認済みspecに従い、L0固定windowの明示entrypoint（`train_mamba_window.py`）を残したまま、GT-only stateful unroll dataset、微分可能state forward、TBPTT学習entrypoint、設定、smoke runnerをMamba_Trackersへ追加した。構文・dataset生成・CPU stubでのstate parity/backwardに加え、実Mamba・CUDA上のP4a/L0 smoke、checkpoint再load、legacy/stateful parityを確認済み。
 
 ## マイルストーン
