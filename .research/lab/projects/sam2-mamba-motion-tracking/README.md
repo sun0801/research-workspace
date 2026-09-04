@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: state carryの正しい学習、SAM2デコーダー統合、Mamba・LSTM・Transformer比較、汚染可視化を優先して次段階の実験へ進む段階。
+summary: P4aのstateful unroll + TBPTTを実装し、detach/reset・内部stateログ・SAM2統合時の性能差を検証中。
 created: 2026-07-07
-last_updated: 2026-09-01
+last_updated: 2026-09-04
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -89,6 +89,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 **9/2 P4a closeout / P4b初回比較完了**：P4aにL0互換train logging、train/val splitを分離したGT-only validation、horizon 1/4/8/16/32のfree rollout、checkpoint SHA256 manifestを追加した。実データepoch5でvalidation loss 0.048975、state finite rate 1.0、全rollout horizonの発散率0を確認した。P2-B1固定条件のDanceTrack val 25系列ではL0 epoch5 HOTA 53.971、P4a epoch5 HOTA 53.240で、P4aはHOTA -0.731、AssA -0.659、IDF1 -0.800、IDSW +2となった。epoch100本学習の結果とは分けて扱う。
 
+**9/4 MTG後**：stateful unroll + TBPTTの学習コード実装と学習実行を確認した。mean lossとvalidation lossは低下している一方、内部stateログ終盤のスパイク、`detach`・state carry・resetの実際のタイミング、Mamba側とSAM2統合側の性能差は未整理である。まずコード・設定・ログ・sequence別結果を突き合わせて挙動と原因を検証し、その後にdecoder統合へ進む。
+
 **9/1 P4a実装着手**：承認済みspecに従い、L0固定windowの明示entrypoint（`train_mamba_window.py`）を残したまま、GT-only stateful unroll dataset、微分可能state forward、TBPTT学習entrypoint、設定、smoke runnerをMamba_Trackersへ追加した。構文・dataset生成・CPU stubでのstate parity/backwardに加え、実Mamba・CUDA上のP4a/L0 smoke、checkpoint再load、legacy/stateful parityを確認済み。
 
 ## マイルストーン
@@ -113,6 +115,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 - [x] state carryのepoch間MOT Metrics不変について、frame 6付近のNaN・matching失敗・track再生成を診断する（7/16確認）
 - [ ] state carryの小規模過学習と同一データでのtracker推論を確認する
 - [ ] state carry型のrecurrent学習を導入・検討し、TBPTTを含む学習設計を整理する
+- [x] stateful unroll + TBPTTの学習コードを実装する（9/4確認）
+- [ ] stateful unroll + TBPTTのdetach・state carry・resetの挙動と内部stateログを検証する
 - [ ] オクルージョンを含む定性的トラッキング可視化を用意する
 - [ ] MIRU用の30 FPS動画・追跡結果可視化アプリ・定性候補を準備する
 - [ ] SAM2デコーダーへのMamba統合を実装し、統合位置とトークン数の影響を確認する
@@ -131,6 +135,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-04 | MTG: stateful unroll + TBPTTの実装・学習を確認。detach/reset・内部stateログ・SAM2統合時の性能差を先に検証し、View原稿と研究室見学資料を進める方針を整理。 |
 | 2026-08-28 | MTG: state carryの正しい学習、SAM2デコーダー統合、Mamba・LSTM・Transformerの同程度GFLOPS比較、ID switchを起点にした汚染可視化、test評価を優先する方針を確認。 |
 | 2026-09-01 | P4aの承認済みspecに基づく実装に着手。L0/P4aのentrypoint・dataset・stateful forward・TBPTT smokeを追加し、実Mamba・CUDA smoke、checkpoint再load、legacy/stateful parityまで確認。 |
 | 2026-07-30 | MTG: epoch100をSAM2統合の暫定基準とし、細かな`kf_score_weight`探索よりMambaTrack再現・state carry学習見直しを優先。MIRU定性候補はViewer確認後に採用する。 |
