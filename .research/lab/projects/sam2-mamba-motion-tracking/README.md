@@ -3,7 +3,7 @@ project: sam2-mamba-motion-tracking
 status: active
 summary: P4aのstateful unroll + TBPTTを実装し、detach/reset・内部stateログ・SAM2統合時の性能差を検証中。
 created: 2026-07-07
-last_updated: 2026-09-04
+last_updated: 2026-09-08
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -55,6 +55,35 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 | `MambaStatefulMotionFilter`の状態管理 | ✅ 元repo checkpointのstrict load・track別cache・state carryを実装済み |
 | MOT推論エントリ | `scripts/main_inference_mot.py` |
 
+---
+
+### SAM2MOT-lite実装リポジトリ（停止中・着想元）
+`/mnt/HDD10TB-2/aburatani/2026_05_aburatani_sam2mot`
+
+SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作追加（`639751d..HEAD`で17ファイル・約2,400行）。[SAM2MOT](https://github.com/TripleJoy/SAM2MOT)論文設計の再実装で、detectorのbboxをSAM2へのbox promptとして与え、SAM2のmaskから生成したbboxをMOT形式で出力するTracking-by-Segmentationベースライン。
+
+**位置づけ**：8/28 MTGの方針により、SAM2MOTの再現完成を目的とせず「途中検出による軌跡補正」の着想元として扱う。**2026-06-12以降停止中。**
+
+| マイルストーン | 状態 | 実装位置 |
+|---|---|---|
+| M0-M3 Detection/Mask/Matching・SAM2 prompt | ✅ 実装済み | `tracker/detection.py`, `mask_utils.py`, `matching.py`, `sam2_wrapper.py` |
+| M4 最小推論パイプライン | ✅ 実装済み | `scripts/run_sequence.py`, `tracker/track.py` |
+| M5 Object Addition（動的追加） | ✅ 実装済み | `trajectory_manager.py:162` |
+| M6 Object Removal / 状態遷移 | ⚠️ 実装済みだがフラグ不通 | `trajectory_manager.py:104` |
+| M7 Quality Reconstruction | ✅ 実装済み | `trajectory_manager.py:256` |
+| M8 Cross-object Interaction | ⚠️ 実装済みだが既定で無効 | `trajectory_manager.py:359-426` |
+| M9 TrackEval評価接続 | ❌ 未着手（出力形式のみ適合） | — |
+
+⚠️ **`sam2mot_lite/README.md`のMilestone表は古い**（M4以降を「設計のみ」と記載）。README最終更新`5bdcc9e`はM4〜M8実装コミットの祖先。構成図にある`cross_object_interaction.py`と`visualize.py`は全git履歴を通じて存在しない。
+
+⚠️ **既存の推論結果はGTオラクル条件**：`scripts/run_dancetrack.py:116`が検出入力に`gt/gt.txt`（score列=1）をそのまま使っているため、detector入力の既存ベースラインとは原理的に比較不可能。DanceTrack val **15/25系列**のみ出力あり（欠損10系列は原因不明、ログ未保存）。存在する15系列は全て最終フレームまで完走。
+
+**SAM2への関与**：`sam2/`本体は一行も未改変。非公開の`inference_state`をラッパー側から書き換えるDynamic Batch Padding方式（`sam2_wrapper.py:78`, `:125-135`）で、時間的メモリを保持したまま追跡途中のオブジェクト追加を実現している。内部API依存度が非常に高く、**SAM2デコーダー統合やSAM3移行時に再利用できない前提**で扱う。OOMの真因は`cond_frame_outputs`の無制限増加であり、`prune_horizon=48`（`non_cond`のみ削除）では救えない。
+
+**実行環境**：`.venv-sam2mot`（Python 3.12.3, torch 2.12.0+cu130）。`cwd`=リポジトリルート・`PYTHONPATH=./sam2mot_lite`が必須（`.`を入れると`sam2/`がパッケージを遮蔽して`RuntimeError`）。`requirements.txt`・lockファイルなし、venvは`.gitignore`除外のため**venvを失うとバージョン再現不可**。
+
+詳細な棚卸しは [`experiments/2026-09-08-sam2mot-lite-implementation-status.md`](experiments/2026-09-08-sam2mot-lite-implementation-status.md) を参照。
+
 ## 現在の状況
 
 **7/2 MTG後の状況**：state carry型Mambaは100エポックで収束しかけているが、LRスケジューラがほぼ固定になっており過学習の可能性が高い。TrackSSMは入力形式の違いが発覚し実験設定の見直しが必要。public validationの設計（5エポックごとのHOTA評価）が次の実装課題。
@@ -92,6 +121,8 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 **9/4 MTG後**：stateful unroll + TBPTTの学習コード実装と学習実行を確認した。mean lossとvalidation lossは低下している一方、内部stateログ終盤のスパイク、`detach`・state carry・resetの実際のタイミング、Mamba側とSAM2統合側の性能差は未整理である。まずコード・設定・ログ・sequence別結果を突き合わせて挙動と原因を検証し、その後にdecoder統合へ進む。
 
 **9/1 P4a実装着手**：承認済みspecに従い、L0固定windowの明示entrypoint（`train_mamba_window.py`）を残したまま、GT-only stateful unroll dataset、微分可能state forward、TBPTT学習entrypoint、設定、smoke runnerをMamba_Trackersへ追加した。構文・dataset生成・CPU stubでのstate parity/backwardに加え、実Mamba・CUDA上のP4a/L0 smoke、checkpoint再load、legacy/stateful parityを確認済み。
+
+**9/8 SAM2MOT-lite棚卸し完了**：停止中のSAM2MOT-lite実装リポジトリをresearch-workspace管理下へ入れ、実装実態・出力カバレッジ・残作業を確定した。M0〜M8は実装済み（M6は`enable_object_removal`が全`.py`から未参照でフラグ不通、M8は既定無効）、M9 TrackEval接続は未着手。最重要の発見は、既存のDanceTrack出力が`run_dancetrack.py:116`でGTの`gt/gt.txt`を検出入力に使うオラクル条件であり、detector入力の既存ベースラインと比較不可能な点である。val 15/25系列のみ出力があり、存在する15系列は全て完走しているが、欠損10系列の失敗原因はログ未保存のため不明。SAM2本体は未改変で、動的オブジェクト追加は非公開`inference_state`への依存が強く、SAM2デコーダー統合・SAM3移行時には再利用できない。
 
 ## マイルストーン
 
@@ -135,6 +166,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-08 | SAM2MOT-lite実装リポジトリをREADME『実装コードの場所』へ登録し、棚卸しをexperimentsへ保存。検出入力がGTのオラクル条件である点、M6のフラグ不通・M8既定無効、M9未着手、val 15/25系列を確定。 |
 | 2026-09-04 | MTG: stateful unroll + TBPTTの実装・学習を確認。detach/reset・内部stateログ・SAM2統合時の性能差を先に検証し、View原稿と研究室見学資料を進める方針を整理。 |
 | 2026-08-28 | MTG: state carryの正しい学習、SAM2デコーダー統合、Mamba・LSTM・Transformerの同程度GFLOPS比較、ID switchを起点にした汚染可視化、test評価を優先する方針を確認。 |
 | 2026-09-01 | P4aの承認済みspecに基づく実装に着手。L0/P4aのentrypoint・dataset・stateful forward・TBPTT smokeを追加し、実Mamba・CUDA smoke、checkpoint再load、legacy/stateful parityまで確認。 |
