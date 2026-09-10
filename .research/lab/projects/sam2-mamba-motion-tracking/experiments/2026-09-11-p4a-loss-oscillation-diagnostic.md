@@ -87,3 +87,34 @@ lossピークとstateピークは同じbatch位置に再現しておらず、今
 1. loss上位batch（特にlocal batch 93, 67, 72, 71, 68）のtrajectory構成とframe gapを確認する。
 2. state normが大きい後半batchについて、lossピークとは別のstate値増加要因を確認する。
 3. frame gapとtrajectory構成で説明できない場合に限り、TBPTT segment単位のloss・detach前後stateを追加診断する。
+
+
+## 追加対照: shuffle=True
+
+固定batch順序がloss振動の主因かを確認するため、学習DataLoaderのみ`shuffle=True`に変更した3epoch対照runを実施した。前回runと同様に、`train/current_loss`は全batchで記録した。
+
+- command: `ssm_tracker/train_mamba_stateful.py --exp_name p4a_shuffle_diag_3ep_20260911 --config_file ssm_tracker/cfgs/MambaStatefulTBPTT.yaml --device 0 --epochs 3 --seed 0`
+- Comet: [experiment 27bdd0adb5ea4416ac6198987b6b3c83](https://www.comet.com/sun0801/mamba-mot/27bdd0adb5ea4416ac6198987b6b3c83)
+- Comet run name: `p4a_shuffle_diag_3ep_20260911__20260911T054041+0900_3489e78`
+- `train/current_loss`: 351点（117点/epoch）
+- 一時変更: train DataLoaderの`shuffle=False`→`True`、logging条件を全batch化、既存SyntaxErrorの`log_metrics`を実行時のみ修復
+- 学習終了後、学習コードは実験前の状態へ復元した。既存のYAML設定変更は保持した。
+
+### 固定順序runとの比較
+
+| run | epoch pair Spearman rho | top-10 overlap | batch loss std |
+|---|---:|---:|---:|
+| `shuffle=False`、1 vs 2 | 0.9997 | 1.0 | 0.0433 / 0.0428 |
+| `shuffle=False`、1 vs 3 | 0.9971 | 1.0 | 0.0433 / 0.0412 |
+| `shuffle=False`、2 vs 3 | 0.9977 | 1.0 | 0.0428 / 0.0412 |
+| `shuffle=True`、1 vs 2 | -0.0458 | 0.0 | 0.0084 / 0.0089 |
+| `shuffle=True`、1 vs 3 | 0.0290 | 0.0 | 0.0084 / 0.0085 |
+| `shuffle=True`、2 vs 3 | -0.1270 | 0.1 | 0.0089 / 0.0085 |
+
+`shuffle=True`では、固定順序runで再現していたlocal batch 93などのピーク位置がepochごとに再現しなかった。epoch mean lossは`0.07391 → 0.07012 → 0.06670`で、固定順序runの`0.07363 → 0.07328 → 0.07113`よりも安定して低下した。
+
+### 解釈
+
+今回の対照runは、Comet上のepoch周期的なloss振動が、主に`shuffle=False`で同じchunk群を毎epoch同じlocal batch位置に配置していたことによる観測・更新順序の影響だと強く支持する。一方、shuffleによって各batchの構成とoptimizer更新順序も変わるため、これだけで個々のchunkの固有難度やframe gapの原因まで特定したとは扱わない。
+
+現在の`dancetrack_train.json`は417個のtrackを`dancetrack`配下にまとめ、bbox列だけを保存しており、元sequence名とframe IDを保持していない。そのため、ピークbatchのglobal track IDとchunk開始位置までは復元できるが、元sequence・frame gapの確定には元DanceTrack GTまたはsequence情報付きannotationが必要である。
