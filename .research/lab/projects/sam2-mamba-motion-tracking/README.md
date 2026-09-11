@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: P4aのstateful unroll + TBPTTを実装し、detach/reset・内部stateログ・SAM2統合時の性能差を検証中。
+summary: P4aのloss振動は固定chunk順序の影響を強く支持。shuffle条件のSAM2評価、ハイパラ探索、デコーダー統合の構造整理へ進む。
 created: 2026-07-07
-last_updated: 2026-09-08
+last_updated: 2026-09-11
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -124,6 +124,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **9/8 SAM2MOT-lite棚卸し完了**：停止中のSAM2MOT-lite実装リポジトリをresearch-workspace管理下へ入れ、実装実態・出力カバレッジ・残作業を確定した。M0〜M8は実装済み（M6は`enable_object_removal`が全`.py`から未参照でフラグ不通、M8は既定無効）、M9 TrackEval接続は未着手。最重要の発見は、既存のDanceTrack出力が`run_dancetrack.py:116`でGTの`gt/gt.txt`を検出入力に使うオラクル条件であり、detector入力の既存ベースラインと比較不可能な点である。val 15/25系列のみ出力があり、存在する15系列は全て完走しているが、欠損10系列の失敗原因はログ未保存のため不明。SAM2本体は未改変で、動的オブジェクト追加は非公開`inference_state`への依存が強く、SAM2デコーダー統合・SAM3移行時には再利用できない。
 
+**9/11 MTG後**：P4aの用語とstate carry/TBPTTの実挙動を整理した。loss振動は`shuffle=False`で固定されたchunk順序の影響を強く支持するため、shuffle条件のSAM2評価とハイパラ探索へ進む。padding・maskingと正規化bbox lossのpixel換算も確認する。View原稿は状態保持型MambaによるSAM2ベース物体追跡を軸に整理し、デコーダー統合は物体数変化・マスク特徴量対応・SAM2/SAMURAI/MOTの運用差を図示してから検討する。
+
 ## マイルストーン
 
 ### フェーズ1：MIRU / ポスター
@@ -148,6 +150,10 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 - [ ] state carry型のrecurrent学習を導入・検討し、TBPTTを含む学習設計を整理する
 - [x] stateful unroll + TBPTTの学習コードを実装する（9/4確認）
 - [ ] stateful unroll + TBPTTのdetach・state carry・resetの挙動と内部stateログを検証する
+- [x] P4a loss振動を全batch loggingとshuffle対照で診断し、固定chunk順序の影響を確認する（9/11完了）
+- [ ] shuffle条件で学習したP4aをSAM2統合側で評価する
+- [ ] P4aのchunk/TBPTT長、batchサイズ、Mamba内部次元を探索する
+- [ ] padding・maskingの挙動と正規化bbox lossのpixel換算を確認する
 - [ ] オクルージョンを含む定性的トラッキング可視化を用意する
 - [ ] MIRU用の30 FPS動画・追跡結果可視化アプリ・定性候補を準備する
 - [ ] SAM2デコーダーへのMamba統合を実装し、統合位置とトークン数の影響を確認する
@@ -155,6 +161,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 - [ ] state carryのID switch / hidden state contaminationを出力軌跡のシミュレーションで可視化する
 - [ ] testデータで追跡性能を評価する
 - [ ] SAM2MOTから着想を得た途中検出による補正機構を検討する
+- [ ] SAM2/SAMURAI/MOTの物体数変化とマスク特徴量対応を図示し、デコーダー／メモリへのMamba統合位置を比較する
 
 ### フェーズ2：修論 / CVPR
 - [ ] hidden state contaminationの定義・定量化指標の設計
@@ -166,6 +173,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-11 | MTG: P4a loss振動は固定chunk順序の影響を強く支持。shuffle条件のSAM2評価、ハイパラ探索、padding・maskingとbbox誤差の確認へ進む。View原稿は状態保持型MambaによるSAM2ベース物体追跡を軸にし、デコーダー統合は物体数変化と特徴対応を整理してから検討する。 |
 | 2026-09-08 | SAM2MOT-lite実装リポジトリをREADME『実装コードの場所』へ登録し、棚卸しをexperimentsへ保存。検出入力がGTのオラクル条件である点、M6のフラグ不通・M8既定無効、M9未着手、val 15/25系列を確定。 |
 | 2026-09-04 | MTG: stateful unroll + TBPTTの実装・学習を確認。detach/reset・内部stateログ・SAM2統合時の性能差を先に検証し、View原稿と研究室見学資料を進める方針を整理。 |
 | 2026-08-28 | MTG: state carryの正しい学習、SAM2デコーダー統合、Mamba・LSTM・Transformerの同程度GFLOPS比較、ID switchを起点にした汚染可視化、test評価を優先する方針を確認。 |
