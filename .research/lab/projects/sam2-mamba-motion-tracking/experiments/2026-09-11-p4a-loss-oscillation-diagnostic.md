@@ -3,7 +3,7 @@ date: 2026-09-11
 project: sam2-mamba-motion-tracking
 spec: ../specs/2026-09-11-p4a-loss-oscillation-diagnostic-spec.md
 status: completed
-tags: [experiment, p4a, loss, logging, diagnosis]
+tags: [experiment, p4a, loss, logging, diagnosis, dataset-order]
 ---
 
 # P4a loss oscillation diagnostic
@@ -118,3 +118,75 @@ lossピークとstateピークは同じbatch位置に再現しておらず、今
 今回の対照runは、Comet上のepoch周期的なloss振動が、主に`shuffle=False`で同じchunk群を毎epoch同じlocal batch位置に配置していたことによる観測・更新順序の影響だと強く支持する。一方、shuffleによって各batchの構成とoptimizer更新順序も変わるため、これだけで個々のchunkの固有難度やframe gapの原因まで特定したとは扱わない。
 
 現在の`dancetrack_train.json`は417個のtrackを`dancetrack`配下にまとめ、bbox列だけを保存しており、元sequence名とframe IDを保持していない。そのため、ピークbatchのglobal track IDとchunk開始位置までは復元できるが、元sequence・frame gapの確定には元DanceTrack GTまたはsequence情報付きannotationが必要である。
+
+
+## 追記 (2026-09-17): 振動機序の特定 — 1 batch ≒ 1動画
+
+上記「追加対照: shuffle=True」の結論（固定batch順序が主因）は維持する。本追記はそれを否定するものではなく、**なぜ固定順序が振動を生んだのか**という機序を特定したものである。
+
+### 特定した機序
+
+`StatefulUnrollDataset`はtrackを時系列順に`unroll_length`ずつ切って`samples`へ順に積むだけで、並べ替えを行わない（`ssm_tracker/dataset/stateful_unroll_dataset.py:39-48`）。同一trackのchunkは連続配置され、同一動画に属するtrackも連続したobj_idで並ぶ。
+
+その結果、64 chunkからなる1 batchは3〜10 trackしか含まず、そのほぼ全てが同じ動画に属する。**`shuffle=False`の1 epochは、訓練動画を1本ずつ順に巡回する処理**になっていた。batch lossは、その区間の動画の1frameあたりbbox中心移動量のほぼ単調関数である。
+
+### epoch冒頭の谷とepoch内の山は同一原因
+
+Comet上では、epoch冒頭約12 stepにわたって`train/current_loss`が0.02〜0.05と低く、local batch 14付近で0.146へ跳ね上がる谷が観測されていた。当初これを`train/mean_loss`のepoch内累積平均リセットによる表示上のartifactと考えたが、**生系列の`train/current_loss`自体が同じ谷を示しており、この仮説は棄却された**。`train/mean_loss`は谷をV字に均していただけである。
+
+epoch冒頭の谷とlocal batch 93等の山は別現象ではなく、動画巡回という同一原因の別部分である。
+
+### 証拠（モデル非依存の再現）
+
+`dancetrack_train.json`をdataset順（`unroll_length=48`、batch size 64）に走査し、「変位ゼロと予測した場合のsmooth L1」を`loss_start_index=4`とmaskを適用して算出、batch単位で平均した。モデルの重みを一切使わない。
+
+| local batch | track | 解像度 | 1frameあたり中心移動量 | 変位ゼロ予測時のsmooth L1 |
+|---|---|---|---:|---:|
+| 0 | 0–9 | 1280x720 | 0.0066 | 0.082 |
+| 2 | 13–15 | 1280x720 | 0.0045 | 0.050 |
+| 8 | 33–38 | 1920x1080 | 0.0042 | 0.032 |
+| 11 | 50–56 | 1920x1080 | 0.0039 | 0.026（最小） |
+| 14 | 66–69 | 1920x1080 | 0.0073 | 0.129 |
+| 16 | 71–74 | 1920x1080 | 0.0085 | 0.146 |
+| 67 | 214–216 | 1280x720 | 0.0108 | 0.193 |
+| 93 | 314–317 | 1280x720 | 0.0124 | 0.234（最大） |
+
+- この計算の累積平均は batch 0 で 0.082、batch 11 で最小 0.045、batch 116 で 0.074 となり、実測`train/mean_loss`の 0.072 → 0.043（step≒11）→ 0.070 と一致する。
+- proxyのピーク位置 67 / 72 / 93 は、本実験が実測したピーク位置`93, 67, 72, 71, 68, ...`と一致する。
+- epoch冒頭の谷の実体は、local batch 2〜11に並ぶtrack 25〜56の1920x1080動画群が訓練セット中で最も動きが遅いことである（track 54、55は0.0018）。
+- **loss系列の形状がモデル非依存に再現できたため、この振動は学習の挙動ではなくデータ並び順で決まっていたと確定する。**
+
+再現手順:
+
+```python
+import json, math
+anno = json.load(open("ssm_tracker/traj_anno_data/dancetrack_train.json"))["dancetrack"]
+U, B, START, SD = 48, 64, 4, 50.0
+chunks = []
+for oid, od in anno.items():
+    if oid in {"total_objs", "obj_id_start"}:
+        continue
+    bb = od["bboxes"]
+    for s in range(0, max(0, len(bb) - 1), U):
+        chunks.append((bb, s, min(U, len(bb) - 1 - s)))
+sl1 = lambda x: 0.5 * x * x if abs(x) < 1 else abs(x) - 0.5
+def chunk_loss(bb, s, vl):
+    vals = [sum(sl1((bb[t + 1][k] - bb[t][k]) * SD) for k in range(4)) / 4
+            for t in range(s, s + vl) if (t - s) >= START]
+    return sum(vals) / len(vals) if vals else None
+per = [chunk_loss(*c) for c in chunks]
+batches = [[v for v in per[i * B:(i + 1) * B] if v is not None] for i in range(math.ceil(len(chunks) / B))]
+batch_loss = [sum(v) / len(v) for v in batches]
+```
+
+### 「次の候補」1への部分回答
+
+本実験の「次の候補」1（loss上位batchのtrajectory構成とframe gapの確認）は、trajectory構成の側では上表で回答された。ピークbatchは移動量の大きい動画に対応する。
+
+また「元sequence名とframe IDを保持していない」という制約に対し、**`dancetrack_train.json`の各objectが持つ`image_h`/`image_w`の切り替わりから動画境界が部分的に復元できる**ことがわかった（local batch 6と18が境界に当たる）。ただし復元できるのは1280x720と1920x1080の切り替わり点のみで、同一解像度の動画が連続する区間の境界は依然として不明である。frame gapの確定には引き続き元DanceTrack GTが必要である。
+
+### logging上の注意（対応は先送り）
+
+`train/mean_loss`は「そのepochの先頭からn batch分の累積平均」であり、x軸上でnが1→117と変化するため、点ごとに定義の異なる量を時系列として描いている。epoch平均は`train/epoch_mean_loss`が別途1点/epochで記録しているため冗長でもある。
+
+この整理（`train/mean_loss`の削除、記録間隔を`len(dataloader)//10`基準へ変更、`--max_batches`時のstep軸ずれ修正）は、2026-09-17のunroll×TBPTT探索runが実行中であるため今回は実施せず、探索完了後に再検討する。
