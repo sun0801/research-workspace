@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: P4aのloss振動は固定chunk順序の影響を強く支持。shuffle条件のSAM2評価、ハイパラ探索、デコーダー統合の構造整理へ進む。
+summary: shuffle条件のP4aをSAM2統合・TrackEvalまで完了（HOTA 53.944）。次はunroll/TBPTT長・batch・Mamba内部次元の探索へ進む。
 created: 2026-07-07
-last_updated: 2026-09-11
+last_updated: 2026-09-18
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -124,6 +124,9 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **9/8 SAM2MOT-lite棚卸し完了**：停止中のSAM2MOT-lite実装リポジトリをresearch-workspace管理下へ入れ、実装実態・出力カバレッジ・残作業を確定した。M0〜M8は実装済み（M6は`enable_object_removal`が全`.py`から未参照でフラグ不通、M8は既定無効）、M9 TrackEval接続は未着手。最重要の発見は、既存のDanceTrack出力が`run_dancetrack.py:116`でGTの`gt/gt.txt`を検出入力に使うオラクル条件であり、detector入力の既存ベースラインと比較不可能な点である。val 15/25系列のみ出力があり、存在する15系列は全て完走しているが、欠損10系列の失敗原因はログ未保存のため不明。SAM2本体は未改変で、動的オブジェクト追加は非公開`inference_state`への依存が強く、SAM2デコーダー統合・SAM3移行時には再利用できない。
 
+**9/18 shuffle条件評価完了**：`shuffle=True`で学習したP4a epoch100 checkpointをSAM2/SAMURAIへ統合し、DanceTrack val 25系列をTrackEvalで評価した。HOTA 53.944、AssA 60.701、IDF1 62.172、IDSW 1,551で、非shuffle P4a統合結果（HOTA 54.391）を下回った。単一seed・epoch100固定のため、shuffleの有効性は未確定とし、次はunroll/TBPTT長・batchサイズ・Mamba内部次元の探索で確認する。
+
+
 **9/11 MTG後**：P4aの用語とstate carry/TBPTTの実挙動を整理した。loss振動は`shuffle=False`で固定されたchunk順序の影響を強く支持するため、shuffle条件のSAM2評価とハイパラ探索へ進む。padding・maskingと正規化bbox lossのpixel換算も確認する。View原稿は状態保持型MambaによるSAM2ベース物体追跡を軸に整理し、デコーダー統合は物体数変化・マスク特徴量対応・SAM2/SAMURAI/MOTの運用差を図示してから検討する。
 
 ## マイルストーン
@@ -151,7 +154,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 - [x] stateful unroll + TBPTTの学習コードを実装する（9/4確認）
 - [ ] stateful unroll + TBPTTのdetach・state carry・resetの挙動と内部stateログを検証する
 - [x] P4a loss振動を全batch loggingとshuffle対照で診断し、固定chunk順序の影響を確認する（9/11完了）
-- [ ] shuffle条件で学習したP4aをSAM2統合側で評価する
+- [x] shuffle条件で学習したP4aをSAM2統合側で評価する（9/18完了、HOTA 53.944）
 - [ ] P4aのchunk/TBPTT長、batchサイズ、Mamba内部次元を探索する
 - [ ] padding・maskingの挙動と正規化bbox lossのpixel換算を確認する
 - [ ] オクルージョンを含む定性的トラッキング可視化を用意する
@@ -173,6 +176,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-18 | `shuffle=True`のP4a epoch100 checkpointをSAM2統合・TrackEval評価。25系列でHOTA 53.944、AssA 60.701、IDF1 62.172、IDSW 1,551。非shuffle P4aのHOTA 54.391を下回ったため、次はハイパーパラメータ探索へ進む。 |
 | 2026-09-11 | MTG: P4a loss振動は固定chunk順序の影響を強く支持。shuffle条件のSAM2評価、ハイパラ探索、padding・maskingとbbox誤差の確認へ進む。View原稿は状態保持型MambaによるSAM2ベース物体追跡を軸にし、デコーダー統合は物体数変化と特徴対応を整理してから検討する。 |
 | 2026-09-08 | SAM2MOT-lite実装リポジトリをREADME『実装コードの場所』へ登録し、棚卸しをexperimentsへ保存。検出入力がGTのオラクル条件である点、M6のフラグ不通・M8既定無効、M9未着手、val 15/25系列を確定。 |
 | 2026-09-04 | MTG: stateful unroll + TBPTTの実装・学習を確認。detach/reset・内部stateログ・SAM2統合時の性能差を先に検証し、View原稿と研究室見学資料を進める方針を整理。 |
