@@ -1,7 +1,7 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: shuffle条件のP4aをSAM2統合・TrackEvalまで完了（HOTA 53.944）。次はunroll/TBPTT長・batch・Mamba内部次元の探索へ進む。
+summary: shuffle条件のP4aをSAM2統合・TrackEvalまで完了（HOTA 53.944）。次はsequence別失敗分析とSAM2デコーダーへのMamba埋め込み調査を優先する。
 created: 2026-07-07
 last_updated: 2026-09-18
 ---
@@ -110,6 +110,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **8/28 MTG後**：MIRUで受けた意見を踏まえ、state carry型Mambaの学習方法の見直しを最優先し、SAM2デコーダーへのMamba統合を10月中旬頃までの実装目標とした。Mamba・LSTM・Transformerは同程度GFLOPSと速度を揃えて比較する。hidden state contaminationは、まずID switchを人工的に挿入した出力軌跡のシミュレーションで定義・可視化し、SAM2MOTは再現ではなく途中検出による独自補正の着想として扱う。Viewの2ページ原稿作成とtestデータ評価も進める。
 
+**9/18 MTG後**：unroll/TBPTTのtracker性能差は明確な単調傾向がなく、細かな探索はいったん深追いしない。YOLO＋MambaとSAM2＋Mambaの比較条件を整理し、sequence別の失敗分析、0-padding・state伝播・detach境界の実装確認、SAM2デコーダーへのMamba埋め込み調査を優先する。
+
 研究の問い：
 
 > MOTにおいて，state carry型Mambaのhidden stateをtrackごとに持続的に保持することは有効か？不安定な場合，その原因はhidden state contaminationなのか？それをどう検出・抑制すればよいか？
@@ -176,7 +178,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
-| 2026-09-18 | `shuffle=True`のP4a epoch100 checkpointをSAM2統合・TrackEval評価。25系列でHOTA 53.944、AssA 60.701、IDF1 62.172、IDSW 1,551。非shuffle P4aのHOTA 54.391を下回ったため、次はハイパーパラメータ探索へ進む。 |
+| 2026-09-18 | MTG: unroll/TBPTTの細かな探索は一旦保留し、YOLO＋MambaとSAM2＋Mambaの比較条件整理、sequence別失敗分析、padding・detach境界の実装確認、SAM2デコーダーへのMamba埋め込み調査を優先する。 |
+| 2026-09-18 | `shuffle=True`のP4a epoch100 checkpointをSAM2統合・TrackEval評価。25系列でHOTA 53.944、AssA 60.701、IDF1 62.172、IDSW 1,551。非shuffle P4aのHOTA 54.391を下回った。 |
 | 2026-09-11 | MTG: P4a loss振動は固定chunk順序の影響を強く支持。shuffle条件のSAM2評価、ハイパラ探索、padding・maskingとbbox誤差の確認へ進む。View原稿は状態保持型MambaによるSAM2ベース物体追跡を軸にし、デコーダー統合は物体数変化と特徴対応を整理してから検討する。 |
 | 2026-09-08 | SAM2MOT-lite実装リポジトリをREADME『実装コードの場所』へ登録し、棚卸しをexperimentsへ保存。検出入力がGTのオラクル条件である点、M6のフラグ不通・M8既定無効、M9未着手、val 15/25系列を確定。 |
 | 2026-09-04 | MTG: stateful unroll + TBPTTの実装・学習を確認。detach/reset・内部stateログ・SAM2統合時の性能差を先に検証し、View原稿と研究室見学資料を進める方針を整理。 |
