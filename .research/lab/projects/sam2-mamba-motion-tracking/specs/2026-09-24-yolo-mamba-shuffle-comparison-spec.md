@@ -2,7 +2,7 @@
 date: 2026-09-24
 project: sam2-mamba-motion-tracking
 source: brainstorm
-status: draft
+status: completed
 tags: [spec, experiment, yolo, mamba, shuffle, tracking]
 ---
 
@@ -152,7 +152,7 @@ shuffle Mamba checkpoint     + fixed YOLO detections
 7. DanceTrack val 25系列を両条件で実行する。
 8. TrackEvalでHOTA、DetA、AssA、MOTA、IDF1、IDSWを集計する。
 9. sequence別・track別・missing区間別の差分を集計する。
-10. 結果を`experiments/2026-09-24-yolo-mamba-shuffle-comparison.md`へ保存する。
+10. 結果を`experiments/2026-09-25-yolo-mamba-shuffle-comparison.md`へ保存する。
 
 ## 期待される結果
 
