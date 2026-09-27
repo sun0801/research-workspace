@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: shuffle条件のP4aをSAM2統合・TrackEvalまで完了（HOTA 53.944）。次はsequence別失敗分析とSAM2デコーダーへのMamba埋め込み調査を優先する。
+summary: SAM2MOT再現はS2（Object Addition）までval評価完了（HOTA 59.21→64.32）。主線はSAM2デコーダーへのtemporal Mamba統合、SAM2MOT再現は期限付きの補助線として次はS3。
 created: 2026-07-07
-last_updated: 2026-09-18
+last_updated: 2026-09-27
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -84,6 +84,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 詳細な棚卸しは [`experiments/2026-09-08-sam2mot-lite-implementation-status.md`](experiments/2026-09-08-sam2mot-lite-implementation-status.md) を参照。
 
+**再現実装 `sam2mot_repro/`（2026-09-08〜）**：同リポジトリ内に、承認済みspec [`specs/2026-09-08-sam2mot-reproduction-spec.md`](specs/2026-09-08-sam2mot-reproduction-spec.md) に基づく再現実装を新規に作成した（`sam2mot_lite/` は変更禁止・読み取り専用）。検出器はCo-DINO-L、セグメンタはSAM2.1-large per-instance。S0〜S2完了、S3（CoI）・S4（Q-R）未着手。段階実装のプロトコルは同リポジトリの `CLAUDE.md`、結果は [`experiments/2026-09-27-sam2mot-s0-s2-results.md`](experiments/2026-09-27-sam2mot-s0-s2-results.md) を参照。
+
 ## 現在の状況
 
 **7/2 MTG後の状況**：state carry型Mambaは100エポックで収束しかけているが、LRスケジューラがほぼ固定になっており過学習の可能性が高い。TrackSSMは入力形式の違いが発覚し実験設定の見直しが必要。public validationの設計（5エポックごとのHOTA評価）が次の実装課題。
@@ -130,6 +132,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 
 **9/11 MTG後**：P4aの用語とstate carry/TBPTTの実挙動を整理した。loss振動は`shuffle=False`で固定されたchunk順序の影響を強く支持するため、shuffle条件のSAM2評価とハイパラ探索へ進む。padding・maskingと正規化bbox lossのpixel換算も確認する。View原稿は状態保持型MambaによるSAM2ベース物体追跡を軸に整理し、デコーダー統合は物体数変化・マスク特徴量対応・SAM2/SAMURAI/MOTの運用差を図示してから検討する。
+
+**9/27 SAM2MOT再現 S0〜S2完了**：承認済みspecに従い、Co-DINO-L検出（val 25系列、track カバレッジ 272/273）、S1 baseline、S2 Object Addition をDanceTrack val 25系列で推論・TrackEval評価した。S1 HOTA 59.21 / MOTA 46.64 / IDF1 64.41 / IDSW 425 に対し、S2は HOTA 64.32 / MOTA 59.77 / IDF1 71.13 / IDSW 1,162（ΔHOTA +5.11、論文testのAdd寄与は+5.0）。FNが71,380減りDetAが+14.38上がった一方、AssAは−6.39、IDSWは+737となった。CoI・Q-Rは未着手で、spec の順序基準の判定はS3・S4待ち。9/25 MTGと9/27の優先順位整理により、SAM2MOT再現は期限付きの補助線、temporal Mamba統合が主線。
 
 ## マイルストーン
 
@@ -178,6 +182,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-27 | SAM2MOT再現 S0〜S2の結果をexperimentsへ記録。S2の TrackEval を実施し、val 25系列で S1 HOTA 59.21 → S2 64.32（ΔHOTA +5.11、AssA −6.39、IDSW +737）。 |
 | 2026-09-18 | MTG: unroll/TBPTTの細かな探索は一旦保留し、YOLO＋MambaとSAM2＋Mambaの比較条件整理、sequence別失敗分析、padding・detach境界の実装確認、SAM2デコーダーへのMamba埋め込み調査を優先する。 |
 | 2026-09-18 | `shuffle=True`のP4a epoch100 checkpointをSAM2統合・TrackEval評価。25系列でHOTA 53.944、AssA 60.701、IDF1 62.172、IDSW 1,551。非shuffle P4aのHOTA 54.391を下回った。 |
 | 2026-09-11 | MTG: P4a loss振動は固定chunk順序の影響を強く支持。shuffle条件のSAM2評価、ハイパラ探索、padding・maskingとbbox誤差の確認へ進む。View原稿は状態保持型MambaによるSAM2ベース物体追跡を軸にし、デコーダー統合は物体数変化と特徴対応を整理してから検討する。 |
