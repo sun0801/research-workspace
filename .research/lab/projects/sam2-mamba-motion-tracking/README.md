@@ -182,6 +182,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-27 | SAM2MOT再現spec（`specs/2026-09-08-sam2mot-reproduction-spec.md`）を承認。期限 2026-10-16。本文は変更せず、Object Removal を S1 に含めた実装差分と解決済み未決事項を承認時メモとして追記。 |
 | 2026-09-27 | SAM2MOT再現 S0〜S2の結果をexperimentsへ記録。S2の TrackEval を実施し、val 25系列で S1 HOTA 59.21 → S2 64.32（ΔHOTA +5.11、AssA −6.39、IDSW +737）。 |
 | 2026-09-18 | MTG: unroll/TBPTTの細かな探索は一旦保留し、YOLO＋MambaとSAM2＋Mambaの比較条件整理、sequence別失敗分析、padding・detach境界の実装確認、SAM2デコーダーへのMamba埋め込み調査を優先する。 |
 | 2026-09-18 | `shuffle=True`のP4a epoch100 checkpointをSAM2統合・TrackEval評価。25系列でHOTA 53.944、AssA 60.701、IDF1 62.172、IDSW 1,551。非shuffle P4aのHOTA 54.391を下回った。 |

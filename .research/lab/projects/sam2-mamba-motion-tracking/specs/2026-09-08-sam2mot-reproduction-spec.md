@@ -2,7 +2,9 @@
 date: 2026-09-08
 project: sam2-mamba-motion-tracking
 source: brainstorm
-status: draft
+status: approved
+approved: 2026-09-27
+deadline: 2026-10-16
 tags: [spec, experiment, sam2mot, reproduction, ablation, dancetrack]
 ---
 
@@ -293,3 +295,15 @@ TrackEval（MOTChallenge プロトコル）で以下を全段階記録する。
 
 - `.research/secretary/notes/brainstorm/2026-09-08-sam2mot-reimplementation-vs-official.md`（前提の訂正を含む追記あり）
 - `.research/lab/projects/sam2-mamba-motion-tracking/experiments/2026-09-08-sam2mot-lite-implementation-status.md`
+
+## 承認時メモ（2026-09-27）
+
+本specは本文を変更せずに承認した。実施状況との差分と、承認時に決めた事項のみを記す。
+
+- **期限**: 2026-10-16。9/27の優先順位整理（`.research/secretary/notes/brainstorm/2026-09-27-priority-after-0925-mtg.md`）により、SAM2MOT再現は期限付きの補助線、SAM2デコーダーへのtemporal Mamba統合が主線である。
+- **Object Removal の実装段**: 本文「S2」手順2は Object Removal（4状態遷移）を S2 で実装するとしているが、実装では **S1 baseline に含めた**。Removal を無効にすると全トラックが永久に残り baseline として成立しないため（理由は `sam2mot_repro/logs/s1_baseline.md`）。S2 は Object Addition のみを追加した段である。S3・S4 の差分はこの実装どおり前段との差で評価する。
+- **解決済みの未決事項**:
+  - Co-DINO-L の適用条件: S0 で確定（3x_coco、person クラスのみ、soft_nms 既定値、書き出し下限 0.05、det conf 0.5 は追跡側で適用）
+  - per-object 並列の VRAM: S1・S2 の val 25系列で成立（peak 最大 S1 10.83 GiB、S2 19.7 GiB）
+  - 着手時期: S0〜S2 は 2026-09-10〜09-12 に実施済み
+- **実施状況**: S0〜S2 完了、S3（CoI）・S4（Q-R）未着手。結果は `experiments/2026-09-27-sam2mot-s0-s2-results.md`。
