@@ -1,7 +1,7 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: SAM2MOT再現はS3（CoI）まで評価。並行してMOSE上のSAM2.1 Small全体追加学習＋temporal Mamba比較を承認済みspecで実装中（TBPTT preflight完了、F0 pilot進行中）。
+summary: SAM2MOT再現はS3（CoI）まで評価。MOSE比較は実装・pilot完了、F0/F1の100更新tuningは同等。fit全軌跡のF0本学習を実行中。
 created: 2026-07-07
 last_updated: 2026-09-30
 ---
@@ -139,7 +139,9 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **9/30 S3のA7切り分け**：A7（低信頼エントリのメモリ除外）を切り、A6（CoIによる誤追跡のメモリ除外）だけでval 25系列を評価した。HOTA 68.22、AssA 64.57、IDF1 75.42、MOTA 76.88、IDSW 839。S2比でHOTA +3.90、AssA −1.16、DetA +9.17、MOTA +17.10。AssA低下−3.21のうち−2.05とIDF1低下の大半はA7由来で、DetA・MOTAの変化はすべてA6由来だった。A6のみでも、AssA増とDetA不変の署名、およびCoI寄与 > Add寄与の順序は不成立。同日、A7の既定を無効に変更し、S4の前段はA6のみrunとした（S4実装後にA7の有効・無効を再確認する）。spec機構署名の見直しはS4前に判断する。詳細は [`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`](experiments/2026-09-30-sam2mot-s3-a7-ablation.md)。
 
-**9/30 MOSE temporal Mamba追加学習の実装開始**：承認済みspec [`specs/2026-09-30-temporal-mamba-mose-finetuning-spec.md`](specs/2026-09-30-temporal-mamba-mose-finetuning-spec.md) に従い、SAM2専用worktreeで学習・streaming評価entrypointを実装中。fit 1,121動画/2,789 video-object軌跡、tuning 125動画/313軌跡、lockbox 200動画/570軌跡を固定。F0/F1の短・中央値・最長500-frame preflightはTBPTT=8でfinite、peak VRAM約18.2/19.9GiB。TBPTT=16は55-frameでOOMとなり不採用。DAVIS公式境界F実装との数値一致を確認し、F0 100軌跡pilotを実行中。実験ログは [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+**9/30 MOSE temporal Mamba追加学習開始**：承認済みspecに従い、SAM2専用worktreeで学習・streaming評価entrypoint、F0/F1 100軌跡pilot、更新済み評価器smokeを完了。fit 1,121動画/2,789軌跡、tuning 125動画/313軌跡、lockbox 200動画/570軌跡を固定。短・中央値・最長500-frameでTBPTT=8のfiniteを確認し、TBPTT=16はOOMで不採用。pilot checkpointの全tuningではF0 J&F=0.734545、F1=0.734542（Δ=−0.000003）。全fitを1 pass（2,789 updates）する条件を固定し、現在F0本学習を実行中。実験ログは [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+
+**9/30 MTGでの設計整理**：temporal Mambaの現行global average pooling・1 token・空間broadcast構成は最小接続確認用とし、最終設計は未決定。空間情報を保つ特徴表現、次元削減の必要性、計算量・メモリ、設計根拠を調査する。SAM2MOTはHOTA 70以上の手法と学習・評価条件を照合する。中間発表・研究室見学の資料準備も進めるが、日程は確認中。議事録は [`meetings/2026-09-30-mtg.md`](meetings/2026-09-30-mtg.md)。
 
 ## マイルストーン
 
@@ -189,6 +191,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-30 | MTGでtemporal Mambaの空間情報を保つ設計候補、HOTA 70以上の手法調査、中間発表・研究室見学資料の準備を整理。`meetings/2026-09-30-mtg.md`に記録。 |
 | 2026-09-30 | A7（低信頼フィルタ）の既定を無効に変更し、spec のA7行を更新。S4の前段はA6のみrunとし、S4実装後にA7の有効・無効を再確認する。 |
 | 2026-09-30 | S3のA7切り分けrun（A6のみ）をval 25系列で評価。HOTA 68.22、AssA 64.57、IDF1 75.42。本番runのAssA低下の約2/3がA7由来と判明。`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`に記録。 |
 | 2026-09-28 | SAM2MOT再現 S3（CoI）をval 25系列で評価。HOTA 64.32→67.13、MOTA +17.10、IDSW −264、AssA −3.21、DetA +9.19。機構署名のAssA増・DetA不変と順序基準が不成立。結果を`experiments/2026-09-28-sam2mot-s3-coi-results.md`に記録。 |
