@@ -146,3 +146,88 @@ MOSEv2はMOSEv1の2,149動画を含む。よってv1 trainで学習後にv2を�
 - MOSEv1配布: https://huggingface.co/datasets/FudanCVL/MOSE
 - MOSEv2配布: https://huggingface.co/datasets/FudanCVL/MOSEv2
 - SAM2公式学習ガイド: https://github.com/facebookresearch/sam2/blob/main/training/README.md
+
+---
+
+## 追記 09:06 MOSEv1取得状態の確認
+
+- 取得先: `/mnt/HDD10TB-2/aburatani/dataset/MOSE-v1-data/MOSE_release.zip`。
+- ZIP実体は26,014,033,719バイト。SHA-256は`027b1608c73847f5068112623ce20778cc5067f20c2e81c11f3489447f888585`で、FudanCVL/MOSEのGit LFS参照に記載された値と一致。
+- ZIPには`MOSE_release/train.tar.gz`、`valid.tar.gz`、`meta_train.json`、`meta_valid.json`、`SHA256SUMS`が含まれる。`train.tar.gz`内部は`train/JPEGImages/`と`train/Annotations/`を含む。
+- 2026-09-30 09:06 JST時点ではZIPのみで、train/validは未展開。取得は完了したが学習入力としては未準備。公開validの正解マスクは先頭フレームのみなので、ローカルの全フレーム評価にはtrainから動画単位のholdoutが必要。
+
+---
+
+## 追記 09:15 MOSEv1 train展開完了と次段階
+
+- `MOSE_release/train/JPEGImages/`と`train/Annotations/`は各1,507系列、画像・マスクは各93,873ファイル。全系列でフレーム名が1対1に対応し、空系列・不一致は0。展開プロセスは終了した。公開`valid/`は未展開。
+- SAM2 fork内の`training/assets/MOSE_sample_train_list.txt`は1,246系列、`MOSE_sample_val_list.txt`は200系列。重複0、両リストの全系列が展開済みtrainに存在。残る61系列は両リストに含まれないため、初期比較では使わず、分割を固定する候補とする。
+- SAM2公式MOSE fine-tuning configはBase+、1024px・8フレーム・最大3物体で、学習時のpoint/box promptや途中修正フレームをランダムに使う。一方、今回の推論smokeはSAM2.1 Small・単一人物・初回box promptのみ。公式configをそのまま学習条件とせず、データローダーと分割を参照し、モデル・prompt・時間順序・state管理を別specで固定する。
+- 2026-09-30 09:15 JST時点のGPUはRTX PRO 4500 Blackwell 32GBとRTX A4000 16GB。まず1 clipのforward/backwardとVRAMを測る設計が必要。GPU状態は時点情報。
+
+### 次の学習specに入れる骨子
+
+1. 問い: SAM2.1 Smallを固定し、学習済みtemporal Mamba adapterのstate carryがmask品質を改善するか。
+2. データ: MOSEv1 trainの公式1,246系列を学習候補、200系列を動画単位のローカルholdout候補にする。初期smokeは学習側の1 clip。
+3. 条件: B0（SAM2）、B1（adapter alpha=0）、B2（学習済みadapter・state carry）、B3（B2と同じ重み・毎フレームreset）。単一target、初回GT maskから導いたbox prompt、その後GT補正なしを候補とする。
+4. 実装前に決めること: 学習時の微分可能なMamba state経路、損失、clip長・detach境界、alpha初期化、SAM2凍結範囲、checkpoint形式、推論経路との一致検証、評価指標と合否基準。
+5. 最初の検証: 1 clipでGT読み込み、prompt生成、finite loss、adapter勾配、state carry/reset差、VRAMを確認。その後にholdoutでJ/F等を比較する。
+
+上記は計画候補であり、学習実装・実験開始の承認済みspecではない。
+
+---
+
+## 追記 09:20 学習範囲の方針修正
+
+ユーザーはSAM2公式のMOSE追加学習を土台にモデル全体を更新する想定だった。前節までの「SAM2を固定してadapterのみ学習」は実施可能な診断案だが、主案として固定した記述は早計だった。以後、**SAM2.1 Smallを事前学習checkpointからMOSEで追加学習し、Mambaあり／なしを同条件で比較する案を主案**として検討する。正式な学習範囲は新しいspecで決める。
+
+### 可能な学習範囲と問い
+
+| 条件 | 更新パラメータ | 答えられる問い |
+|---|---|---|
+| P0 | なし | 事前学習済みSAM2の基準 |
+| F0 | SAM2全体 | MOSEへの追加学習だけで得られる改善 |
+| F1 | SAM2全体＋temporal Mamba adapter | 同じMOSE追加学習条件でMambaを加えた改善 |
+| F1-reset | F1と同一重み、推論時に毎フレームstate reset | 時間stateの寄与 |
+| A（任意診断） | adapterのみ、SAM2固定 | 既存SAM2を保持したままadapter単独で効果が出るか |
+
+F0とF1は同一のSAM2.1 Small初期checkpoint、MOSE動画分割、prompt、loss、学習予算、評価条件を使う。P0との比較だけではMOSE追加学習の効果とMambaの効果を分離できない。A条件は低コストな成立性確認として残せるが、主張に必要な比較対象を置き換えない。
+
+SAM2公式MOSE設定はBase+モデル全体を学習する構成で、画像encoderにも学習率が設定されている。今回のSmall・単一人物・初回box prompt条件へは調整が必要。また、現`TemporalMambaAdapter.step()`は`@torch.no_grad()`と推論cacheを使うため、F1でもAでもそのままではadapterへ勾配が流れない。学習時の微分可能なstate更新、videoごとのreset、時間順処理とdetach方針、checkpoint保存を先に設計する。SAM2公式の途中prompt補正が今回の推論条件と異なる点も揃える。
+
+現サーバーの32GB GPUでF0/F1の必要VRAMは未計測。SAM2公式のBase+・8 GPU設定を直接実行せず、Small・1 clipでforward/backwardとpeak VRAMを測る手順をspecへ入れる。全体学習が収まらない場合の縮小条件は、結果の比較可能性を保って事前に決める。
+
+関連一次資料: https://github.com/facebookresearch/sam2/blob/main/training/README.md 、https://docs.pytorch.org/tutorials/beginner/transfer_learning_tutorial.html
+
+---
+
+## 追記 09:23 全体追加学習とadapter単独学習の比較
+
+| 学習範囲 | 利点 | 限界 |
+|---|---|---|
+| SAM2固定・adapterのみ更新 | 更新パラメータとoptimizer状態が少なく、SAM2の元の重みを保持できる。固定SAM2に追加した経路が単独で機能するかを見やすい。 | 既存decoderが新しい残差を活用するようには更新されない。現adapterは全空間を平均した1 tokenを全位置にbroadcastする小さな経路なので、効果が出ない場合もMamba自体の無効性を意味しない。decoder側の逆伝播と学習可能なMamba state経路は依然必要。 |
+| SAM2全体＋adapterを更新 | SAM2のmemory/decoderが新しい時間特徴へ適応でき、マスク品質改善の余地が大きい。SAM2公式の追加学習の枠組みに近い。 | 計算・VRAM・checkpoint管理の負担が大きい。MOSE適応だけでも性能が変わるため、同条件でSAM2のみを全体追加学習した対照が必須。過学習や元checkpointの能力変化にも注意。 |
+
+**推奨:** 研究上の主比較は、同じ事前学習checkpoint・データ分割・prompt・学習予算による`F0: SAM2全体追加学習`対`F1: SAM2全体＋Mamba追加学習`。F1と同じ重みでstateだけresetする評価も入れ、時間stateの寄与を確認する。adapterのみの学習は、必要なら1 clipの学習経路確認や低コスト診断に使う。初期adapter単独で改善が出なくてもF1案を棄却しない。
+
+32GB GPUで全体追加学習が成立するかは未測定。specに1 clipのforward/backwardとpeak VRAM測定を入れ、収まらない場合はSAM2の一部のみを更新する同条件の対照を設計し直す。SAM2公式のBase+・8 GPU設定の結果をSmall・単一人物条件へ直接移さない。
+
+一次資料: https://github.com/facebookresearch/sam2/blob/main/training/README.md 、https://docs.pytorch.org/tutorials/beginner/transfer_learning_tutorial.html
+
+---
+
+## 追記 09:32 学習spec前に固定する条件案
+
+ユーザーは `F0: SAM2.1 Small全体をMOSEで追加学習` と `F1: 同じ条件でSAM2.1 Small＋temporal Mamba adapterを追加学習` を主比較とする方向に同意した。以下はspec化のための**推奨条件案**であり、実装・実験開始の承認ではない。
+
+| 論点 | 推奨する固定条件 |
+|---|---|
+| 対象とprompt | まずMOSEv1の全カテゴリを対象に、1 clipにつき1物体。対象が見える最初の注釈フレームのGT maskからboxを1回生成し、その後はGT prompt・途中補正なし。人物への転移は別評価として扱う。 |
+| データ分割 | 公式SAM2のsample train 1,246動画を学習、sample val 200動画を今回の追加学習からのholdout。リスト外61動画は初期比較に入れない。動画単位で分離する。評価は初回フレームに対象maskがある物体を1物体ずつ独立に走らせ、毎回stateをresetする。 |
+| 比較条件 | P0（追加学習前）、F0（SAM2のみ全体追加学習）、F1（SAM2＋adapter全体追加学習）、F1-reset（F1重みのまま推論時だけMamba stateを毎フレームreset）。F0/F1は同checkpoint、split、対象サンプリング、prompt、loss、更新step数、checkpoint選択規則、評価条件を揃える。 |
+| 評価と判定 | 主指標は動画・対象ごとのJ&FとF1−F0の差。JとF、失踪・再出現区間、F1−F1-resetも報告する。単一runだけで一般化や時間stateの因果効果を断定しない。holdoutの反復利用と元checkpointのMOSE学習歴を確認し、独立評価の要否をspecへ記す。 |
+| 資源制約 | 32GB GPU上でSmall・1 clipのF0/F1 forward/backwardとpeak VRAMを実測してから学習長を確定する。収まらない場合は解像度、clip長、checkpointing、更新範囲を事前規則で調整し、F0/F1に同じ変更を適用する。全体学習を断念する場合は比較名も変更する。 |
+
+spec内で解決する技術項目: 公式`SAM2Train`のランダムなpoint/box・途中補正・複数初期conditioning frame・逆順処理を上記protocolへ揃える。現adapterの`@torch.no_grad()`と推論専用cacheを学習用の微分可能な時間展開へ分ける。`SAM2Train.track_step`からobject IDが現adapterへ渡らない点を解決し、対象・video・clipごとのresetを保証する。学習clip内のBPTT/detach境界と、alpha初期値がadapter勾配を遮断しないことを検証する。初回boxのみで公式lossが成立するかを1 clipで確認する。
+
+外部SAM2実装リポジトリの変更・学習実行は、別途spec承認と開始承認後に行う。
