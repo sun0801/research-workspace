@@ -1,7 +1,7 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: SAM2MOT再現はS3（CoI）まで評価。A7は有害と判明し既定を無効化（A6のみでHOTA 68.22）。次はspec機構署名の見直しを判断してS4へ。主線はtemporal Mamba統合。
+summary: SAM2MOT再現はS3（CoI）まで評価。並行してMOSE上のSAM2.1 Small全体追加学習＋temporal Mamba比較を承認済みspecで実装中（TBPTT preflight完了、F0 pilot進行中）。
 created: 2026-07-07
 last_updated: 2026-09-30
 ---
@@ -139,6 +139,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **9/30 S3のA7切り分け**：A7（低信頼エントリのメモリ除外）を切り、A6（CoIによる誤追跡のメモリ除外）だけでval 25系列を評価した。HOTA 68.22、AssA 64.57、IDF1 75.42、MOTA 76.88、IDSW 839。S2比でHOTA +3.90、AssA −1.16、DetA +9.17、MOTA +17.10。AssA低下−3.21のうち−2.05とIDF1低下の大半はA7由来で、DetA・MOTAの変化はすべてA6由来だった。A6のみでも、AssA増とDetA不変の署名、およびCoI寄与 > Add寄与の順序は不成立。同日、A7の既定を無効に変更し、S4の前段はA6のみrunとした（S4実装後にA7の有効・無効を再確認する）。spec機構署名の見直しはS4前に判断する。詳細は [`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`](experiments/2026-09-30-sam2mot-s3-a7-ablation.md)。
 
+**9/30 MOSE temporal Mamba追加学習の実装開始**：承認済みspec [`specs/2026-09-30-temporal-mamba-mose-finetuning-spec.md`](specs/2026-09-30-temporal-mamba-mose-finetuning-spec.md) に従い、SAM2専用worktreeで学習・streaming評価entrypointを実装中。fit 1,121動画/2,789 video-object軌跡、tuning 125動画/313軌跡、lockbox 200動画/570軌跡を固定。F0/F1の短・中央値・最長500-frame preflightはTBPTT=8でfinite、peak VRAM約18.2/19.9GiB。TBPTT=16は55-frameでOOMとなり不採用。DAVIS公式境界F実装との数値一致を確認し、F0 100軌跡pilotを実行中。実験ログは [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+
 ## マイルストーン
 
 ### フェーズ1：MIRU / ポスター
@@ -170,6 +172,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 - [ ] オクルージョンを含む定性的トラッキング可視化を用意する
 - [ ] MIRU用の30 FPS動画・追跡結果可視化アプリ・定性候補を準備する
 - [ ] SAM2デコーダーへのMamba統合を実装し、統合位置とトークン数の影響を確認する
+- [ ] 承認済みMOSE specに基づくSAM2全体fine tuningとtemporal Mamba比較（F0/F1、tuning checkpoint選択、200系列lockbox評価）を完了する
 - [ ] Mamba・LSTM・Transformerを同程度GFLOPS・速度条件で比較する
 - [ ] state carryのID switch / hidden state contaminationを出力軌跡のシミュレーションで可視化する
 - [ ] testデータで追跡性能を評価する
