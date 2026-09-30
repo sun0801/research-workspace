@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: SAM2MOT再現はS3（CoI）までval評価完了（HOTA 64.32→67.13、MOTA +17.10）。AssA低下・DetA大幅増で機構署名が不成立のため、S4前に切り分け方針を決める。主線はtemporal Mamba統合。
+summary: SAM2MOT再現はS3（CoI）まで評価。A7は有害と判明し既定を無効化（A6のみでHOTA 68.22）。次はspec機構署名の見直しを判断してS4へ。主線はtemporal Mamba統合。
 created: 2026-07-07
-last_updated: 2026-09-28
+last_updated: 2026-09-30
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -137,6 +137,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **9/28 SAM2MOT再現 S3完了**：Cross-object Interaction（mask IoU>0.8の衝突検出、logit差・分散による誤追跡同定、誤追跡トラックの現フレームのメモリ除外、A7低信頼フィルタ）を実装し、val 25系列で評価した。S2→S3で HOTA 64.32→67.13（+2.81）、MOTA +17.10（論文test +17.7）、IDF1 +1.60、IDSW −264。一方でAssAは−3.21、DetAは+9.19で、spec の機構署名（AssA増・DetAほぼ不変）と順序基準（CoI寄与 > Add寄与）は不成立。MOTA改善の約97%はFP減少由来で、IDSWが小さい以上、論文のΔMOTA +17.7自体がDetA不変と両立しにくいことも分かった。S4前に、A7分離run・spec機構署名の見直し・test提出のどれを行うか決める。
 
+**9/30 S3のA7切り分け**：A7（低信頼エントリのメモリ除外）を切り、A6（CoIによる誤追跡のメモリ除外）だけでval 25系列を評価した。HOTA 68.22、AssA 64.57、IDF1 75.42、MOTA 76.88、IDSW 839。S2比でHOTA +3.90、AssA −1.16、DetA +9.17、MOTA +17.10。AssA低下−3.21のうち−2.05とIDF1低下の大半はA7由来で、DetA・MOTAの変化はすべてA6由来だった。A6のみでも、AssA増とDetA不変の署名、およびCoI寄与 > Add寄与の順序は不成立。同日、A7の既定を無効に変更し、S4の前段はA6のみrunとした（S4実装後にA7の有効・無効を再確認する）。spec機構署名の見直しはS4前に判断する。詳細は [`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`](experiments/2026-09-30-sam2mot-s3-a7-ablation.md)。
+
 ## マイルストーン
 
 ### フェーズ1：MIRU / ポスター
@@ -184,6 +186,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-30 | A7（低信頼フィルタ）の既定を無効に変更し、spec のA7行を更新。S4の前段はA6のみrunとし、S4実装後にA7の有効・無効を再確認する。 |
+| 2026-09-30 | S3のA7切り分けrun（A6のみ）をval 25系列で評価。HOTA 68.22、AssA 64.57、IDF1 75.42。本番runのAssA低下の約2/3がA7由来と判明。`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`に記録。 |
 | 2026-09-28 | SAM2MOT再現 S3（CoI）をval 25系列で評価。HOTA 64.32→67.13、MOTA +17.10、IDSW −264、AssA −3.21、DetA +9.19。機構署名のAssA増・DetA不変と順序基準が不成立。結果を`experiments/2026-09-28-sam2mot-s3-coi-results.md`に記録。 |
 | 2026-09-27 | SAM2MOT再現spec（`specs/2026-09-08-sam2mot-reproduction-spec.md`）を承認。期限 2026-10-16。本文は変更せず、Object Removal を S1 に含めた実装差分と解決済み未決事項を承認時メモとして追記。 |
 | 2026-09-27 | SAM2MOT再現 S0〜S2の結果をexperimentsへ記録。S2の TrackEval を実施し、val 25系列で S1 HOTA 59.21 → S2 64.32（ΔHOTA +5.11、AssA −6.39、IDSW +737）。 |

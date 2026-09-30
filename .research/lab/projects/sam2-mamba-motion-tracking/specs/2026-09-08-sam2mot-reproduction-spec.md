@@ -139,7 +139,7 @@ lost        : logits ≤ τ_s
 | A4 | 第1フレームの初期化 | Object Additionの3段フィルタを通す | 第1フレームは既存トラックがないため `M_non = I` となり r=0.7 判定は自動的に通過する | 第1フレームのtrack数が高信頼検出数と一致するか |
 | A5 | Quality Reconstructionの「keyframe更新」の具体操作（issue #4） | 現フレームにbox promptを再投入し conditioning frame として追加 | 論文は "the matched high-confidence box updates the object's keyframe information" とのみ記載 | cond_frame数の増加、pending→reliableの遷移率、VRAM/速度 |
 | A6 | CoIのメモリ除外の範囲 | 衝突が検出されたフレームごとに、誤追跡と同定されたB のみ1フレーム単位で除外 | 論文は "its current-frame memory information is excluded from memory bank updates" と記載。継続期間と対象範囲は未記載 | IDSWの減少幅。除外が狭すぎると効果が出ず、広すぎるとトラック消失 |
-| A7 | 低信頼エントリのフィルタリング閾値 | τ_s = 2.0 を仮置き | 論文は "adopt a relatively low threshold" とのみ記載し具体値なし | メモリバンクサイズと性能の関係。感度確認が必要 |
+| A7 | 低信頼エントリのフィルタリング閾値 | τ_s = 2.0 を仮置き → **2026-09-30 に既定を無効へ変更**（フィルタを追加しない） | 論文は "adopt a relatively low threshold" とのみ記載し具体値なし。"maintaining" は SAM2 既定の扱いを維持する意味とも読める | メモリバンクサイズと性能の関係。感度確認が必要。**実測**: τ_s = 2.0 で有効にすると val 25系列で HOTA −1.09 / AssA −2.05 / IDF1 −2.68、DetA・MOTA は不変（`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`）。**S4 実装後に有効・無効を再確認する** |
 | A8 | 検出器の適用条件 | person単一クラス、NMS・score閾値はS0で決定 | DanceTrackは単一クラス。論文に詳細なし | 検出のみのrecall確認 |
 | A9 | SAM2のメモリフレーム選択 | SAM2既定（keyframe + 直近6フレーム）を維持し、CoIの除外のみ追加 | 論文はCoIが "jointly optimizes SAM2's memory frame selection strategy" と述べるが、既定からの変更内容は未記載 | CoI段で効果が出ない場合、選択戦略側の変更が必要な可能性 |
 
@@ -306,4 +306,10 @@ TrackEval（MOTChallenge プロトコル）で以下を全段階記録する。
   - Co-DINO-L の適用条件: S0 で確定（3x_coco、person クラスのみ、soft_nms 既定値、書き出し下限 0.05、det conf 0.5 は追跡側で適用）
   - per-object 並列の VRAM: S1・S2 の val 25系列で成立（peak 最大 S1 10.83 GiB、S2 19.7 GiB）
   - 着手時期: S0〜S2 は 2026-09-10〜09-12 に実施済み
-- **実施状況**: S0〜S2 完了、S3（CoI）・S4（Q-R）未着手。結果は `experiments/2026-09-27-sam2mot-s0-s2-results.md`。
+- **実施状況**（2026-09-27 時点）: S0〜S2 完了、S3（CoI）・S4（Q-R）未着手。結果は `experiments/2026-09-27-sam2mot-s0-s2-results.md`。
+
+### 追記（2026-09-30）: A7 の既定変更
+
+- S3 の val 25系列の切り分けで、A7（τ_s = 2.0 で全トラックの低信頼フレームをメモリから除外）が association だけを悪化させると分かったため、A7 の既定を無効に変更した（A7 行を更新）。
+- S4 の前段となる S3 の出力は、A7 無効の run（`results/tracks/s3_coi_no_lowconf/`、HOTA 68.22）とする。
+- S4 実装後に、S4 の設定で A7 の有効・無効の2条件を評価し、Q-R との相互作用で A7 が有効に働くかを再確認する。
