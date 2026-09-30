@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: SAM2MOT再現はS2（Object Addition）までval評価完了（HOTA 59.21→64.32）。主線はSAM2デコーダーへのtemporal Mamba統合、SAM2MOT再現は期限付きの補助線として次はS3。
+summary: SAM2MOT再現はS3（CoI）までval評価完了（HOTA 64.32→67.13、MOTA +17.10）。AssA低下・DetA大幅増で機構署名が不成立のため、S4前に切り分け方針を決める。主線はtemporal Mamba統合。
 created: 2026-07-07
-last_updated: 2026-09-27
+last_updated: 2026-09-28
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -84,7 +84,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 詳細な棚卸しは [`experiments/2026-09-08-sam2mot-lite-implementation-status.md`](experiments/2026-09-08-sam2mot-lite-implementation-status.md) を参照。
 
-**再現実装 `sam2mot_repro/`（2026-09-08〜）**：同リポジトリ内に、承認済みspec [`specs/2026-09-08-sam2mot-reproduction-spec.md`](specs/2026-09-08-sam2mot-reproduction-spec.md) に基づく再現実装を新規に作成した（`sam2mot_lite/` は変更禁止・読み取り専用）。検出器はCo-DINO-L、セグメンタはSAM2.1-large per-instance。S0〜S2完了、S3（CoI）・S4（Q-R）未着手。段階実装のプロトコルは同リポジトリの `CLAUDE.md`、結果は [`experiments/2026-09-27-sam2mot-s0-s2-results.md`](experiments/2026-09-27-sam2mot-s0-s2-results.md) を参照。
+**再現実装 `sam2mot_repro/`（2026-09-08〜）**：同リポジトリ内に、承認済みspec [`specs/2026-09-08-sam2mot-reproduction-spec.md`](specs/2026-09-08-sam2mot-reproduction-spec.md) に基づく再現実装を新規に作成した（`sam2mot_lite/` は変更禁止・読み取り専用）。検出器はCo-DINO-L、セグメンタはSAM2.1-large per-instance。S0〜S3完了、S4（Q-R）未着手。段階実装のプロトコルは同リポジトリの `CLAUDE.md`、結果は [`experiments/2026-09-27-sam2mot-s0-s2-results.md`](experiments/2026-09-27-sam2mot-s0-s2-results.md)、[`experiments/2026-09-28-sam2mot-s3-coi-results.md`](experiments/2026-09-28-sam2mot-s3-coi-results.md) を参照。
 
 ## 現在の状況
 
@@ -135,6 +135,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **9/27 SAM2MOT再現 S0〜S2完了**：承認済みspecに従い、Co-DINO-L検出（val 25系列、track カバレッジ 272/273）、S1 baseline、S2 Object Addition をDanceTrack val 25系列で推論・TrackEval評価した。S1 HOTA 59.21 / MOTA 46.64 / IDF1 64.41 / IDSW 425 に対し、S2は HOTA 64.32 / MOTA 59.77 / IDF1 71.13 / IDSW 1,162（ΔHOTA +5.11、論文testのAdd寄与は+5.0）。FNが71,380減りDetAが+14.38上がった一方、AssAは−6.39、IDSWは+737となった。CoI・Q-Rは未着手で、spec の順序基準の判定はS3・S4待ち。9/25 MTGと9/27の優先順位整理により、SAM2MOT再現は期限付きの補助線、temporal Mamba統合が主線。
 
+**9/28 SAM2MOT再現 S3完了**：Cross-object Interaction（mask IoU>0.8の衝突検出、logit差・分散による誤追跡同定、誤追跡トラックの現フレームのメモリ除外、A7低信頼フィルタ）を実装し、val 25系列で評価した。S2→S3で HOTA 64.32→67.13（+2.81）、MOTA +17.10（論文test +17.7）、IDF1 +1.60、IDSW −264。一方でAssAは−3.21、DetAは+9.19で、spec の機構署名（AssA増・DetAほぼ不変）と順序基準（CoI寄与 > Add寄与）は不成立。MOTA改善の約97%はFP減少由来で、IDSWが小さい以上、論文のΔMOTA +17.7自体がDetA不変と両立しにくいことも分かった。S4前に、A7分離run・spec機構署名の見直し・test提出のどれを行うか決める。
+
 ## マイルストーン
 
 ### フェーズ1：MIRU / ポスター
@@ -182,6 +184,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-09-28 | SAM2MOT再現 S3（CoI）をval 25系列で評価。HOTA 64.32→67.13、MOTA +17.10、IDSW −264、AssA −3.21、DetA +9.19。機構署名のAssA増・DetA不変と順序基準が不成立。結果を`experiments/2026-09-28-sam2mot-s3-coi-results.md`に記録。 |
 | 2026-09-27 | SAM2MOT再現spec（`specs/2026-09-08-sam2mot-reproduction-spec.md`）を承認。期限 2026-10-16。本文は変更せず、Object Removal を S1 に含めた実装差分と解決済み未決事項を承認時メモとして追記。 |
 | 2026-09-27 | SAM2MOT再現 S0〜S2の結果をexperimentsへ記録。S2の TrackEval を実施し、val 25系列で S1 HOTA 59.21 → S2 64.32（ΔHOTA +5.11、AssA −6.39、IDSW +737）。 |
 | 2026-09-18 | MTG: unroll/TBPTTの細かな探索は一旦保留し、YOLO＋MambaとSAM2＋Mambaの比較条件整理、sequence別失敗分析、padding・detach境界の実装確認、SAM2デコーダーへのMamba埋め込み調査を優先する。 |
