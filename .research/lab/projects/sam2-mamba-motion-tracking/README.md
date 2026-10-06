@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: SAM2MOT再現はS3（CoI）まで評価。MOSE比較は実装・pilot完了、F0/F1の100更新tuningは同等。fit全軌跡のF0本学習を実行中。
+summary: SAM2MOT再現はS4（Q-R）までval評価完了。Q-RでHOTA 68.22→61.85と逆効果で、寄与構造は未再現。Q-Rのマッチ基準などの切り分けとtest提出を判断する。主線はtemporal Mamba統合。
 created: 2026-07-07
-last_updated: 2026-09-30
+last_updated: 2026-10-06
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -84,7 +84,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 詳細な棚卸しは [`experiments/2026-09-08-sam2mot-lite-implementation-status.md`](experiments/2026-09-08-sam2mot-lite-implementation-status.md) を参照。
 
-**再現実装 `sam2mot_repro/`（2026-09-08〜）**：同リポジトリ内に、承認済みspec [`specs/2026-09-08-sam2mot-reproduction-spec.md`](specs/2026-09-08-sam2mot-reproduction-spec.md) に基づく再現実装を新規に作成した（`sam2mot_lite/` は変更禁止・読み取り専用）。検出器はCo-DINO-L、セグメンタはSAM2.1-large per-instance。S0〜S3完了、S4（Q-R）未着手。段階実装のプロトコルは同リポジトリの `CLAUDE.md`、結果は [`experiments/2026-09-27-sam2mot-s0-s2-results.md`](experiments/2026-09-27-sam2mot-s0-s2-results.md)、[`experiments/2026-09-28-sam2mot-s3-coi-results.md`](experiments/2026-09-28-sam2mot-s3-coi-results.md) を参照。
+**再現実装 `sam2mot_repro/`（2026-09-08〜）**：同リポジトリ内に、承認済みspec [`specs/2026-09-08-sam2mot-reproduction-spec.md`](specs/2026-09-08-sam2mot-reproduction-spec.md) に基づく再現実装を新規に作成した（`sam2mot_lite/` は変更禁止・読み取り専用）。検出器はCo-DINO-L、セグメンタはSAM2.1-large per-instance。S0〜S4完了（2026-10-03）。段階実装のプロトコルは同リポジトリの `CLAUDE.md`、結果は [`experiments/2026-09-27-sam2mot-s0-s2-results.md`](experiments/2026-09-27-sam2mot-s0-s2-results.md)、[`experiments/2026-09-28-sam2mot-s3-coi-results.md`](experiments/2026-09-28-sam2mot-s3-coi-results.md) を参照。
 
 ## 現在の状況
 
