@@ -100,6 +100,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **7/21 P0.5完了**：既存のDanceTrack val 25系列出力を同一TrackEval条件で比較した。HOTAはMambaTrack 33.837、TrackSSM 32.783、MambaStateful 47.293。MambaStatefulが高かったが、checkpoint provenance、入力形式、モデル構造、prediction-primary associationが未分離のため、学習方式の優位性とは解釈しない。次はP1を診断用baselineとして個別に検証する。
 
+**10/6 MOSE学習再開**：F0は最後の復旧checkpoint `step 1400` から再開し、step 1436/2789まで進行。checkpointに含まれない以前のstep 1401〜1456は採用せず再計算中。再開後のログはstep連番・固定sample orderに一致し、全loss finite。再計算した最長500-frame軌跡もfiniteで完走。step 500/1000のtuningは完了済み。GPU1の別処理終了を待って残る候補評価を行う。詳細は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+
 **7/23 P1 25系列確認完了**：同一epoch100 checkpoint・detector入力・config・scale・lifecycle・state/cache更新・TrackEval条件で、prediction-primary A1とlast accepted observation A2をDanceTrack val 25系列で比較した。A1はHOTA 47.233、A2はHOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386となり、A2はA1に対してHOTA +0.677、AssA +0.936、IDF1 +1.429、IDSW -192を示した。効果は3系列より小さく系列依存もあるが、P1仮説を25系列aggregateでも支持する。P2 cache更新制御のspec化へ進む。
 
 **7/23 P2完了**：P1 A2を固定し、B0 self-update、B1 missing freeze、B2 trusted detector match gate、B3 prolonged-untrusted resetを3系列・25系列で診断した。25系列ではB0 HOTA 47.910に対しB1 48.035で、state非有限イベントは4,515から115へ減少した。一方、B2はHOTA 46.962、B3は46.855で、AssA/IDF1が低下しIDSWが増加した。missing freezeはcontamination抑制の根拠を与えたが、単純なquality gate/resetは採用せず、P3/P4へ自動移行しない。
@@ -139,7 +141,9 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **9/30 S3のA7切り分け**：A7（低信頼エントリのメモリ除外）を切り、A6（CoIによる誤追跡のメモリ除外）だけでval 25系列を評価した。HOTA 68.22、AssA 64.57、IDF1 75.42、MOTA 76.88、IDSW 839。S2比でHOTA +3.90、AssA −1.16、DetA +9.17、MOTA +17.10。AssA低下−3.21のうち−2.05とIDF1低下の大半はA7由来で、DetA・MOTAの変化はすべてA6由来だった。A6のみでも、AssA増とDetA不変の署名、およびCoI寄与 > Add寄与の順序は不成立。同日、A7の既定を無効に変更し、S4の前段はA6のみrunとした（S4実装後にA7の有効・無効を再確認する）。spec機構署名の見直しはS4前に判断する。詳細は [`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`](experiments/2026-09-30-sam2mot-s3-a7-ablation.md)。
 
-**9/30 MOSE temporal Mamba追加学習開始**：承認済みspecに従い、SAM2専用worktreeで学習・streaming評価entrypoint、F0/F1 100軌跡pilot、更新済み評価器smokeを完了。fit 1,121動画/2,789軌跡、tuning 125動画/313軌跡、lockbox 200動画/570軌跡を固定。短・中央値・最長500-frameでTBPTT=8のfiniteを確認し、TBPTT=16はOOMで不採用。pilot checkpointの全tuningではF0 J&F=0.734545、F1=0.734542（Δ=−0.000003）。全fitを1 pass（2,789 updates）する条件を固定し、現在F0本学習を実行中。実験ログは [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+**10/3 SAM2MOT再現 S4完了**：Quality Reconstruction（pendingかつAddition段で高信頼検出とマッチしたトラックに、box promptをconditioning frameとして入れ直す）を実装し、val 25系列で評価した。S3（A6のみ）→S4で HOTA 68.22→61.85（−6.37）、AssA −10.15、IDF1 −10.35、IDSW +710 と、論文の+1.7とは逆に悪化した。全段の判定では、Addは再現、CoIはMOTAのみ再現、Q-Rは逆効果で、論文Table 3の寄与構造は未再現。Q-Rのマッチ基準がIoU>0で隣の人物のboxでkeyframeを上書きしている可能性が高く（0065で衝突0→1,068、HOTA 91→49）、マッチ閾値・発動間隔・A5操作の切り分けを判断する。詳細は [`experiments/2026-10-03-sam2mot-s4-qr-results.md`](experiments/2026-10-03-sam2mot-s4-qr-results.md)。
+
+**9/30 MOSE temporal Mamba追加学習開始**：承認済みspecに従い、SAM2専用worktreeで学習・streaming評価entrypoint、F0/F1 100軌跡pilot、更新済み評価器smokeを完了。fit 1,121動画/2,789軌跡、tuning 125動画/313軌跡、lockbox 200動画/570軌跡を固定。短・中央値・最長500-frameでTBPTT=8のfiniteを確認し、TBPTT=16はOOMで不採用。pilot checkpointの全tuningではF0 J&F=0.734545、F1=0.734542（Δ=−0.000003）。全fitを1 pass（2,789 updates）する条件を固定。10/3にF0学習をstep 800の復旧checkpointから再開し、step 1,456/2,789まで進行。step 900・1,000・1,100・1,200・1,300・1,400 checkpointを保存し、step 1〜1,456 lossは全てfinite（最大419.36、step 1,039）。F0 step 500/1,000 tuningは完了し、J&F=0.75319/0.75406。metadata対象数・除外数とprompt tensorを保存する評価器、全6候補を必須とするtuning checkpoint選択器、code/checkpoint/index hashで固定するone-time lockbox gateを実装・smoke確認した。F0 prompt tensor exporterは異なるweight checkpoint間で座標が一致することを2軌跡で確認した。F1 adapter decay groupをspecどおり限定し、augmentationの公式configとの差は明記した。実験ログは [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
 
 **9/30 MTGでの設計整理**：temporal Mambaの現行global average pooling・1 token・空間broadcast構成は最小接続確認用とし、最終設計は未決定。空間情報を保つ特徴表現、次元削減の必要性、計算量・メモリ、設計根拠を調査する。SAM2MOTはHOTA 70以上の手法と学習・評価条件を照合する。中間発表・研究室見学の資料準備も進めるが、日程は確認中。議事録は [`meetings/2026-09-30-mtg.md`](meetings/2026-09-30-mtg.md)。
 
@@ -191,7 +195,10 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-10-06 | 承認済みMOSE学習を再開。F0はstep 1400 recovery checkpointからstep 1403まで再計算。 |
 | 2026-09-30 | MTGでtemporal Mambaの空間情報を保つ設計候補、HOTA 70以上の手法調査、中間発表・研究室見学資料の準備を整理。`meetings/2026-09-30-mtg.md`に記録。 |
+| 2026-10-06 | S4の設定でA7の有効・無効を再確認。A7有効でHOTA −0.61、AssA −1.51、IDF1 −1.58と改善せず、A7は無効のまま。 |
+| 2026-10-03 | SAM2MOT再現 S4（Q-R）をval 25系列で評価。HOTA 68.22→61.85、AssA −10.15、IDF1 −10.35で逆効果。全段の判定で寄与構造は未再現。`experiments/2026-10-03-sam2mot-s4-qr-results.md`に記録。 |
 | 2026-09-30 | A7（低信頼フィルタ）の既定を無効に変更し、spec のA7行を更新。S4の前段はA6のみrunとし、S4実装後にA7の有効・無効を再確認する。 |
 | 2026-09-30 | S3のA7切り分けrun（A6のみ）をval 25系列で評価。HOTA 68.22、AssA 64.57、IDF1 75.42。本番runのAssA低下の約2/3がA7由来と判明。`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`に記録。 |
 | 2026-09-28 | SAM2MOT再現 S3（CoI）をval 25系列で評価。HOTA 64.32→67.13、MOTA +17.10、IDSW −264、AssA −3.21、DetA +9.19。機構署名のAssA増・DetA不変と順序基準が不成立。結果を`experiments/2026-09-28-sam2mot-s3-coi-results.md`に記録。 |
