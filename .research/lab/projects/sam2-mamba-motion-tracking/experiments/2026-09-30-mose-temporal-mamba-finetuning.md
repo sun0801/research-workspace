@@ -140,6 +140,13 @@ pilot結果を踏まえ、lockboxを開く前に以下を固定した。両条�
 ### 2026-10-06 実装再開
 
 - ユーザーが保留を解除し、実装開始を再承認。前回セッション終了後に残っていなかったF0学習プロセスを確認し、最後の復旧checkpoint `F0_step_001400.pt` から再開した。checkpointに含まれないstep 1401〜1456の旧ログ・更新は引き継がず、再計算している。
-- 再開時に学習ログがstep 1400へtrimされたことを確認。再開後はstep 1436/2,789まで進み、step 1〜1,436のlossは全てfinite（最大419.36）、固定sample orderとの不一致0件、step連番に欠落なし。再計算したstep 1421は最長500-frame軌跡でloss 2.5397、finiteで完走。GPU0で学習継続中。
+- 再開時に学習ログがstep 1400へtrimされたことを確認。step 1500 tuning候補checkpoint（SHA-256 `1206e9f8c02a73a9eee70b54633366535fc3cab305f427078a9e3b93b4c2ee7d`）、step 1600 recovery checkpoint（SHA-256 `43796d3295acdb2ae183269feb9fbe5853a335ce564d7c83c5fa3ee6663b76f0`）、step 1700 recovery checkpoint（SHA-256 `2553f1fdd1a2e61fb58b3479a6647f309f6cd922c234134dfec6bf86975b54d6`）、step 1800 recovery checkpoint（SHA-256 `c9d884fdd3e5e5486429281ab186743622e4445a425ef3aaa76b8ddf5b29f27b`）を保存し、学習はstep 1835/2,789まで進行。step 1〜1,835のlossは全てfinite（最大419.36）、固定sample orderとの不一致0件、step連番に欠落なし。再計算したstep 1421は最長500-frame軌跡でloss 2.5397、finiteで完走。
+- 高loss系列をannotationのみで確認。step 1550はloss 175.82/200 frame、空GT 15 frame、visible mask面積258〜151,979 pixel。step 1567はloss 14.73/53 frame、空GT 23 frame、visible mask面積678〜22,151 pixel。step 1595はloss 56.07/342 frame、空GT 108 frame、visible mask面積244〜410,063 pixel。これらはfiniteで完走し、空maskだけが高lossの原因とは断定せず、固定条件を変えずに評価結果で確認する。
+- step 1676はloss 366.62/114 frameでfinite。GT 114 frameは全て非空で、visible mask面積は1,516〜125,213 pixel。単一系列から原因は判断せず、固定条件のtuning評価を待つ。
+- step 1791/1793はそれぞれloss 27.81/229 frame、26.08/46 frameでfinite。step1791はaugmentation retry 5回、空GT 156 frameを含み、step1793はretry 1回、空GTなし。visible mask面積は各754〜167,216、1,035〜48,300 pixel。因果は断定せず、設定は維持する。
+- GPU0でF0本学習継続中。step 1500 tuning候補は保存済みで、tuning queueはGPU1の別SAM2MOT検出process終了を待つ。
 - GPU1は別のSAM2MOTプロセスが使用中のため、F0残り候補のtuning評価はGPU1のcompute process終了を待つキューに維持。F0 selectorも6候補のsummaryが全て揃うまで待機中。lockbox評価は未実施。
 - F0復旧以降の実装コードにはfinite検査・prompt tensor記録・manifest/実行時間記録が追加されている。学習更新の主要計算は同一であることを確認済みだが、再開以後に適用した追加コード差分を最終manifestと記録で追跡する。
+- 再確認時、F0はstep 1,863/2,789まで進行。ログ1,863行はstep連番、manifestの固定sample orderと全件一致し、loss非finiteは0件（最大lossはstep 1,039の419.36）。step 1500/1600/1700/1800 checkpointは存在し、各ハッシュは上記の通り。step 1900 checkpointは未作成。
+- F1成果物の混同を確認。run直下の`F1_fit_manifest.json`と`F1_step_000100.pt`は9/30に作成された100-step pilotで、本学習待機queueは`runs/mose_temporal_mamba_20260930/F1_full_fit/`を専用出力先に指定している。よってpilot成果物はfull-fit checkpoint選択に混ざらない。F1本学習はF0 manifestの`completed_unix`を待機中。
+- GPU0のF0学習processは稼働継続。GPU1は別のSAM2MOT検出process（PID 597741）が使用中で、F0残り候補評価・selector・prompt exporter・F1評価・lockbox queueはそれぞれ指定条件を待機中。lockbox評価は未実施。

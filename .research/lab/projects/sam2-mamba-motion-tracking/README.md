@@ -100,7 +100,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **7/21 P0.5完了**：既存のDanceTrack val 25系列出力を同一TrackEval条件で比較した。HOTAはMambaTrack 33.837、TrackSSM 32.783、MambaStateful 47.293。MambaStatefulが高かったが、checkpoint provenance、入力形式、モデル構造、prediction-primary associationが未分離のため、学習方式の優位性とは解釈しない。次はP1を診断用baselineとして個別に検証する。
 
-**10/6 MOSE学習再開**：F0は最後の復旧checkpoint `step 1400` から再開し、step 1436/2789まで進行。checkpointに含まれない以前のstep 1401〜1456は採用せず再計算中。再開後のログはstep連番・固定sample orderに一致し、全loss finite。再計算した最長500-frame軌跡もfiniteで完走。step 500/1000のtuningは完了済み。GPU1の別処理終了を待って残る候補評価を行う。詳細は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+**10/6 MOSE学習再開**：F0は最後の復旧checkpoint `step 1400` から再開し、step 1863/2789まで進行。ログ1〜1863は連番・固定sample orderに一致し、lossはfinite。step 1500 tuning候補、step 1600/1700/1800 recovery checkpointを保存。旧step 1401〜1456は再計算済み。最長500-frame軌跡もfiniteで完走し、高loss系列のannotation確認を実験ログに記録。GPU1の別検出ジョブ終了後に残る候補評価を行う。詳細は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
 
 **7/23 P1 25系列確認完了**：同一epoch100 checkpoint・detector入力・config・scale・lifecycle・state/cache更新・TrackEval条件で、prediction-primary A1とlast accepted observation A2をDanceTrack val 25系列で比較した。A1はHOTA 47.233、A2はHOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386となり、A2はA1に対してHOTA +0.677、AssA +0.936、IDF1 +1.429、IDSW -192を示した。効果は3系列より小さく系列依存もあるが、P1仮説を25系列aggregateでも支持する。P2 cache更新制御のspec化へ進む。
 
@@ -195,6 +195,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-10-06 | F0はstep 1,863/2,789。学習ログ全件のfinite・連番・sample order一致を再監査し、全て通過。step 1500候補と1600/1700/1800 recovery checkpointを確認。旧root直下のF1 step100成果物は9/30のpilotで、本学習は別の`F1_full_fit/`出力先を使うことを起動queueで確認。 |
 | 2026-10-06 | 承認済みMOSE学習を再開。F0はstep 1400 recovery checkpointからstep 1403まで再計算。 |
 | 2026-09-30 | MTGでtemporal Mambaの空間情報を保つ設計候補、HOTA 70以上の手法調査、中間発表・研究室見学資料の準備を整理。`meetings/2026-09-30-mtg.md`に記録。 |
 | 2026-10-06 | S4の設定でA7の有効・無効を再確認。A7有効でHOTA −0.61、AssA −1.51、IDF1 −1.58と改善せず、A7は無効のまま。 |
