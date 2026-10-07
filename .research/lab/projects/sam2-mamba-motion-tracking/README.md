@@ -195,6 +195,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-10-07 | SAM2MOT再現 S4のQ-Rマッチ閾値を0.5に絞った切り分けrunを評価。HOTA 61.70でS4本番（61.85）とほぼ同じで、マッチ閾値の問題ではないと判明。test 35系列の検出生成も完了。 |
 | 2026-10-06 | F0はstep 1,863/2,789。学習ログ全件のfinite・連番・sample order一致を再監査し、全て通過。step 1500候補と1600/1700/1800 recovery checkpointを確認。旧root直下のF1 step100成果物は9/30のpilotで、本学習は別の`F1_full_fit/`出力先を使うことを起動queueで確認。 |
 | 2026-10-06 | 承認済みMOSE学習を再開。F0はstep 1400 recovery checkpointからstep 1403まで再計算。 |
 | 2026-09-30 | MTGでtemporal Mambaの空間情報を保つ設計候補、HOTA 70以上の手法調査、中間発表・研究室見学資料の準備を整理。`meetings/2026-09-30-mtg.md`に記録。 |
