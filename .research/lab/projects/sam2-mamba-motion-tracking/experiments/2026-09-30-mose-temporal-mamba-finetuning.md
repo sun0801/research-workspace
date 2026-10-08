@@ -606,3 +606,4 @@ paired video bootstrapは10,000 resample、seed 123、95% percentile CI。
 - worktreeで未commitだった実装（tracked変更3ファイル、untracked 6ファイル）を、内容を変えずにSAM2 repoへcommitした。commitは`f52a744`（branch `codex/mose-temporal-mamba-training`）、tagは`mose-fulltrack-lockbox-20261008`。commit前に`lockbox_eval_freeze.json`の実装8ファイルSHA-256と全件一致し、dirty diff SHA-256も記録値`61c1cc9e…bd3`と一致することを確認した。
 - 作業branch `dev`へfast-forward mergeした。remoteへのpushは未実施。
 - `runs/`（133 GB）と`.codex_deps/`はgit管理外のまま、worktree内に残っている。manifestにはworktreeの絶対パスが記録されている。
+- 同日、merge済みのbranch `codex/mose-temporal-mamba-training`（ローカル）とorigin `mac-mini`を削除した。実装はtag `mose-fulltrack-lockbox-20261008`と`dev`に残る。worktreeはdetached HEAD（`f52a744`）で`runs/`ごと残した。
