@@ -607,3 +607,4 @@ paired video bootstrapは10,000 resample、seed 123、95% percentile CI。
 - 作業branch `dev`へfast-forward mergeした。remoteへのpushは未実施。
 - `runs/`（133 GB）と`.codex_deps/`はgit管理外のまま、worktree内に残っている。manifestにはworktreeの絶対パスが記録されている。
 - 同日、merge済みのbranch `codex/mose-temporal-mamba-training`（ローカル）とorigin `mac-mini`を削除した。実装はtag `mose-fulltrack-lockbox-20261008`と`dev`に残る。worktreeはdetached HEAD（`f52a744`）で`runs/`ごと残した。
+- 同日、worktreeを消しても成果物が残るよう、`runs/mose_temporal_mamba_20260930/`（133 GB、145,964ファイル）を`/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/`へ移動した。同一filesystem内の移動で、移動前後のファイル一覧とサイズが一致することを確認した。元のパスにはsymlinkを置き、manifestに記録された絶対パスでも参照できる。git管理外（`.git/info/exclude`）のまま。
