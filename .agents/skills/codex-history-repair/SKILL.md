@@ -29,6 +29,8 @@ It repairs only history-indexed root threads whose database `history_mode` is `l
 
 Do not broaden this filter to string matches inside message content. Modern `paginated` threads, child-agent threads, unindexed rollouts, recently updated threads, and rollouts held open by another process are excluded and reported.
 
+An open-rollout result means a process currently has the rollout file open; it does not identify a separate application or a separate chat. A single VS Code Codex app-server process can hold files for several threads. Do not tell the user that another app owns a conversation based on the PID alone. If `Developer: Reload Window` does not release the rollout, re-scan and identify the process. Only terminate a verified Codex app-server after the user explicitly authorizes it, since this closes Codex sessions served by that process. Send `SIGTERM`, wait, and re-scan; do not send `SIGKILL` as a fallback.
+
 The repair always creates a new thread. It never edits or deletes the original thread or rollout. Before creating repaired data, it makes and verifies:
 
 - an online SQLite backup;
@@ -39,6 +41,16 @@ The repair always creates a new thread. It never edits or deletes the original t
 For retained records, bytes are preserved except that exact occurrences of the old thread ID are changed to the new thread ID. Normal user/assistant messages, reasoning, function calls and outputs, command output, task events, turn context, and metadata remain. Only whole records with the six exact legacy event types are removed.
 
 Successful prior repairs are recognized from manifests and from the normalized retained-content fingerprint of existing `(repaired)` threads. Re-running the script must not create another copy of an already verified repair. An incomplete or inconsistent prior repair fails closed for manual inspection.
+
+Older single-thread repair manifests may have top-level `target_id`, `new_id`, and `destination` fields instead of the current `threads` list. A repaired rollout may also have since moved from `sessions/` to `archived_sessions/`, leaving the old manifest destination stale. Before treating this as an incomplete repair, inspect that specific mapping read-only:
+
+- Confirm the manifest's `new_id` has a DB row and a current session-index entry.
+- Check the old thread's current `history_mode`. If it is still `legacy`, compare its normalized retained-content fingerprint with the repaired rollout; they must match before the manifest can suppress another repair. If the old thread is already `paginated`, the repair script will skip it independently.
+- Read the rollout path from that DB row and confirm it is inside `sessions/` or `archived_sessions/`.
+- Confirm that rollout exists, its SHA-256 equals the manifest's `repaired_sha256`, its JSONL parses, and it contains none of the six legacy event types.
+- If all checks pass, make and verify a copy of the old manifest, preserve its existing fields, and add `threads: [{"old_id": <target_id>, "new_id": <new_id>, "destination": <current DB rollout_path>}]`. Re-run the dry-run scan before applying.
+
+If any check fails, stop for manual inspection. Do not guess a replacement path, edit SQLite, or discard the old manifest. A changed source hash alone is not conclusive if the old thread is now `paginated`; if it is still `legacy`, use the retained-content fingerprint check rather than ignoring source changes.
 
 ## Workflow
 
@@ -68,4 +80,4 @@ Do not remove original threads after the script succeeds. Original cleanup is a 
 
 The same two commands work from an ordinary terminal when the Codex UI cannot load. The default invocation is dry-run and changes nothing. `--apply` performs the backed-up repair. Use `--codex-home PATH` only when the affected Codex home is not `${CODEX_HOME:-$HOME/.codex}`.
 
-If the script reports an unsupported schema, malformed JSONL, an incomplete earlier repair, or a live/open rollout, stop and report the exact condition. Do not delete SQLite files, WAL files, caches, or the entire Codex home as a fallback.
+If the script reports an unsupported schema, malformed JSONL, an incomplete earlier repair that cannot be verified as described above, or a live/open candidate rollout, stop and report the exact condition. Do not delete SQLite files, WAL files, caches, or the entire Codex home as a fallback.
