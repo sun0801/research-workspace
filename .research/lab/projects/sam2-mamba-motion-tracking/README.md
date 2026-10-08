@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: MOSE temporal Mambaのspec実装・4条件lockbox評価を完了。F1−F0のJ&F差は+0.00282だが95% CIが0を含み、主仮説は支持されなかった。SAM2MOT S4の寄与切り分けは継続中。
+summary: MOSE temporal MambaのF0/F1 lockbox評価は完了したが、F1 adapterはLR不足でalpha≈2e-4のまま実質未学習で、Mamba効果は未検証。F0も学習量不足。adapter LRと学習量を見直した再学習を検討中。SAM2MOT S4の寄与切り分けは継続中。
 created: 2026-07-07
-last_updated: 2026-10-08
+last_updated: 2026-10-09
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -87,6 +87,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 **再現実装 `sam2mot_repro/`（2026-09-08〜）**：同リポジトリ内に、承認済みspec [`specs/2026-09-08-sam2mot-reproduction-spec.md`](specs/2026-09-08-sam2mot-reproduction-spec.md) に基づく再現実装を新規に作成した（`sam2mot_lite/` は変更禁止・読み取り専用）。検出器はCo-DINO-L、セグメンタはSAM2.1-large per-instance。S0〜S4完了（2026-10-03）。段階実装のプロトコルは同リポジトリの `CLAUDE.md`、結果は [`experiments/2026-09-27-sam2mot-s0-s2-results.md`](experiments/2026-09-27-sam2mot-s0-s2-results.md)、[`experiments/2026-09-28-sam2mot-s3-coi-results.md`](experiments/2026-09-28-sam2mot-s3-coi-results.md) を参照。
 
 ## 現在の状況
+
+**10/9 MOSE結果の事後診断**：F1 checkpointのadapter alphaは学習全体で約2e-4以下にとどまり、出力層の重みもstep 500〜2789でほぼ不変だった。adapterにSAM2微調整用のLR 5e-6を使ったため、cosineで2,789 step学習してもalphaは最大約0.007しか動けない設計だった。F1は実質F0とほぼ同じモデルで、10/8の「主仮説を支持しない」はMamba効果を有効に検証できていないと解釈し直す。F0のtuning J&Fも最終stepまで単調増加（0.753→0.770）で、学習量（公式MOSE configの画像フレーム数で約1/4）が不足している。再学習ではadapter LR・alpha初期化・学習量を見直す。lockbox 200系列は使用済みのため、同じ200系列での再評価は探索的扱いになる。学習コードはSAM2 repo `dev`（tag `mose-fulltrack-lockbox-20261008`）にcommitし、成果物はSAM2 repoの`runs/mose_temporal_mamba_20260930/`へ移した。詳細は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
 
 **10/8 MOSE実装・評価完了**：承認済みspecに基づきF0/F1を各2,789 step学習し、tuningでF0 step 2789、F1 step 2000を選択。200動画・570対象・36,260評価frameでP0/F0/F1/F1-resetを評価し、各条件のprediction PNG・frame coverage・凍結hash・集計値を独立監査して異常なし。動画平均J&FはP0=0.70084、F0=0.73920、F1=0.74202、F1-reset=0.74265。主比較F1−F0は+0.00282、video-level paired bootstrap 95% CI=[−0.00669,+0.01157]で0を含み、specの基準では主仮説を支持しない。F1−F1-resetは−0.00063 [−0.00156,+0.00004]で、state carryの改善は確認できなかった。系列長別比較もすべて95% CIが0を含む。単一seedの結果として記録し、seedを越えた再現性は主張しない。F0−P0は+0.03837 [0.02159,0.05731]。詳細な比較・監査結果は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
 
@@ -182,7 +184,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 - [ ] オクルージョンを含む定性的トラッキング可視化を用意する
 - [ ] MIRU用の30 FPS動画・追跡結果可視化アプリ・定性候補を準備する
 - [ ] SAM2デコーダーへのMamba統合を実装し、統合位置とトークン数の影響を確認する
-- [x] 承認済みMOSE specに基づくSAM2全体fine tuningとtemporal Mamba比較（F0/F1、tuning checkpoint選択、200系列lockbox評価）を完了する（2026-10-08、単一seedの主仮説は未支持）
+- [x] 承認済みMOSE specに基づくSAM2全体fine tuningとtemporal Mamba比較（F0/F1、tuning checkpoint選択、200系列lockbox評価）を完了する（2026-10-08。10/9にF1 adapterが実質未学習と判明し、Mamba効果は未検証）
 - [ ] Mamba・LSTM・Transformerを同程度GFLOPS・速度条件で比較する
 - [ ] state carryのID switch / hidden state contaminationを出力軌跡のシミュレーションで可視化する
 - [ ] testデータで追跡性能を評価する
@@ -199,6 +201,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-10-09 | MOSE F0/F1の事後診断：F1 adapterはLR 5e-6のためalpha≈2e-4で実質未学習、F0もtuning J&Fが最終stepまで上昇中で学習不足と判明。10/8の結論を「Mamba効果は未検証」と読み替え、summaryを更新。学習コードのSAM2 repo commit・成果物移動・worktree削除も記録。 |
 | 2026-10-08 | SAM2MOT再現 S4のA5切り分け：Q-Rを補正として入れるとHOTA 69.25（S3比+1.03、論文+1.7と同方向）。S4悪化の原因はconditioning frame追加だったと判明。test S1完了、test S2〜S4（S4は補正方式）を並行実行中。 |
 | 2026-10-08 | 16:38 JST、F1 lockboxは245/570対象。F0 fit manifestに欠けるoptimizer情報を、最終checkpoint stateと同一hashのmodel/trainer sourceから再構成して実験ログに記録。freeze対象のmanifestは変更せず保持。 |
 | 2026-10-08 | 16:31 JST、F1 lockboxは221/570対象。途中出力全件をfrozen index/frame順、t0除外、J/F/J&Fのfinite/rangeとobject平均、P0/F0とのprompt parityで監査し通過。8件のsource hashも一致。 |

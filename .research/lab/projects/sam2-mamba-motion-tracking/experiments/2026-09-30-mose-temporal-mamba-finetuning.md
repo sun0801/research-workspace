@@ -614,3 +614,47 @@ paired video bootstrapは10,000 resample、seed 123、95% percentile CI。
 - worktreeの`.codex_deps/`にあった学習用依存（fvcore、pycocotools、pandas、tensorboard、submitit、tensordictなど15パッケージ）を、同じversionで`.venv-sam2`へinstallした。追加された間接依存は5パッケージ（grpcio、tabulate、termcolor、yacs、zipp）。torch・numpyなど既存パッケージのversion変更はない。
 - SAM2 repo本体で`PYTHONPATH`を本体だけにしても、学習・評価5 entrypointの`--help`と`training.trainer`のimportが通ることを確認した。
 - `runs/`のsymlinkを外したうえで、`git worktree remove`でworktree `/mnt/HDD10TB-2/aburatani/worktrees/sam2-mose-temporal-mamba`を削除した。`runs/`本体（133 GB）はSAM2 repo側に残っている。manifest内のworktree絶対パスは、`/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/`配下へ読み替える。今後は`PYTHONPATH`にSAM2 repo本体を指定して実行する。
+
+## 2026-10-09 事後診断：F1 adapterの学習状況とF0の学習量
+
+lockbox結果の解釈を見直すため、保存済みcheckpointとtuning summaryを確認した。lockboxの数値と凍結済みの手順は変更しない。
+
+### F1 adapterは実質的に学習されていなかった
+
+adapterの出力は`pix_feat + alpha * residual`で、alphaの初期値は0。F1 full-fit checkpointの値は次のとおり。
+
+| step | alpha | `output_proj.weight` norm | `mamba.out_proj.weight` norm |
+|---:|---:|---:|---:|
+| 500 | 1.32e-4 | 9.231 | 9.2118 |
+| 1000 | 8.21e-5 | 9.231 | 9.2099 |
+| 2000（選択） | 1.87e-4 | 9.231 | 9.2079 |
+| 2789 | 1.78e-4 | 9.231 | 9.2076 |
+
+- alphaは学習を通じて約2e-4以下にとどまり、Mambaの補正はSAM2特徴へほぼ足されていない。出力層の重みnormもstep 500〜2789で4桁一致し、ほとんど更新されていない。
+- F1 manifestのoptimizer groupでは、adapterを含むSAM2本体側のLRは最大5e-6（vision encoderは3e-6）。新規追加したadapterにも事前学習済みモデル微調整用のLRを使っていた。AdamWの1更新はおおむねLR程度なので、cosine decayで2,789 step学習してもalphaは最大で約0.007（5e-6 × 2,789 × 1/2）しか動けない。
+- したがってF1は実質的にF0とほぼ同じモデルとして学習・評価された。F1−F0（+0.00282、CIは0を含む）とF1−F1-reset（−0.00063）がほぼ0なのはこれと整合する。10/8の「主仮説を支持しない」は、**Mamba adapterの効果を有効に検証できていない**と解釈する。temporal Mambaに効果がないという結論にはしない。
+- alphaが小さい理由として、adapterが性能を下げるため勾配がalphaを0付近へ戻した可能性は完全には除外できない。ただし出力層の重みもほぼ動いていないため、LR不足が主因と考える。
+
+### F0は学習途中で止まっている
+
+| step | 500 | 1000 | 1500 | 2000 | 2500 | 2789 |
+|---|---:|---:|---:|---:|---:|---:|
+| F0 tuning J&F | 0.75319 | 0.75406 | 0.75756 | 0.76208 | 0.76933 | 0.77008 |
+| F1 tuning J&F | 0.75025 | 0.76584 | 0.76128 | 0.77122 | 0.77084 | 0.76974 |
+
+F0のtuning J&Fは最後のstepまで単調に上がり、最終stepが最良だった。全fit 1周の学習量では頭打ちに達していない。公式MOSE configの学習量（1,246動画 × multiplier 2 × 40 epoch、8フレームclip）と比べ、今回の画像フレーム処理数は約1/4、optimizer更新回数は約1/4.5（公式は8 GPUで実効batch 8、今回はbatch 1）。
+
+### 公式学習とのその他の差
+
+- 公式`training/train.py`とTrainerは使わず、独自ループで学習した（lossは公式`MultiStepMultiMasksAndIous`、configはhydraで読み込み）。
+- 公式のpoint/box/mask promptのランダム化と途中補正クリックを無効化し、初出frameのboxを1回だけ与えた（specで意図した変更）。
+- 画像encoderのlayer-wise LR decay 0.9がなく、cosineの終点が公式のLR/10ではなく0。
+- augmentationの実装順・shear・fill・色変換順が公式と異なる（既述）。
+
+### 再学習で見直す点（未決定）
+
+1. adapterのLRをSAM2本体と分け、alphaの初期化も見直す。本学習の前に、少数軌跡のpilotでalphaと出力層が実際に更新されることを確認する。
+2. F0はtuning J&Fが頭打ちになるまで学習量を増やす。公式trainerへ寄せるかもあわせて検討する。
+3. lockbox 200系列は使用済みなので、同じ200系列での再評価は探索的な扱いになる。確証的な評価には新しいholdoutが必要。
+
+再学習には新しいspecとImplementation Gateの承認が必要。
