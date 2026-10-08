@@ -600,3 +600,9 @@ paired video bootstrapは10,000 resample、seed 123、95% percentile CI。
 - 本結果は1 seedの実験である。F1−F0のCIは0を含み、temporal Mambaの改善仮説は支持されない。seed間再現性や一般的な優位性は主張せず、追加seedが必要。
 
 成果物は外部worktree `/mnt/HDD10TB-2/aburatani/worktrees/sam2-mose-temporal-mamba` の `runs/mose_temporal_mamba_20260930/` に保存した。主要な集計は `lockbox_paired_summary.json`、F1-resetの全frame出力は `lockbox/F1-reset/objects.jsonl` と `lockbox/F1-reset/predictions/`。
+
+### 2026-10-08 実装コードのcommit
+
+- worktreeで未commitだった実装（tracked変更3ファイル、untracked 6ファイル）を、内容を変えずにSAM2 repoへcommitした。commitは`f52a744`（branch `codex/mose-temporal-mamba-training`）、tagは`mose-fulltrack-lockbox-20261008`。commit前に`lockbox_eval_freeze.json`の実装8ファイルSHA-256と全件一致し、dirty diff SHA-256も記録値`61c1cc9e…bd3`と一致することを確認した。
+- 作業branch `dev`へfast-forward mergeした。remoteへのpushは未実施。
+- `runs/`（133 GB）と`.codex_deps/`はgit管理外のまま、worktree内に残っている。manifestにはworktreeの絶対パスが記録されている。
