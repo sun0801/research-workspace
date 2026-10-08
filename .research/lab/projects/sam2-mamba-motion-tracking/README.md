@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: SAM2MOT再現はS4（Q-R）までval評価完了。Q-RでHOTA 68.22→61.85と逆効果で、寄与構造は未再現。Q-Rのマッチ基準などの切り分けとtest提出を判断する。主線はtemporal Mamba統合。
+summary: MOSE temporal Mambaのspec実装・4条件lockbox評価を完了。F1−F0のJ&F差は+0.00282だが95% CIが0を含み、主仮説は支持されなかった。SAM2MOT S4の寄与切り分けは継続中。
 created: 2026-07-07
-last_updated: 2026-10-06
+last_updated: 2026-10-08
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -88,6 +88,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 ## 現在の状況
 
+**10/8 MOSE実装・評価完了**：承認済みspecに基づきF0/F1を各2,789 step学習し、tuningでF0 step 2789、F1 step 2000を選択。200動画・570対象・36,260評価frameでP0/F0/F1/F1-resetを評価し、各条件のprediction PNG・frame coverage・凍結hash・集計値を独立監査して異常なし。動画平均J&FはP0=0.70084、F0=0.73920、F1=0.74202、F1-reset=0.74265。主比較F1−F0は+0.00282、video-level paired bootstrap 95% CI=[−0.00669,+0.01157]で0を含み、specの基準では主仮説を支持しない。F1−F1-resetは−0.00063 [−0.00156,+0.00004]で、state carryの改善は確認できなかった。系列長別比較もすべて95% CIが0を含む。単一seedの結果として記録し、seedを越えた再現性は主張しない。F0−P0は+0.03837 [0.02159,0.05731]。詳細な比較・監査結果は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+
 **7/2 MTG後の状況**：state carry型Mambaは100エポックで収束しかけているが、LRスケジューラがほぼ固定になっており過学習の可能性が高い。TrackSSMは入力形式の違いが発覚し実験設定の見直しが必要。public validationの設計（5エポックごとのHOTA評価）が次の実装課題。
 
 **7/9 MTG後の状況**：`val loss` と tracking 指標ベースの validation を学習導線へ組み込む実装自体は成立した。次の課題は、TrackEval 側の関数化が単体で正しいかを切り分けること、tracking validation の命名整理、そして計算時間増加の原因を profiler で特定すること。MIRU ポスターは「SAM2 / SAMURAI の改善」を主題に据え、定量表に加えてオクルージョン時の定性的可視化も準備する。
@@ -100,7 +102,9 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 **7/21 P0.5完了**：既存のDanceTrack val 25系列出力を同一TrackEval条件で比較した。HOTAはMambaTrack 33.837、TrackSSM 32.783、MambaStateful 47.293。MambaStatefulが高かったが、checkpoint provenance、入力形式、モデル構造、prediction-primary associationが未分離のため、学習方式の優位性とは解釈しない。次はP1を診断用baselineとして個別に検証する。
 
-**10/6 MOSE学習再開**：F0は最後の復旧checkpoint `step 1400` から再開し、step 1863/2789まで進行。ログ1〜1863は連番・固定sample orderに一致し、lossはfinite。step 1500 tuning候補、step 1600/1700/1800 recovery checkpointを保存。旧step 1401〜1456は再計算済み。最長500-frame軌跡もfiniteで完走し、高loss系列のannotation確認を実験ログに記録。GPU1の別検出ジョブ終了後に残る候補評価を行う。詳細は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+**10/6 MOSE学習再開**：F0は最後の復旧checkpoint `step 1400` から再開し、step 2001/2789まで進行。ログ1〜2001は連番・固定sample orderに一致し、lossはfinite。step 1500/2000 tuning候補とstep 1600/1700/1800/1900 recovery checkpointを保存。step 2000 checkpoint SHA-256は`f9c8d9e7…bf580111b`。旧step 1401〜1456は再計算済み。最長500-frame軌跡もfiniteで完走し、高loss系列のannotation確認を実験ログに記録。GPU1の別検出ジョブ終了後に残る候補評価を行う。詳細は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
+
+**10/7 MOSE学習再開**：F0は復旧checkpoint `step 2500`から再開し、step 2566/2789。step/sample order/lossを再監査し、不一致なし。F0 step 2500 tuning評価は97/313対象でGPU1にて進行中。ターン中断対策としてF0 recovery guardと後続pipelineをtmux detached sessionへ移行した。詳細は [`experiments/2026-09-30-mose-temporal-mamba-finetuning.md`](experiments/2026-09-30-mose-temporal-mamba-finetuning.md)。
 
 **7/23 P1 25系列確認完了**：同一epoch100 checkpoint・detector入力・config・scale・lifecycle・state/cache更新・TrackEval条件で、prediction-primary A1とlast accepted observation A2をDanceTrack val 25系列で比較した。A1はHOTA 47.233、A2はHOTA 47.910、AssA 30.843、IDF1 47.315、IDSW 2386となり、A2はA1に対してHOTA +0.677、AssA +0.936、IDF1 +1.429、IDSW -192を示した。効果は3系列より小さく系列依存もあるが、P1仮説を25系列aggregateでも支持する。P2 cache更新制御のspec化へ進む。
 
@@ -178,7 +182,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 - [ ] オクルージョンを含む定性的トラッキング可視化を用意する
 - [ ] MIRU用の30 FPS動画・追跡結果可視化アプリ・定性候補を準備する
 - [ ] SAM2デコーダーへのMamba統合を実装し、統合位置とトークン数の影響を確認する
-- [ ] 承認済みMOSE specに基づくSAM2全体fine tuningとtemporal Mamba比較（F0/F1、tuning checkpoint選択、200系列lockbox評価）を完了する
+- [x] 承認済みMOSE specに基づくSAM2全体fine tuningとtemporal Mamba比較（F0/F1、tuning checkpoint選択、200系列lockbox評価）を完了する（2026-10-08、単一seedの主仮説は未支持）
 - [ ] Mamba・LSTM・Transformerを同程度GFLOPS・速度条件で比較する
 - [ ] state carryのID switch / hidden state contaminationを出力軌跡のシミュレーションで可視化する
 - [ ] testデータで追跡性能を評価する
@@ -195,8 +199,41 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-10-08 | SAM2MOT再現 S4のA5切り分け：Q-Rを補正として入れるとHOTA 69.25（S3比+1.03、論文+1.7と同方向）。S4悪化の原因はconditioning frame追加だったと判明。test S1完了、test S2〜S4（S4は補正方式）を並行実行中。 |
+| 2026-10-08 | 16:38 JST、F1 lockboxは245/570対象。F0 fit manifestに欠けるoptimizer情報を、最終checkpoint stateと同一hashのmodel/trainer sourceから再構成して実験ログに記録。freeze対象のmanifestは変更せず保持。 |
+| 2026-10-08 | 16:31 JST、F1 lockboxは221/570対象。途中出力全件をfrozen index/frame順、t0除外、J/F/J&Fのfinite/rangeとobject平均、P0/F0とのprompt parityで監査し通過。8件のsource hashも一致。 |
+| 2026-10-08 | 16:29 JST、F1 lockboxは216/570対象。途中出力をfrozen index順・frame coverage・有限指標・object平均・P0/F0同一promptで監査し通過。8ファイルのfreeze hashも一致。 |
+| 2026-10-08 | 16:27 JST、F1 lockboxは205/570対象で進行中。F1 worker PID 1131047とdetached pipeline PID 878216を再確認。F1-reset・paired/系列長別summaryは未完了。 |
+| 2026-10-08 | 16:25 JST、F1 lockboxは195/570対象。途中出力をfrozen trajectory/frame順・t0除外・有限範囲J/F/J&Fとobject mean整合で再監査し通過。全8 frozen source hashも一致。 |
+| 2026-10-08 | 16:24 JST、F1 lockboxは187/570対象。P0/F0の保存予測PNGは対象別評価frameと全件一致。F1の完了object分に予測PNG欠落なしで、JSONL記録前の処理中objectに属する17 frame分も逐次出力を確認。F1-reset・paired集計は未完了。 |
+| 2026-10-08 | 16:22 JST、F1 lockboxは177/570対象で進行。P0/F0全件の集計監査とF0/F1全学習log監査は通過し、P0/F0全570件とF1評価済み177件で保存prompt seed/tensorが一致。F1-reset・paired集計は未完了。 |
+| 2026-10-08 | 16:17 JST、P0/F0 lockbox評価を完了。200動画・570対象でP0 J&F=0.70084、F0=0.73920。F1 lockboxは156/570対象で評価中、F1-resetとpaired集計は未完了。 |
+| 2026-10-08 | 13:56 JST、F0 lockboxは102/570対象。worker PID 1099129で評価継続中。P0は200動画・570対象で完了、F1・F1-resetとpaired集計は未完了。 |
+| 2026-10-08 | 13:34 JST、MOSE lockbox P0を200動画・570対象で完了。除外0、平均J=0.66448、F=0.73719、J&F=0.70084。F0 lockbox評価を開始し、F1・F1-resetとpaired集計は継続中。 |
+| 2026-10-08 | 13:04 JST、P0 lockboxは446/570対象。全行を凍結index prefix、対象一意性、first frame/length/t0除外frame数、finite/in-range J/F/J&Fで監査し通過。 |
+| 2026-10-08 | 13:02 JST、P0 lockboxは440/570対象。全440行で凍結index prefix、一意性、first frame/length、t0除外、finite/in-range J/F/J&Fを監査し通過。worker PID 1074677は稼働中。 |
+| 2026-10-08 | 13:01 JST、P0 lockboxは431/570対象。全出力を凍結index順・unique object・first-frame/length・t0除外・finite/in-range J/F/J&Fで監査し通過。worker PID 1074677は稼働継続。 |
+| 2026-10-08 | 13:00 JST、P0 lockboxは424/570対象。全出力が凍結trajectory順・一意性・初出frame/length・t0除外後frame数・finite/in-range J/F/J&Fに適合することを再監査。 |
+| 2026-10-08 | 12:59 JST、P0 lockboxは414/570対象。途中出力全件を凍結trajectory順・unique ID・初出frame/length・t0除外後frame数・finite/in-range J/F/J&Fで検査し通過。worker PID 1074677は稼働中。 |
+| 2026-10-08 | 12:58 JST、P0 lockboxは411/570対象。411行すべてを凍結trajectory prefix・unique object IDs・first frame/length・t0除外後frame数・finite/in-range指標で監査し通過。worker PID 1074677は稼働中。 |
+| 2026-10-08 | 12:57 JST、P0 lockboxは404/570対象。部分出力全件を凍結trajectory prefix、unique IDs、初出frame/length、t0除外frame数、finite/in-range J/F/J&Fで検査し通過。 |
+| 2026-10-08 | 12:56 JST、P0 lockboxが400/570対象に到達。部分出力400行をspec条件で監査し通過。worker PID 1074677は稼働中。 |
+| 2026-10-08 | 12:55 JST、P0 lockboxは398/570対象。途中JSONL 398行をfrozen indexのexpected prefix・unique ID・first frame/length・t0除外後frame数・finite/in-range J/F/J&Fで監査し通過。worker PID 1074677は継続中。 |
+| 2026-10-08 | 12:54 JST、P0 lockboxは395/570対象。全出力を凍結trajectory prefix、unique ID、first frame、trajectory/scored frame数、finite/in-range J/F/J&Fで再監査し通過。 |
+| 2026-10-08 | 12:53 JST、P0 lockboxは390/570対象。全390行が凍結indexの期待prefix、一意対象、初出frame・軌跡長・t0除外後frame数、finite/in-range J/F/J&Fを満たすことを監査。worker PID 1074677は継続中。 |
+| 2026-10-08 | 12:51 JST、P0 lockboxは380/570対象。全380行がfrozen indexの期待prefixと一致し、重複なし、first-frame・length・t0除外frame数・有限範囲J/F/J&Fを監査して通過。 |
+| 2026-10-08 | 12:48 JST、P0 lockboxは374/570対象。最新partial JSONLを凍結index順・対象一意性・first frame・length・t0除外後frame数・finite/in-range指標で監査し通過。worker PID 1074677はGPU1で継続中。 |
+| 2026-10-08 | 12:45 JST、P0 lockboxは366/570対象で部分出力監査を通過。別のSAM2MOT S4評価2件（GPU0）が同時稼働中。MOSE P0はGPU1で独立して進行し、worker PID 1074677を確認。 |
+| 2026-10-08 | 12:44 JST、P0 lockboxは360/570対象。途中出力全行を凍結index順・unique ID・初出frame・軌跡長・t0除外後frame数・finite/in-range J/F/J&Fで監査し通過。 |
+| 2026-10-08 | 12:42 JST時点でP0 lockboxは351/570対象、worker PID 1074677は稼働中。直前の349件までの部分監査は凍結index順・unique ID・初出frame・軌跡長・t0除外frame数・finite/in-range J/F/J&Fを通過。実装worktreeのgit commit/dirty状態も実験ログへ記録した。 |
+| 2026-10-08 | 12:40 JST、P0 lockboxは342/570対象。途中出力を凍結trajectory index順・unique ID・初出frame・軌跡長・t0除外後frame数・finite/in-range J/F/J&Fで再監査し通過。評価worker PID 1074677はGPU1で継続中。 |
+| 2026-10-08 | 12:37 JST、P0 lockboxは330/570対象。部分出力を凍結index順・unique ID・初出frame・軌跡長・t0除外frame数・有限範囲のJ/F/J&Fで監査し通過。worker PID 1074677は継続稼働し、pipelineはP0後にF0/F1/F1-resetとpaired summaryを実行する設定。 |
+| 2026-10-08 | 12:35 JST、P0 lockboxは315/570対象。部分JSONL 315行は凍結indexの期待prefixと一致し、対象ID重複なし、軌跡長・評価frame数（t0除外）・finite/in-range J/F/J&Fを確認。Comet SDKとユーザー設定ファイルは存在するが、このMOSE runにはlogger未接続。 |
+| 2026-10-08 | 12:32 JST時点でP0 lockboxは310/570対象。tmux評価worker PID 1074677が稼働し、GPU1で評価中。GPU0は515 MiB/32 GiB使用で空きがあるが、追加学習は既開始lockboxの主比較に含まれない探索runとなるため開始せず、凍結済み評価を継続する。 |
+| 2026-10-08 | MOSE F1 full fitを2,789/2,789 step完了。全log・final checkpoint finiteとprompt replayを監査し、F0はstep2789、F1はstep2000をtuningから選択。選択checkpoint・評価plan・実装hashをlockbox前に凍結し、P0 lockboxを242/570対象まで評価中。 |
 | 2026-10-07 | SAM2MOT再現 S4のQ-Rマッチ閾値を0.5に絞った切り分けrunを評価。HOTA 61.70でS4本番（61.85）とほぼ同じで、マッチ閾値の問題ではないと判明。test 35系列の検出生成も完了。 |
-| 2026-10-06 | F0はstep 1,863/2,789。学習ログ全件のfinite・連番・sample order一致を再監査し、全て通過。step 1500候補と1600/1700/1800 recovery checkpointを確認。旧root直下のF1 step100成果物は9/30のpilotで、本学習は別の`F1_full_fit/`出力先を使うことを起動queueで確認。 |
+| 2026-10-07 | F0 full fitをstep 2,789まで完了。全学習logは連番・finite loss、最終checkpointのmodel/optimizer tensorもfinite。tuning候補step 500〜2,500評価済みで最高はstep 2,500（動画平均J&F 0.76933）。step 2,789 tuning評価37/313、F1 fit indexは400/1,121動画・1,002軌跡。selector・lockbox評価は継続中。 |
+| 2026-10-06 | F0はstep 2,001/2,789。学習ログ全件のfinite・連番・sample order一致を再監査し、全て通過。step 1500/2000候補と1600/1700/1800/1900 recovery checkpointを確認。旧root直下のF1 step100成果物は9/30のpilotで、本学習は別の`F1_full_fit/`出力先を使うことを起動queueで確認。 |
 | 2026-10-06 | 承認済みMOSE学習を再開。F0はstep 1400 recovery checkpointからstep 1403まで再計算。 |
 | 2026-09-30 | MTGでtemporal Mambaの空間情報を保つ設計候補、HOTA 70以上の手法調査、中間発表・研究室見学資料の準備を整理。`meetings/2026-09-30-mtg.md`に記録。 |
 | 2026-10-06 | S4の設定でA7の有効・無効を再確認。A7有効でHOTA −0.61、AssA −1.51、IDF1 −1.58と改善せず、A7は無効のまま。 |
