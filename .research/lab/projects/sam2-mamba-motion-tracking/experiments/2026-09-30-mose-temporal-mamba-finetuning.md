@@ -3,7 +3,7 @@ project: sam2-mamba-motion-tracking
 type: experiment-log
 status: in_progress
 created: 2026-09-30
-last_updated: 2026-10-08
+last_updated: 2026-10-09
 ---
 
 # MOSEv1 SAM2.1 Small + temporal Mamba追加学習
@@ -608,3 +608,9 @@ paired video bootstrapは10,000 resample、seed 123、95% percentile CI。
 - `runs/`（133 GB）と`.codex_deps/`はgit管理外のまま、worktree内に残っている。manifestにはworktreeの絶対パスが記録されている。
 - 同日、merge済みのbranch `codex/mose-temporal-mamba-training`（ローカル）とorigin `mac-mini`を削除した。実装はtag `mose-fulltrack-lockbox-20261008`と`dev`に残る。worktreeはdetached HEAD（`f52a744`）で`runs/`ごと残した。
 - 同日、worktreeを消しても成果物が残るよう、`runs/mose_temporal_mamba_20260930/`（133 GB、145,964ファイル）を`/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/`へ移動した。同一filesystem内の移動で、移動前後のファイル一覧とサイズが一致することを確認した。元のパスにはsymlinkを置き、manifestに記録された絶対パスでも参照できる。git管理外（`.git/info/exclude`）のまま。
+
+### 2026-10-09 worktree削除
+
+- worktreeの`.codex_deps/`にあった学習用依存（fvcore、pycocotools、pandas、tensorboard、submitit、tensordictなど15パッケージ）を、同じversionで`.venv-sam2`へinstallした。追加された間接依存は5パッケージ（grpcio、tabulate、termcolor、yacs、zipp）。torch・numpyなど既存パッケージのversion変更はない。
+- SAM2 repo本体で`PYTHONPATH`を本体だけにしても、学習・評価5 entrypointの`--help`と`training.trainer`のimportが通ることを確認した。
+- `runs/`のsymlinkを外したうえで、`git worktree remove`でworktree `/mnt/HDD10TB-2/aburatani/worktrees/sam2-mose-temporal-mamba`を削除した。`runs/`本体（133 GB）はSAM2 repo側に残っている。manifest内のworktree絶対パスは、`/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/`配下へ読み替える。今後は`PYTHONPATH`にSAM2 repo本体を指定して実行する。
