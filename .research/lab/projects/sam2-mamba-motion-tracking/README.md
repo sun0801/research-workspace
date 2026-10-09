@@ -202,6 +202,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 | 日付 | 内容 |
 |------|--------|
 | 2026-10-09 | MOSE F0/F1の事後診断：F1 adapterはLR 5e-6のためalpha≈2e-4で実質未学習、F0もtuning J&Fが最終stepまで上昇中で学習不足と判明。10/8の結論を「Mamba効果は未検証」と読み替え、summaryを更新。学習コードのSAM2 repo commit・成果物移動・worktree削除も記録。 |
+| 2026-10-09 | SAM2MOT再現 test 35系列でS1〜S4（S4はQ-R補正方式）を実行。全段35/35成功・形式検証PASS。CodaBench提出用のtracker.zipを4段分作成（提出は未実施）。`experiments/2026-10-09-sam2mot-test-runs.md`に記録。 |
 | 2026-10-08 | SAM2MOT再現 S4のA5切り分け：Q-Rを補正として入れるとHOTA 69.25（S3比+1.03、論文+1.7と同方向）。S4悪化の原因はconditioning frame追加だったと判明。test S1完了、test S2〜S4（S4は補正方式）を並行実行中。 |
 | 2026-10-08 | 16:38 JST、F1 lockboxは245/570対象。F0 fit manifestに欠けるoptimizer情報を、最終checkpoint stateと同一hashのmodel/trainer sourceから再構成して実験ログに記録。freeze対象のmanifestは変更せず保持。 |
 | 2026-10-08 | 16:31 JST、F1 lockboxは221/570対象。途中出力全件をfrozen index/frame順、t0除外、J/F/J&Fのfinite/rangeとobject平均、P0/F0とのprompt parityで監査し通過。8件のsource hashも一致。 |
