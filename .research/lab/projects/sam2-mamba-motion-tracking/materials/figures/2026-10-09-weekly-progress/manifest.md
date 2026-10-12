@@ -14,4 +14,4 @@
 | file | type | purpose | source | note |
 |---|---|---|---|---|
 | 01-sam2mot-hota-by-stage.png | experiment（再構成） | SAM2MOTの段ごとのHOTAを論文test・本再現test・本再現valで比較 | generated | S1 testは未提出。valとtestは別split |
-| 02-mose-paired-jf-diff.png | experiment（再構成） | MOSE lockboxのJ&F差と95% CI | generated | 単一seed。F1 adapterは実質未学習 |
+| 02-mose-paired-jf-diff.png | experiment（再構成） | MOSE test（200動画）のJ&F差と95% CI | generated | 単一seed。F1 adapterは実質未学習 |
