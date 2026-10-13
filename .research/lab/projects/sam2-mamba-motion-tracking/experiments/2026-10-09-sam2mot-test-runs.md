@@ -121,3 +121,40 @@ CodaBench の提出上限が1日3件のため、初日は S2〜S4 を提出し�
 - **Q-R（補正方式）は全指標で論文と同じ向き**で、大きさも近い（HOTA +1.4 / +1.7、IDF1 +2.1 / +2.5）
 - **MOTA の絶対値は S2 の時点で論文より 8.4 低く**、その差は S3・S4 でもほぼ一定（−8.2 / −9.3）。差は CoI や Q-R ではなく、S2 以前（検出器の設定、baseline、Object Addition）で生じている。S1 の提出で、baseline と Add のどちらで差が生じているかを切り分けられる
 - spec の機構署名（CoI で AssA 増・DetA ほぼ不変）は、test でも不成立（AssA −2.0、DetA +9.6）。ただし、論文の ΔMOTA +17.7 自体が DetA の大きな変化を伴うはずなので、この署名は見直しが必要（`2026-09-28-sam2mot-s3-coi-results.md`）
+
+---
+
+## 追記 2026-10-13 17:20: S1 の提出結果
+
+ユーザーが S1（`results/submissions/test_s1/tracker.zip`）を CodaBench に提出した。詳細画面の値は次のとおり（Submission ID は未記録）。
+
+| 段 | HOTA | DetA | AssA | MOTA | IDF1 |
+|---|---|---|---|---|---|
+| S1 baseline 本再現 test | 63.3 | 55.4 | 72.3 | 55.1 | 70.3 |
+| S1 論文 test | 62.9 | — | — | 55.6 | 69.6 |
+| 差 | +0.4 | — | — | −0.5 | +0.7 |
+
+### 段ごとの論文との差（test、HOTA / MOTA / IDF1）
+
+| 段 | 本再現 − 論文 |
+|---|---|
+| S1 baseline | +0.4 / −0.5 / +0.7 |
+| S2 + Add | −2.3 / −8.4 / −2.5 |
+| S3 + CoI | −4.6 / −8.2 / −4.7 |
+| S4 + Q-R | −4.9 / −9.3 / −5.1 |
+
+### 寄与（test）
+
+| 寄与 | ΔHOTA | ΔDetA | ΔAssA | ΔMOTA | ΔIDF1 |
+|---|---|---|---|---|---|
+| Add（S2−S1） 本再現 test | +2.3 | +8.6 | −5.0 | +6.2 | +1.6 |
+| Add 論文 test | +5.0 | — | — | +14.1 | +4.8 |
+| Add 本再現 val（参考） | +5.11 | +14.38 | −6.39 | +13.13 | +6.72 |
+
+### 解釈（暫定）
+
+- **baseline（S1）は test で論文とほぼ一致した**（HOTA +0.4、MOTA −0.5、IDF1 +0.7）。SAM2 predictor の系統、スコア定義（A2）、mask→box（A3）、検出器 3x_coco の S1 への影響は、test の S1 では論文との差として現れていない。
+- **論文との差は Add で生じ始める。** S2 の時点の MOTA 差 −8.4 は、ほぼすべて Add の寄与不足（+6.2 と論文 +14.1）による。HOTA の差 −4.9（S4）は、Add の寄与不足 −2.7 と CoI の寄与不足 −2.3 でほぼ説明できる。
+- **Add の寄与は val では論文と一致するが、test では半分以下になる**（ΔHOTA val +5.11 / test +2.3、ΔMOTA val +13.13 / test +6.2）。S1 は val 59.21 → test 63.3（+4.1）と split 間の差が大きく、「val と test の差は1ポイント程度」は S1 では成り立たない。val で Add を合わせても test の差は縮まらない可能性がある。
+- 候補として、公式 README が DanceTrack test でのみ渡す系列別の検出閾値 CSV（`config/dancetrack_test/co_dino_detections_thresholds.csv`、未公開）がある。det conf は Object Addition の発動を直接決めるため、test でだけ Add の寄与が小さいことと整合する（hypothesis。CSV の内容は不明）。
+- **spec の順序基準は test では成立した**: Add +2.3 > 0、CoI +3.6 > Add +2.3、Q-R +1.4 が最小。val では CoI < Add で不成立だった。
