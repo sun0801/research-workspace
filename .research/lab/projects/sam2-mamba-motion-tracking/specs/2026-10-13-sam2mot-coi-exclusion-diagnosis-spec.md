@@ -2,7 +2,8 @@
 date: 2026-10-13
 project: sam2-mamba-motion-tracking
 source: brainstorm
-status: draft
+status: approved
+approved: 2026-10-13
 tags: [spec, experiment, sam2mot, reproduction, cross-object-interaction, diagnosis, dancetrack]
 ---
 
