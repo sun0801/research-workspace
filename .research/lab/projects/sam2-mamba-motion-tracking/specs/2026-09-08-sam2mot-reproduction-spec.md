@@ -140,7 +140,7 @@ lost        : logits ≤ τ_s
 | A5 | Quality Reconstructionの「keyframe更新」の具体操作（issue #4） | 現フレームにbox promptを再投入し conditioning frame として追加 | 論文は "the matched high-confidence box updates the object's keyframe information" とのみ記載 | cond_frame数の増加、pending→reliableの遷移率、VRAM/速度 |
 | A6 | CoIのメモリ除外の範囲 | 衝突が検出されたフレームごとに、誤追跡と同定されたB のみ1フレーム単位で除外 | 論文は "its current-frame memory information is excluded from memory bank updates" と記載。継続期間と対象範囲は未記載 | IDSWの減少幅。除外が狭すぎると効果が出ず、広すぎるとトラック消失 |
 | A7 | 低信頼エントリのフィルタリング閾値 | τ_s = 2.0 を仮置き → **2026-09-30 に既定を無効へ変更**（フィルタを追加しない） | 論文は "adopt a relatively low threshold" とのみ記載し具体値なし。"maintaining" は SAM2 既定の扱いを維持する意味とも読める | メモリバンクサイズと性能の関係。感度確認が必要。**実測**: τ_s = 2.0 で有効にすると val 25系列で HOTA −1.09 / AssA −2.05 / IDF1 −2.68、DetA・MOTA は不変（`experiments/2026-09-30-sam2mot-s3-a7-ablation.md`）。**S4 実装後に有効・無効を再確認する** |
-| A8 | 検出器の適用条件 | person単一クラス、NMS・score閾値はS0で決定 | DanceTrackは単一クラス。論文に詳細なし | 検出のみのrecall確認 |
+| A8 | 検出器の適用条件 | person単一クラス、NMS・score閾値はS0で決定。**2026-10-15 変更: checkpoint を 3x_coco から o365tococo（公式README記載）に変更**（末尾の追記参照） | DanceTrackは単一クラス。論文に詳細なし | 検出のみのrecall確認 |
 | A9 | SAM2のメモリフレーム選択 | SAM2既定（keyframe + 直近6フレーム）を維持し、CoIの除外のみ追加 | 論文はCoIが "jointly optimizes SAM2's memory frame selection strategy" と述べるが、既定からの変更内容は未記載 | CoI段で効果が出ない場合、選択戦略側の変更が必要な可能性 |
 
 ### 差分が合わない場合の切り分け対応表
@@ -313,3 +313,12 @@ TrackEval（MOTChallenge プロトコル）で以下を全段階記録する。
 - S3 の val 25系列の切り分けで、A7（τ_s = 2.0 で全トラックの低信頼フレームをメモリから除外）が association だけを悪化させると分かったため、A7 の既定を無効に変更した（A7 行を更新）。
 - S4 の前段となる S3 の出力は、A7 無効の run（`results/tracks/s3_coi_no_lowconf/`、HOTA 68.22）とする。
 - S4 実装後に、S4 の設定で A7 の有効・無効の2条件を評価し、Q-R との相互作用で A7 が有効に働くかを再確認する。
+
+### 追記（2026-10-15）: A8 の検出器 checkpoint を o365tococo に変更
+
+- 検出器 checkpoint を、S0 で決めた 3x_coco（COCO のみ、AP 60.0）から、**公式 README 記載の o365tococo**（Objects365→COCO、AP 64.1、`co_dino_5scale_swin_large_16e_o365tococo-614254c9.pth`）に変更する。後処理（person のみ、soft_nms 0.8、max_per_img 300、書き出し下限 0.05、追跡側 det conf 0.5）は変えない
+- 根拠: val 25系列の S1〜S4 の比較（`experiments/2026-10-13-sam2mot-o365tococo-val.md`）で、S4 の差は HOTA +0.05 と、同じ設定で GPU だけを変えたときの差（HOTA 0.15、`experiments/2026-10-14-sam2mot-coi-stage2-skip.md`）より小さく、ノイズの範囲だった。2026-10-15 にユーザーが採用した判断ルール「**ノイズの範囲の差なら、論文や公式の設定に近い方を選ぶ。同じくらいなら、変更の少ない方を選ぶ**」に従い、より具体的な公式の指定（README のファイル名指定）に合わせた。論文本文の「COCO pretrained」は 3x_coco・o365tococo のどちらとも読めるため、本文と README が食い違う場合は README を優先する
+- 10/13 の比較時点の事前登録基準（val S4 HOTA +1 以上で採用）では不採用としていた。その判定はさかのぼって変えず、新しいルールによる判断として記録する
+- val の主な値は o365tococo の S1〜S4（`results/tracks/s{1..4}_o365/`、S4 HOTA 69.29）に差し替える。test は o365tococo の検出を作り直してから S1〜S4 を回し直す（未実施）
+- CoI の診断（`specs/2026-10-13-sam2mot-coi-exclusion-diagnosis-spec.md`）と Stage 2 の比較（`specs/2026-10-14-sam2mot-coi-stage2-skip-spec.md`）は 3x_coco で行った。CoI が AssA を下げることは o365tococo でも同じだった（CoI の ΔAssA −1.16 → −1.83）ので、結論はそのまま使う
+

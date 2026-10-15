@@ -132,3 +132,15 @@ S4 の ΔHOTA は 増 11 / 減 14 系列。±5 を超える系列が 0019（+5.8
 - `experiments/2026-10-03-sam2mot-s4-qr-results.md`
 - `specs/2026-09-08-sam2mot-reproduction-spec.md`（A8）
 - `../../../secretary/notes/brainstorm/2026-10-12-sam2mot-val-improvement-plan.md`
+
+---
+
+## 追記 2026-10-15: 主設定を o365tococo に変更
+
+上の採否判定（10/13、事前登録の基準 +1 による不採用）は記録として残したうえで、2026-10-15 に**主設定を o365tococo に変更した**。
+
+- 理由: S4 の差 HOTA +0.05 は、同じ設定で GPU だけを変えたときの val 25系列の差（HOTA 0.15、`experiments/2026-10-14-sam2mot-coi-stage2-skip.md` の A − C）より小さく、ノイズの範囲だった。ユーザーが採用した判断ルール「ノイズの範囲の差なら、論文や公式の設定に近い方を選ぶ。同じくらいなら、変更の少ない方を選ぶ」に従い、公式 README の指定（o365tococo）に合わせた。論文本文の「COCO pretrained」はどちらとも読めるため、README を優先した
+- 10/13 の不採用の判定はさかのぼって変えていない。新しいルールによる判断として、spec A8 の行と追記（`specs/2026-09-08-sam2mot-reproduction-spec.md`）に記録した
+- val の主な値: 本 run の S1〜S4（S4 HOTA 69.29 / AssA 66.46 / MOTA 77.67 / IDF1 77.12）
+- test: o365tococo の test 35系列の検出（約14.5時間、mmdet 環境の都合で RTX A4000 のみ）と S1〜S4 の再実行・CodaBench 提出が必要（未実施、時期はユーザーが判断する）
+
