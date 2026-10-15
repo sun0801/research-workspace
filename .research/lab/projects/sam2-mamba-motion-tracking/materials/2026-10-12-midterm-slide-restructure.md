@@ -107,6 +107,10 @@ tags: [presentation, midterm, restructure]
 - 9枚目にあった帯の図は10枚目「動き予測の2つの構成」の(b)と同じなので外した。Mambaブロックの図は補足スライド「補足：動き予測器のMambaブロック」（「Mambaブロック」の直後）に移した。
 - 9枚目の本文（数式入り）は普通の文字に置き換え、幅を広げて28pt / 24ptにした。
 
+## 2026-10-15 3枚目（10/14 MTGの指摘 #2）
+
+- TBD / TBA の図を、左右に並べたまま時間を上から下へ流す形（t−1, t, t+1）に描き直した。TBDは「各時刻で独立に検出 → まとめて対応付け（association）」、TBAは「前フレームの結果を次の時刻へ渡し、前の位置の周辺を探す」。Transformer・queryの記述をやめた。[図の説明](figures/2026-10-15-mot-paradigm-timeline/manifest.md)
+
 ## 自作図のバックアップ
 
 自作の図（3・4・6・7枚目）は、[抜き出し版のpptx](figures/2026-10-13-midterm-diagrams/manifest.md)にも保存した。
