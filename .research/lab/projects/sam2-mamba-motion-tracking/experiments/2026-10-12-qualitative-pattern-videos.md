@@ -102,3 +102,11 @@ tags: [experiment, qualitative, video, midterm, DanceTrack]
 
 - 手法別の動画がPowerPointで再生できることは、ユーザーが確認した（2026-10-13）。
 - 各パターン2例目のcrop動画（`p*b-*-crop.mp4`）はスライドに入れていない。
+
+## 2026-10-17 追加: 全部うまくいかない例・提案手法だけうまくいかない例の選び直し
+
+10/14 MTGの指摘（動画全体、半分の速さ）に合わせて、②と④の素材を作り直した。詳細は[2回目の素材](figures/2026-10-17-qualitative-patterns-v2/manifest.md)。
+
+- 全部うまくいかない: dancetrack0026 の全302フレーム（GT / SAM2 / SAMURAI / Ours、10fpsで約30秒）。
+- 提案手法だけうまくいかない: dancetrack0079 GT 8、frame 812–891（注目人物の周辺を切り出し、GT / SAM2 / SAMURAI / Ours）。Oursだけがframe 842–864で見失う。
+- 再構成版スライドの16・17枚目に入れた（2026-10-17）。
