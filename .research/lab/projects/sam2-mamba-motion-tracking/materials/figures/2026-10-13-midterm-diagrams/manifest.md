@@ -32,7 +32,7 @@ SOFFICE=/path/to/soffice python export_png.py   # 既定: このフォルダのp
 | `png/03-method-table.png` | 比較表 |
 | `png/04-research-goal.png` | 目的の比較図 |
 | `png/05-old-bbox-mask-merge.png` | （旧）合流図 |
-| `png/06-sliding-window-vs-state-carry.png` | sliding window型とstate carry型 |
+| `png/06-sliding-window-vs-state-carry.png` | Mambaによる時系列情報の取り込み方（sliding window型とstate carry型を左右に並べた図） |
 | `png/07-motion-prediction.png` | Mambaを用いた動き予測（正常な場合の模式図） |
 | `png/08-proposed-method.png` | 提案手法（ID 1〜4 を上下に並べた図。本体で使う） |
 | `png/09-proposed-method-stacked.png` | （旧）提案手法：IDごとのマスクを重ねた図（差し替え用に残す） |

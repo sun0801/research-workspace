@@ -23,7 +23,7 @@ NAMES = {  # slide title -> file name
     "既存手法の整理：動き予測": "03-method-table",
     "研究の目的": "04-research-goal",
     "提案手法": "08-proposed-method",
-    "動き予測の2つの構成": "06-sliding-window-vs-state-carry",
+    "Mambaによる時系列情報の取り込み方": "06-sliding-window-vs-state-carry",
     "Mambaを用いた動き予測": "07-motion-prediction",
     "（旧）bboxベースとマスクベースの追跡の合流": "05-old-bbox-mask-merge",
     "（旧）提案手法：IDごとのマスクを重ねた図": "09-proposed-method-stacked",
