@@ -3,3 +3,5 @@
 *.mov
 *.avi
 *-poster.jpg
+__pycache__/
+*.py[cod]
