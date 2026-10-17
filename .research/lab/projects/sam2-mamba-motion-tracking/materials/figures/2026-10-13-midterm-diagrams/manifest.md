@@ -37,6 +37,7 @@ SOFFICE=/path/to/soffice python export_png.py   # 既定: このフォルダのp
 | `png/08-proposed-method.png` | 提案手法（SAM2 より後ろを ID 1〜4 の4枚重ねにし，矢印も4本ずつ描いた図。2026-10-16 先生のFB F3 で上下に並べた版から変更） |
 | `png/09-proposed-method-stacked.png` | （旧）提案手法：IDごとのマスクを重ねた図（差し替え用に残す） |
 | `png/10-proposed-method-issue.png` | 提案手法の課題点（8枚目の4枚重ねの図をそのまま使い，手前の ID 1 の取り違えを ①② で示す。2026-10-16 先生のFB F4） |
+| `png/11-method2.png` | 提案手法2（手法1の全体図の SAM2 を拡大し，memory attention と mask decoder の間に Temporal Mamba を入れた図） |
 
 - PNGはLibreOfficeで描いたもの。この環境にないフォントは置き換わる（テーマの「Noto Sans JP」→「Noto Sans CJK JP」）ため、PowerPointの表示と少しずれることがある。
 - 図を直したら、pptxと一緒にPNGも書き出し直す。
