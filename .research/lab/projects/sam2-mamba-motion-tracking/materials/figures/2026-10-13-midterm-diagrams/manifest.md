@@ -34,7 +34,7 @@ SOFFICE=/path/to/soffice python export_png.py   # 既定: このフォルダのp
 | `png/05-old-bbox-mask-merge.png` | （旧）合流図 |
 | `png/06-sliding-window-vs-state-carry.png` | Mambaによる時系列情報の取り込み方（sliding window型とstate carry型を左右に並べた図） |
 | `png/07-motion-prediction.png` | Mambaを用いた動き予測（正常な場合の模式図） |
-| `png/08-proposed-method.png` | 提案手法（ID 1〜4 を上下に並べた図。本体で使う） |
+| `png/08-proposed-method.png` | 提案手法（SAM2 より後ろを ID 1〜4 の4枚重ねにし，矢印も4本ずつ描いた図。2026-10-16 先生のFB F3 で上下に並べた版から変更） |
 | `png/09-proposed-method-stacked.png` | （旧）提案手法：IDごとのマスクを重ねた図（差し替え用に残す） |
 
 - PNGはLibreOfficeで描いたもの。この環境にないフォントは置き換わる（テーマの「Noto Sans JP」→「Noto Sans CJK JP」）ため、PowerPointの表示と少しずれることがある。
