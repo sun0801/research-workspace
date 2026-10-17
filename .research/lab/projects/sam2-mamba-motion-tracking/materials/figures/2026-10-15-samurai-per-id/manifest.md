@@ -10,7 +10,11 @@
 | `masks_all.png` | 元の図のマスク画像（4人を紫・緑・赤・黄で塗ったもの） |
 | `input_sot.png` | 4枚目の入力動画。dancetrack0052 の frame 1（元の図の入力画像と同じフレーム）を 629×351 にし、GT で左端の人（GT の ID 1）の枠だけを、マスク画像の ID 1 と同じ紫で描いたもの |
 | `mask_sot.png` | 4枚目のマスク。`mask_id1.png` から、ほかの3人の薄い枠を消したもの |
+| `mask_id1_wrong.png` | 課題点スライド（4枚重ねの図）用の模式図。ID 1 の色（紫）を ID 2 の人に付け，ID 1 の人は灰色にしたもの（実際の追跡結果ではない）。`make_wrong_id.py` で作る |
+| `mask_id2_wrong.png` | 課題点スライド用の模式図。ID 2 の色（緑）を ID 3 の人に付け，ID 2 の人は灰色にしたもの（実際の追跡結果ではない）。`make_wrong_id.py` で作る（OpenCV が要るので samurai 環境の python で実行） |
 | `mask_id{k}.png` | ID k の枠の中だけ色を残し，ほかを薄い灰色にしたもの（k = 1〜4，左から） |
 
+- `make_sot.py`（`input_sot.png`・`mask_sot.png`）と `make_wrong_id.py` は OpenCV が要るので samurai 環境の python で実行する。
 - `make_per_id.py` で作り直せる（枠の座標は画像に描かれた枠から手で読んだ値）。
+
 - `panel-stack-draft.jpg`: 2026-10-15 に作って取りやめた「ID ごとの枠（パネル）を重ねた」提案手法の図の画像（4枚目に合わせる前の簡略図がもと）。2026-10-16 の先生のFB F3 の検討用に残した。
