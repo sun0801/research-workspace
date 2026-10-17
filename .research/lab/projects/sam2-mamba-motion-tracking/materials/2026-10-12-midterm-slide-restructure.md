@@ -127,6 +127,11 @@ tags: [presentation, midterm, restructure]
 - 8枚目（同日の追加修正）: ユーザーの希望で、IDごとのマスクを重ねる形から**上下に並べる形**に変えた。ID 1〜4 の行ごとに「マスク → Mambaによる動き予測」を並べ、Mamba の出力を1本にまとめて motion score へ。図の上の赤字の注記は外し、列の見出し（IDごとのマスク / IDごとに並列）にした。
 - 重ねた形の図も、あとで戻せるように残した。本体では非表示スライド「（旧）提案手法：IDごとのマスクを重ねた図」（最後尾）、図だけのpptxでは同じ題のスライド（`png/09-proposed-method-stacked.png`）。
 
+## 2026-10-15 4枚目のSAMURAIの図を単一物体（SOT）に
+
+- SAMURAI は単一物体追跡なのに、図では4人全員に bbox prompt とマスクがあり MOT をしているように見えていた（5枚目の表とも食い違う）。入力の bbox prompt とマスクを左端の1人だけにし、マスクの上に「追跡する対象は1人（SOT）」と入れた。画像は同じ場面のまま（[作り方](figures/2026-10-15-samurai-per-id/manifest.md)）。
+- これで4枚目（SAMURAI：1人を追う）と8枚目（提案手法1：IDごとに並列で全員を追う＋KF→Mamba）の違いが、表の行（SAMURAI：SOT / 手法1：MOT）と合う。
+
 ## 2026-10-16 先生のFB（F1〜F3）への対応
 
 - F1（従来のMOT手法）: ID付き・検出結果の画像の枠を太くし（元画像で 12 px → 40 px）、IDの番号を外した。[作り方](figures/2026-10-15-mot-paradigm-timeline/manifest.md)
