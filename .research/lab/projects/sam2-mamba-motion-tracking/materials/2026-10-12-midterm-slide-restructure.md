@@ -127,6 +127,9 @@ tags: [presentation, midterm, restructure]
 - 8枚目（同日の追加修正）: ユーザーの希望で、IDごとのマスクを重ねる形から**上下に並べる形**に変えた。ID 1〜4 の行ごとに「マスク → Mambaによる動き予測」を並べ、Mamba の出力を1本にまとめて motion score へ。図の上の赤字の注記は外し、列の見出し（IDごとのマスク / IDごとに並列）にした。
 - 重ねた形の図も、あとで戻せるように残した。本体では非表示スライド「（旧）提案手法：IDごとのマスクを重ねた図」（最後尾）、図だけのpptxでは同じ題のスライド（`png/09-proposed-method-stacked.png`）。
 
+## 2026-10-16 先生のFB（F1〜F3）への対応
+
+- F1（従来のMOT手法）: ID付き・検出結果の画像の枠を太くし（元画像で 12 px → 40 px）、IDの番号を外した。[作り方](figures/2026-10-15-mot-paradigm-timeline/manifest.md)
 ## 自作図のバックアップ
 
 自作の図（3・4・6・7枚目）は、[抜き出し版のpptx](figures/2026-10-13-midterm-diagrams/manifest.md)にも保存した。

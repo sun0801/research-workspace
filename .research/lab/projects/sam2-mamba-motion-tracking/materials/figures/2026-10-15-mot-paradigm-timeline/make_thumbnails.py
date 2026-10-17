@@ -2,7 +2,7 @@
 """Frame images for the TBD / TBA timeline diagrams (dancetrack0052 GT, three frames).
 
 For each frame k: frame_k.png (input), det_k.png (white boxes, no ID: detector output),
-trk_k.png (ID-colored boxes: tracking output), tba_k.png (ID-colored boxes + dashed search
+trk_k.png (ID-colored boxes, no ID label: tracking output), tba_k.png (ID-colored boxes + dashed search
 region around the previous frame's box of ID 1, as in template matching). Boxes are GT and only
 illustrate what each stage outputs.
 
@@ -19,6 +19,7 @@ SEQ = Path("/mnt/HDD10TB-2/aburatani/dataset/DanceTrack/train2/train2/dancetrack
 OUT = Path(__file__).parent
 SIZE = (725, 500)
 SEARCH_ID = 0  # GT ID 0（表示は ID 1）
+TH = 40  # 枠の太さ（元画像の画素）。スライドでは約1.15インチ幅に縮むので太めにする（2026-10-15 先生のFB）
 COLORS = {0: (60, 60, 230), 1: (220, 140, 30), 2: (70, 180, 60), 3: (180, 60, 170)}  # BGR, ID 1-4
 
 
@@ -63,11 +64,10 @@ def main():
         base = cv2.imread(str(SEQ / "img1" / f"{f:08d}.jpg"))
         det, trk, tba = base.copy(), base.copy(), base.copy()
         for tid, (x, y, w, h) in boxes[f].items():
-            p1, p2 = (round(x), max(4, round(y))), (round(x + w), min(1075, round(y + h)))
-            cv2.rectangle(det, p1, p2, (255, 255, 255), 12, cv2.LINE_AA)
+            p1, p2 = (round(x), max(TH // 2, round(y))), (round(x + w), min(1079 - TH // 2, round(y + h)))
+            cv2.rectangle(det, p1, p2, (255, 255, 255), TH, cv2.LINE_AA)
             for im in (trk, tba):
-                cv2.rectangle(im, p1, p2, COLORS[tid], 12, cv2.LINE_AA)
-                label(im, p1, str(tid + 1), COLORS[tid])
+                cv2.rectangle(im, p1, p2, COLORS[tid], TH, cv2.LINE_AA)  # ID の番号は付けない（色で区別）
         if True:  # 前フレームの位置の周辺（探索範囲）。見やすさのため1人（ID 1）だけ描く
             for tid, (x, y, w, h) in boxes[frames[k - 1] if k else prev].items():
                 if tid != SEARCH_ID:
