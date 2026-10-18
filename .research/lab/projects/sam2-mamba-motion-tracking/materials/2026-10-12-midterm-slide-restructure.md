@@ -163,6 +163,11 @@ tags: [presentation, midterm, restructure]
 - F4（課題点）: 8枚目の図（4枚重ね）をそのまま使った。手前の ID 1 のマスクを、紫が別の人（ID 2 の人）に付いた模式図に替え、SAM2 と ID 1 のマスクを赤枠で囲んで ①、Mamba の箱に ② の印を付けた。図の上に「① SAM2 が ID 1 のマスクを別の人に付ける（候補そのものが誤り）」「② Mamba は受け取った box をなめらかにするだけ → 直せない」。本文は前の版と同じ。上下に並べた版は非表示スライド「（旧）提案手法の課題点（上下に並べた図）」として残した。
 - 2026-10-17: 8枚目と課題点の図で、手前の ID 1 以外（奥の ID 2〜4 の箱・マスク画像・score の箱・線）を薄くした（不透明度 40%、奥の線は薄い灰色。一度 25% まで薄くしたが、ユーザーの判断で 40% に戻した）。
 
+## 2026-10-17 定量的評価の表を小数第2位にそろえた
+
+- ユーザーの依頼で、HOTA / DetA / AssA / IDF1 を小数第2位（4桁）にした。値は TrackEval の `pedestrian_summary.txt`（小数第3位）を四捨五入したもの。SAM2・SAMURAI・Ours（window）は `TrackEval/data/trackers/dancetrack/val/{my_sam2_model,my_samurai_model,my_samurai_mamba_model}`、Ours（state）は [7/23 の評価](../experiments/2026-07-23-sam2-minimal-integration-25seq.md) の summary。
+- SAM2 51.27 / 45.51 / 58.26 / 58.49、SAMURAI 54.11 / 47.89 / 61.48 / 62.33、Ours（window）53.28 / 46.83 / 61.00 / 61.27、Ours（state）55.52 / 49.60 / 62.48 / 64.15。IDSW と太字の位置は変わらない。
+
 ## 自作図のバックアップ
 
 自作の図（3・4・6・7枚目）は、[抜き出し版のpptx](figures/2026-10-13-midterm-diagrams/manifest.md)にも保存した。
