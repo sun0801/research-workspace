@@ -355,6 +355,50 @@ note(s, 0.35, 6.95, 12.8, 0.5,
      "B：一度に処理する系列の数（学習 64，推論 1 ＝ 物体ごと）　T：系列の長さ（学習 11，推論では1観測につき 1）　パラメータ数：約138万\n"
      "層の間に残差接続や正規化はなく，3つの Mamba ブロックをそのまま重ねている。形は学習済みの重み（epoch100.pth）の形と一致", size=11)
 
+# ---- 5e) Selective SSM の中身と，状態方程式・出力方程式の A, B, C, D の対応（1つの Mamba ブロックの中）
+s = new_slide("補足：Selective SSMとA・B・C・D")
+IN_F, IN_L = RGBColor(0xFB, 0xE5, 0xD6), RGBColor(0xED, 0x7D, 0x31)    # 入力から毎時刻作る
+FX_F, FX_L = RGBColor(0xED, 0xED, 0xED), RGBColor(0x7F, 0x7F, 0x7F)    # 学習で決まる固定の値
+box(0.35, 3.25, 2.0, 1.0, [("SSM への入力 x_{t}", True), "Conv1d → SiLU の後", "(512)"], LIN_F, LIN_L, size=12)
+box(2.75, 3.25, 1.9, 1.0, [("x_proj", True), "Linear 512 → 48"], LIN_F, LIN_L, size=13)
+box(5.05, 1.45, 2.4, 1.0, [("Δ_{t}（刻み幅）", True), "16 → dt_proj → softplus", "(512)"], IN_F, IN_L, size=12)
+box(5.05, 3.25, 2.4, 1.0, [("B_{t}", True), "書き込み方", "(16)"], IN_F, IN_L, size=12)
+box(5.05, 5.05, 2.4, 1.0, [("C_{t}", True), "読み出し方", "(16)"], IN_F, IN_L, size=12)
+box(5.05, 0.0 + 6.35, 2.4, 0.6, [("D", True), "固定 (512)"], FX_F, FX_L, size=12)
+box(7.85, 0.0 + 1.25 - 0.0, 2.1, 0.75, [("A ＝ −exp(A_log)", True), "固定 (512 × 16)"], FX_F, FX_L, size=12)
+box(7.85, 2.3, 2.1, 0.75, [("Ā_{t} ＝ exp(Δ_{t} A)", True), "どれだけ保つか"], IN_F, IN_L, size=12)
+box(7.85, 3.35, 2.1, 0.75, [("B̄_{t} ＝ Δ_{t} B_{t}", True), "どれだけ書き込むか"], IN_F, IN_L, size=12)
+box(10.3, 2.05, 2.75, 1.6, [("状態方程式（記憶を更新）", True), "h_{t} ＝ Ā_{t} h_{t−1} ＋ B̄_{t} x_{t}", "状態 h：(512 × 16)"], MB_F, MB_L, size=13, lw=2.5)
+box(10.3, 4.6, 2.75, 1.6, [("出力方程式（記憶を読む）", True), "y_{t} ＝ C_{t} h_{t} ＋ D x_{t}", "(512)"], MB_F, MB_L, size=13, lw=2.5)
+box(10.3, 6.5, 2.75, 0.5, ["× SiLU(z) → out_proj へ"], GR_F, GR_L, size=12)
+arrow([(11.67, 6.2), (11.67, 6.5)])
+# 矢印
+arrow([(2.35, 3.75), (2.75, 3.75)])
+arrow([(4.65, 3.6), (4.85, 3.6), (4.85, 1.95), (5.05, 1.95)])     # → Δ
+arrow([(4.65, 3.75), (5.05, 3.75)])                                # → B
+arrow([(4.65, 3.9), (4.85, 3.9), (4.85, 5.55), (5.05, 5.55)])     # → C
+arrow([(7.45, 1.95), (7.65, 1.95), (7.65, 2.55), (7.85, 2.55)])   # Δ → Ā
+arrow([(8.9, 2.0), (8.9, 2.3)])                                    # A → Ā
+arrow([(7.65, 2.55), (7.65, 3.6), (7.85, 3.6)])                    # Δ → B̄
+arrow([(7.45, 3.75), (7.85, 3.75)])                                # B → B̄
+arrow([(9.95, 2.67), (10.3, 2.67)])                                # Ā → 状態
+arrow([(9.95, 3.72), (10.15, 3.72), (10.15, 3.2), (10.3, 3.2)])   # B̄ → 状態
+arrow([(11.67, 3.65), (11.67, 4.6)])                               # h_t → 出力
+arrow([(7.45, 5.55), (10.3, 5.55)])                                # C → 出力
+arrow([(7.45, 6.65), (10.0, 6.65), (10.0, 6.05), (10.3, 6.05)])    # D → 出力
+arrow([(1.35, 4.25), (1.35, 4.5), (10.6, 4.5), (10.6, 3.65)], color=LIN_L)   # x_t → 状態（B̄_t x_t）
+arrow([(9.6, 4.5), (9.6, 4.85), (10.3, 4.85)], color=LIN_L)                  # x_t → 出力（D x_t）
+arrow([(13.05, 2.85), (13.2, 2.85), (13.2, 1.8), (12.3, 1.8), (12.3, 2.05)], color=MB_L, w=2.0)  # h_{t-1} の引き継ぎ
+shp(11.3, 1.45, "前の時刻の h_{t−1}", w=1.9)
+shp(2.6, 4.53, "x_{t}（状態方程式の B̄_{t} x_{t} と，出力方程式の D x_{t} に使う）", w=6.8)
+note(s, 0.35, 6.3, 4.4, 1.0, "・A は対角で，チャンネルごとに16個（512 × 16）\n・B・C は512チャンネルで共通，Δ はチャンネルごと（どれも時刻ごとに変わる）\n・3つの Mamba ブロックが，それぞれ別の A・D・x_proj を持つ", size=11)
+# 凡例
+for i, (f, l, txt) in enumerate(((IN_F, IN_L, "入力から毎時刻作る（Δ・B・C）：選択メカニズム"), (FX_F, FX_L, "学習で決まる固定の値（A・D）"),
+                                 (MB_F, MB_L, "状態の更新と読み出し"))):
+    sw = s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(0.4), Inches(5.0 + 0.42 * i), Inches(0.3), Inches(0.25))
+    sw.fill.solid(); sw.fill.fore_color.rgb = f; sw.line.color.rgb = l; sw.shadow.inherit = False
+    note(s, 0.75, 4.97 + 0.42 * i, 4.2, 0.3, txt, size=12, color=TXT)
+
 # ---- 6) 手法2の予備実験（MOSE）
 s = new_slide("補足：手法2の予備実験（MOSE，単一物体）", "タイトルとコンテンツ")
 body(s, [(0, "SAM2.1 small に時間方向の Mamba を加えて追加学習"),
@@ -385,5 +429,6 @@ note(s, 0.6, 4.7, 12.1, 0.9, "単体での良さと，SAM2 に組み込んだと
 _lst = prs.slides._sldIdLst
 _ids = {sl.shapes.title.text_frame.text: el for sl, el in zip(prs.slides, list(_lst))}
 _el = _ids["補足：動き予測器の各部分のテンソルの形"]; _lst.remove(_el); _ids["補足：動き予測器のMambaブロック"].addnext(_el)
+_el2 = _ids["補足：Selective SSMとA・B・C・D"]; _lst.remove(_el2); _el.addnext(_el2)
 prs.save(str(OUT))
 print("saved", OUT, len(prs.slides), "slides; per-seq: wins", win, "range", round(diff[-1][0], 2), round(diff[0][0], 2))
