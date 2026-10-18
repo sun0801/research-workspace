@@ -110,3 +110,20 @@ tags: [experiment, qualitative, video, midterm, DanceTrack]
 - 全部うまくいかない: dancetrack0026 の全302フレーム（GT / SAM2 / SAMURAI / Ours、10fpsで約30秒）。
 - 提案手法だけうまくいかない: dancetrack0079 GT 8、frame 812–891（注目人物の周辺を切り出し、GT / SAM2 / SAMURAI / Ours）。Oursだけがframe 842–864で見失う。
 - 再構成版スライドの16・17枚目に入れた（2026-10-17）。
+
+## 2026-10-17 再構成版スライドへの反映（4パターン×1系列）
+
+ユーザーの依頼で、手元の版（`20261018_中間発表_油谷.pptx`）に一度入れた変更は取り消して元に戻し、[再構成版](../materials/2026-10-12-midterm-slides-restructured.pptx)に入れた。③④は、注目する人物と、その人物に関わる track だけを描いた3手法の動画にした（[作り方](figures/2026-10-17-qualitative-focal-only/manifest.md)）。
+
+| スライド | 系列 | 動画 |
+|---|---|---|
+| 16 全手法でうまくいっている例 | dancetrack0058, frame 1–200（20秒、人の重なりあり） | occok20s full（GT＋3手法、frame 番号なし。[オクルージョンがあっても3手法とも全員の ID を保つ区間](figures/2026-10-17-qualitative-occlusion/manifest.md)。0097 の25秒版から差し替え） |
+| 17 全手法でうまくいかない例 | dancetrack0026, 全302フレーム | 2回目 allfail full（GT＋3手法、変更なし） |
+| 18 局所的にうまくいっている例 | dancetrack0025 GT 3, frame 71–150 | localok focal（3手法） |
+| 19 局所的にうまくいっていない例 | dancetrack0007 GT 1, frame 314–413（10秒） | localfail0007 target（3手法、縦長。GT は緑、ID 1 だけ水色。Ours だけ ID 1 が隣の人に移る。0079 GT 8 から差し替え） |
+
+- 「定性的評価：代表例」「4パターンの比較」と、本編と重なる「補足：① 少人数でうまくいく例（1）」は非表示にした。
+- 前の「提案手法だけうまくいかない例」（GT＋3手法、全 track）は、補足「④ 局所的に見てうまくいかない例（dancetrack0079，全 track）」として残した。
+- PowerPoint での再生確認はユーザーに依頼。
+- 本編4枚の動画は、左下の frame 番号を消した版に差し替えた（[作り方](figures/2026-10-17-qualitative-main-nolabel/manifest.md)）。補足は番号ありのまま。
+- （上の手元の版への反映は、ユーザーの依頼で取り消し、作業前のファイルに戻した。）
