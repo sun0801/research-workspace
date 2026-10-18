@@ -658,3 +658,14 @@ F0のtuning J&Fは最後のstepまで単調に上がり、最終stepが最良だ
 3. lockbox 200系列は使用済みなので、同じ200系列での再評価は探索的な扱いになる。確証的な評価には新しいholdoutが必要。
 
 再学習には新しいspecとImplementation Gateの承認が必要。
+
+## 追記 2026-10-18：adapterの学習と推論で計算経路が違っていた
+
+V3 specのレビューで見つかり、コードで確認した（SAM2 repo `dev`、HEAD `f52a744`）。
+
+- 推論の `TemporalMambaAdapter.step()`（`sam2/modeling/temporal_mamba_adapter.py` 147〜150行）は、Mambaの出力に外側の `self.output_proj` をかけてから残差にする。
+- 学習の `training_step()`（同ファイル270〜272行）は、`_mamba_training_step()` の出力（`mamba.out_proj` まで）をそのまま残差にしており、外側の `self.output_proj` を通さない。
+- そのためF1では、`output_proj` は学習で使われず、更新されなかった。一方、tuningとlockboxの評価では、学習されていない（初期値の）`output_proj` が推論時にかかっていた。
+- 10/9の事後診断の表で `output_proj.weight` のnormがstep 500〜2789で9.231のまま変わらなかったことは、この未使用経路と整合する（AdamWは勾配のないパラメータにweight decayもかけない）。「出力層がほぼ更新されない」の原因は、LR不足だけでなく、この経路の欠落も含めて考える。
+- F1・F1-resetのスコアへの影響量は測っていない。alphaが約2e-4以下で残差がほぼゼロだったため、影響は小さいと見込むが未検証。10/9の解釈（Mamba adapterの効果を有効に検証できていない）は変わらない。
+- 新しいV3 spec（[2026-10-18-temporal-mamba-v3-mose-adapter-spec.md](../specs/2026-10-18-temporal-mamba-v3-mose-adapter-spec.md)）では、学習と推論を同じforwardにまとめ、ゼロでない残差・複数フレーム・TBPTTの境界で両者が一致することを段階0aで確認する。lockboxの数値と凍結済みの手順は変更しない。
