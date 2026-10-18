@@ -6,7 +6,7 @@
 |---|---|---|---|
 | 1 | 系列ごとのHOTAの差 | 改善は意味があるか／どの系列で効くか | TrackEval の系列別 HOTA（SAMURAI：`TrackEval/data/trackers/dancetrack/val/my_samurai_model/pedestrian_detailed.csv`、Ours（state）：7/23 評価の `pedestrian_detailed.csv`）。グラフは PowerPoint のネイティブのグラフ |
 | 2 | 評価の条件 | 一般的な MOT と比べられるか | 実験設定（全対象を正解 bbox で初期化、SAMURAI の並列化、SAM2 tiny、val 25系列） |
-| 3 | マスク候補選択のスコアと重み | Mamba の予測をどれくらい使っているか | [kf_score_weight の比較](../../../experiments/2026-07-28-sam2-kf-score-weight-epoch100-25seq.md)（w＝0.0 / 0.5）と表の値（w＝0.25）。表の Ours が w＝0.25 であることは推論ログ（candidate_debug の weighted_scores）から逆算して確認 |
+| 3 | マスク候補選択のスコアと重み | Mamba の予測をどれくらい使っているか | [kf_score_weight の比較](../../../experiments/2026-07-28-sam2-kf-score-weight-epoch100-25seq.md)（w＝0.5）と表の値（w＝0.25）。w＝0.0 の実行は設定の取り違えで24系列が 0.5 になっていたため使わない（2026-10-18 に判明、同記録に訂正を追記）。表の Ours が w＝0.25 であることは推論ログ（candidate_debug の weighted_scores）から逆算して確認 |
 | 4 | 等速の仮定による予測のずれ | なぜ学習ベースにするのか | [dancetrack0052 の図](../2026-10-14-kf-constant-velocity-example/manifest.md) |
 | 5 | 動き予測器のMambaブロック | Mamba の構成 | 再構成版スライドの同名スライドを複写。d_model 256、d_state 16 は [7/23 の記録](../../../experiments/2026-07-23-sam2-minimal-integration-25seq.md) |
 | 5d | 動き予測器の各部分のテンソルの形 | どの部分がどんな形のテンソルを扱うか | 5 の Mamba ブロックの図をもとに描き直した図。形は学習コード `models/MambaStateful.py` と、学習済みの重み `epoch100.pth` の各パラメータの形（in_proj 1024×256，conv1d 512×1×4，x_proj 48×512，dt_proj 512×16，A_log 512×16，out_proj 256×512，head 256→256→4。合計約138万）で確認。B は系列の数（学習 64，推論 1），T は系列の長さ（学習 11，推論 1） |
