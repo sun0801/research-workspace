@@ -3,7 +3,7 @@
 ダウンロードのたびに大きな本体を確認しなくて済むよう、[再構成版スライド](../../2026-10-12-midterm-slides-restructured.pptx)から定性的評価のスライドだけを抜き出したもの（ユーザーの依頼）。図だけのファイル（[2026-10-13-midterm-diagrams](../2026-10-13-midterm-diagrams/manifest.md)）と同じ扱い。
 
 - `2026-10-17-midterm-qualitative.pptx`（約130MB、動画は埋め込み）: 本編4枚（全手法でうまくいっている例 / 全手法でうまくいかない例 / 局所的にうまくいっている例 / 局所的にうまくいっていない例）と、補足の定性比較8枚。非表示のスライドは入れていない。
-- 動画の作り方: [1回目](../../../experiments/2026-10-12-qualitative-pattern-videos.md)、[2回目](../../../experiments/figures/2026-10-17-qualitative-patterns-v2/manifest.md)、[注目人物だけの版](../../../experiments/figures/2026-10-17-qualitative-focal-only/manifest.md)。
+- 動画の作り方: [1回目](../../../../experiments/2026-10-12-qualitative-pattern-videos.md)、[2回目](../../../../experiments/figures/2026-10-17-qualitative-patterns-v2/manifest.md)、[注目人物だけの版](../../../../experiments/figures/2026-10-17-qualitative-focal-only/manifest.md)。
 - 抜き出すとき、補足スライドのアニメーション設定に残っていた「もう無い動画」への参照（各スライド1つ）を消した。本体の同じスライドにも同じ参照が残っている（再生には影響しないと思われるが未確認）。
 - 本体の定性的評価を直したら、`make_qualitative_pptx.py` で作り直す（本体から、表示中の「定性的評価：」と「補足：…例」のスライドだけを残す）。
 - 2026-10-17: 本編4枚の動画を frame 番号なしの版に差し替え、④を10秒版（dancetrack0007 frame 314–413）にしたので作り直した。

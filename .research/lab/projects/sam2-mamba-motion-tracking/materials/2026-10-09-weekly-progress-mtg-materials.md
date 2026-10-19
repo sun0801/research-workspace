@@ -225,7 +225,7 @@ adapterの出力は `pix_feat + alpha * residual`（alphaの初期値は0）。
 - 17枚目: 「SAMURAIに対しHOTA等が小幅に向上、IDSWは減少せず」と書き、今後の作業を1行加える。
 - 細かい点: 3枚目のTransTrackの出典の誤り、15枚目の「追放後」→「追跡後」、表紙の日付。
 
-詳細は [中間発表スライドのレビュー](2026-10-09-midterm-slide-review.md)。
+詳細は [中間発表スライドのレビュー](../papers/2026-midterm/2026-10-09-midterm-slide-review.md)。
 
 ### 7.2 定性比較動画（10/8）
 
@@ -276,7 +276,7 @@ dancetrack0034のframe 300〜340（41 frame、10 fps）で、SAM2 / SAMURAI / Ma
 - [DanceTrack test評価構成の調査](../papers/2026-10-06-deep-research-dancetrack-test-evaluation-configurations.md)
 - [SAM2MOT性能差の調査方針（brainstorm）](../../../../secretary/notes/brainstorm/2026-10-06-sam2mot-performance-gap-investigation.md)
 - [論文調査の運用（brainstorm）](../../../../secretary/notes/brainstorm/2026-10-06-literature-research-workflow.md)
-- [中間発表スライドのレビュー](2026-10-09-midterm-slide-review.md)
+- [中間発表スライドのレビュー](../papers/2026-midterm/2026-10-09-midterm-slide-review.md)
 - [定性比較動画](../experiments/figures/2026-10-08-dancetrack0034-frames300-340-qualitative.md)
 - [9/30 議事録](../meetings/2026-09-30-mtg.md)
 - 図の生成元: 上記実験ログの数値から作成（[manifest](figures/2026-10-09-weekly-progress/manifest.md)）

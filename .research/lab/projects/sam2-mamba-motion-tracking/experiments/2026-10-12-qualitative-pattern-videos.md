@@ -92,7 +92,7 @@ tags: [experiment, qualitative, video, midterm, DanceTrack]
 
 ## スライドへの反映
 
-[中間発表スライド（再構成版）](../materials/2026-10-12-midterm-slides-restructured.pptx)に入れた。
+[中間発表スライド（再構成版）](../papers/2026-midterm/2026-10-12-midterm-slides-restructured.pptx)に入れた。
 
 - 定性的評価：代表例 → p0（3手法×crop）
 - 定性的評価：4パターンの比較 → p1a・p2a・p3a・p4a（各3手法×crop）
@@ -113,7 +113,7 @@ tags: [experiment, qualitative, video, midterm, DanceTrack]
 
 ## 2026-10-17 再構成版スライドへの反映（4パターン×1系列）
 
-ユーザーの依頼で、手元の版（`20261018_中間発表_油谷.pptx`）に一度入れた変更は取り消して元に戻し、[再構成版](../materials/2026-10-12-midterm-slides-restructured.pptx)に入れた。③④は、注目する人物と、その人物に関わる track だけを描いた3手法の動画にした（[作り方](figures/2026-10-17-qualitative-focal-only/manifest.md)）。
+ユーザーの依頼で、手元の版（`20261018_中間発表_油谷.pptx`）に一度入れた変更は取り消して元に戻し、[再構成版](../papers/2026-midterm/2026-10-12-midterm-slides-restructured.pptx)に入れた。③④は、注目する人物と、その人物に関わる track だけを描いた3手法の動画にした（[作り方](figures/2026-10-17-qualitative-focal-only/manifest.md)）。
 
 | スライド | 系列 | 動画 |
 |---|---|---|

@@ -26,6 +26,8 @@
 │   └── figures/
 ├── references/
 └── papers/
+    └── <deliverable>/   # 例: 2026-view/, 2026-midterm/, master-thesis/, cvpr/
+        └── figures/
 ```
 
 ## 保存先の使い分け
@@ -39,6 +41,8 @@
 - `experiments/figures/`: 実験正本図、実験データから生成したグラフ、再利用可能な結果図。
 - `references/`: 外部資料、Notion export、配布資料、参考資料。原則読み取り専用。
 - `papers/`: 論文メモ、原稿関連メモ。
+- `papers/<deliverable>/`: 学会原稿・修論・中間発表など、対外的な成果物ごとの原稿、スライド、発表原稿、想定質問。フォルダ直下の `README.md` に中身と締切を書く。
+- `papers/<deliverable>/figures/`: その成果物のために作った図・動画。実験結果の正本図は `experiments/figures/` に置き、リンクで参照する。
 
 ## スキルの使い分け
 

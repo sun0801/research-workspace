@@ -12,9 +12,9 @@ tags: [presentation, midterm, restructure]
 
 ## 対象
 
-- 元ファイル: [20261017_中間発表_油谷.pptx](20261017_中間発表_油谷.pptx)（変更していない）
+- 元ファイル: [20261017_中間発表_油谷.pptx](../../materials/20261017_中間発表_油谷.pptx)（変更していない）
 - 再構成版: [2026-10-12-midterm-slides-restructured.pptx](2026-10-12-midterm-slides-restructured.pptx)
-- 根拠: [10/9 MTG議事録](../meetings/2026-10-09-mtg.md)、[中間発表スライドのレビュー](2026-10-09-midterm-slide-review.md)
+- 根拠: [10/9 MTG議事録](../../meetings/2026-10-09-mtg.md)、[中間発表スライドのレビュー](2026-10-09-midterm-slide-review.md)
 
 ## 編集のしかた
 
@@ -25,7 +25,7 @@ tags: [presentation, midterm, restructure]
 
 ## 新しい構成（表示32枚＋非表示4枚）
 
-2026-10-12 夜に定性比較の動画を入れた（14・15枚目、20〜27枚目）。2026-10-13に、手法ごとに別の動画へ分け、スライド上で個別に動かせるようにした。動画の選び方は[定性比較動画の実験メモ](../experiments/2026-10-12-qualitative-pattern-videos.md)にある。
+2026-10-12 夜に定性比較の動画を入れた（14・15枚目、20〜27枚目）。2026-10-13に、手法ごとに別の動画へ分け、スライド上で個別に動かせるようにした。動画の選び方は[定性比較動画の実験メモ](../../experiments/2026-10-12-qualitative-pattern-videos.md)にある。
 
 | # | スライド | 元 | 変更内容 |
 |---:|---|---|---|
@@ -131,7 +131,7 @@ tags: [presentation, midterm, restructure]
 
 - タイトルを「動き予測へのMambaの組み込み方」に変え、「2 つのコンテンツ」のレイアウトで左右に並べた。左：sliding window型（直近 L フレームの bbox を毎回入力 / 使う過去：直近 L フレームのみ / MOT の手法に多い）。右：state carry型（対象ごとの隠れ状態 h を毎時刻更新 / 使う過去：これまでの全体 / SOT の手法に多い）。
 - 2つの図を左右に並べ、縮めた分だけ図の中の文字も縮めた（sliding window型 0.54倍、state carry型 0.79倍）。下に「本研究：SAMURAI に両方を組み込み，MOT で比較」。
-- 「〜に多い」の根拠：[specs/2026-07-07-state-carry-research-direction.md](../specs/2026-07-07-state-carry-research-direction.md) の整理（sliding window型：MambaTrack・TrackSSM・MambaMOT・SportMamba、state carry型：MCITrack・SMTrack）。SOTでも引き継がない例（Mamba-FETrack）があるので「〜のみ」とはしない。
+- 「〜に多い」の根拠：[specs/2026-07-07-state-carry-research-direction.md](../../specs/2026-07-07-state-carry-research-direction.md) の整理（sliding window型：MambaTrack・TrackSSM・MambaMOT・SportMamba、state carry型：MCITrack・SMTrack）。SOTでも引き継がない例（Mamba-FETrack）があるので「〜のみ」とはしない。
 - 並び：研究の目的 → 動き予測モデル：Mamba → Mambaを用いた動き予測 → 動き予測へのMambaの組み込み方 → 提案手法（ユーザーの指定。MTGの「目的の直後」とは違うが、MTGでも順番は議論の余地ありとされた）。
 
 ## 2026-10-15 「提案手法の課題点」（10/14 MTGの指摘 #11）
@@ -165,7 +165,7 @@ tags: [presentation, midterm, restructure]
 
 ## 2026-10-17 定量的評価の表を小数第2位にそろえた
 
-- ユーザーの依頼で、HOTA / DetA / AssA / IDF1 を小数第2位（4桁）にした。値は TrackEval の `pedestrian_summary.txt`（小数第3位）を四捨五入したもの。SAM2・SAMURAI・Ours（window）は `TrackEval/data/trackers/dancetrack/val/{my_sam2_model,my_samurai_model,my_samurai_mamba_model}`、Ours（state）は [7/23 の評価](../experiments/2026-07-23-sam2-minimal-integration-25seq.md) の summary。
+- ユーザーの依頼で、HOTA / DetA / AssA / IDF1 を小数第2位（4桁）にした。値は TrackEval の `pedestrian_summary.txt`（小数第3位）を四捨五入したもの。SAM2・SAMURAI・Ours（window）は `TrackEval/data/trackers/dancetrack/val/{my_sam2_model,my_samurai_model,my_samurai_mamba_model}`、Ours（state）は [7/23 の評価](../../experiments/2026-07-23-sam2-minimal-integration-25seq.md) の summary。
 - SAM2 51.27 / 45.51 / 58.26 / 58.49、SAMURAI 54.11 / 47.89 / 61.48 / 62.33、Ours（window）53.28 / 46.83 / 61.00 / 61.27、Ours（state）55.52 / 49.60 / 62.48 / 64.15。IDSW と太字の位置は変わらない。
 
 ## 自作図のバックアップ
@@ -179,7 +179,7 @@ tags: [presentation, midterm, restructure]
 - **4枚目の流れ図**: OC-SORTとTransTrackは「bbox系の代表例」として置いた。SAM2MOTが両方の系統から直接派生したとは主張していない。口頭では「研究の流れが合流してきた」と説明する。
 - **11枚目**: 本文は数式と同じブロック（数式用の代替画像を持つ形式）に入っている。PowerPointでは新しい文面が表示される。LibreOfficeなど一部の表示環境では、代替画像（旧文面）が表示される。PowerPointで一度開いて確認する。
 - **9枚目の図**: 「affinity head / affinity score」の名称（レビュー指摘）は、図の中なので変更していない。必要なら手で直す。
-- **14枚目の旧動画**: 10/8のdancetrack0034の動画は、定量表とは別の推論結果（SAM2・SAMURAI）から作られていた（[実験メモ](../experiments/2026-10-12-qualitative-pattern-videos.md)）。そのため差し替えた。元のpptxには残っている。
+- **14枚目の旧動画**: 10/8のdancetrack0034の動画は、定量表とは別の推論結果（SAM2・SAMURAI）から作られていた（[実験メモ](../../experiments/2026-10-12-qualitative-pattern-videos.md)）。そのため差し替えた。元のpptxには残っている。
 - **ファイルサイズ**: 約160MB（ユーザー了承済み）。
 - **17枚目の図**: 左端の「image embedding」は、正確にはMemory Attention後の対象別pix_feat（レビュー指摘）。図の中なので変更していない。口頭で補うか、手で直す。
 

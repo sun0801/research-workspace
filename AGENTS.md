@@ -59,6 +59,7 @@ Codex と Claude Code の入口は、同じ正本を参照するリンクです�
             │   └── figures/    # MTG説明用の再構成図・概念図
             ├── references/     # 外部資料・参考資料。原則読み取り専用
             └── papers/         # 論文メモ・原稿関連メモ
+                └── <deliverable>/  # 原稿・発表ごとのまとまり（例: 2026-view/, master-thesis/）。figures/ を含む
 ```
 
 ## 運営ルール
@@ -82,6 +83,7 @@ Codex と Claude Code の入口は、同じ正本を参照するリンクです�
 - `references/` は、ユーザーが明示的に依頼しない限り編集しないでください。
 - MTG前資料の正本は `materials/` に保存してください。`meetings/` はMTG後の議事録専用です。
 - MTG説明用の概念図・再構成図は `materials/figures/` に保存してください。実験結果そのものの正本図は `experiments/figures/` に保存してください。
+- 学会原稿・修論・中間発表など対外的な成果物の原稿・スライド・発表用の図は、`papers/<deliverable>/`（図は `papers/<deliverable>/figures/`）にまとめてください。MTGでのレビュー用資料は従来どおり `materials/` に置き、成果物へはリンクで参照してください。
 
 ### 研究実装の開始ゲート
 

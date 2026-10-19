@@ -14,7 +14,7 @@ tags: [brainstorm, research, temporal-mamba, sam2, architecture]
 - プロジェクトREADME（`summary`、現在の状況）: MOSE F1 adapterはLR不足で実質未学習。Mambaの効果はまだ検証できていない。
 - [9/30 MTG議事録](../../../lab/projects/sam2-mamba-motion-tracking/meetings/2026-09-30-mtg.md): 1 token構成（空間平均 → broadcast）は暫定扱い。空間情報・入力次元・計算資源・Mambaの役割を整理し、設計根拠を説明できるようにする。当日メモには「次元を落とす必要があるのか？画像全体を一括で入れられないかもしれない」「FPNなどを工夫し、サイズを削減せずに入れる可能性」とある。
 - [10/9 週次MTG資料](../../../lab/projects/sam2-mamba-motion-tracking/materials/2026-10-09-weekly-progress-mtg-materials.md) の「9. 方針候補・比較」: (A) 1 tokenのままLRを直して再学習、(B) 空間表現を先に設計。
-- [中間発表スライドレビュー](../../../lab/projects/sam2-mamba-motion-tracking/materials/2026-10-09-midterm-slide-review.md): 設計意図は「promptやtokenと混ざる前に、視覚特徴へ時間情報を加える」。
+- [中間発表スライドレビュー](../../../lab/projects/sam2-mamba-motion-tracking/papers/2026-midterm/2026-10-09-midterm-slide-review.md): 設計意図は「promptやtokenと混ざる前に、視覚特徴へ時間情報を加える」。
 - 関連brainstorm: [ID依存の議論](2026-09-27-temporal-mamba-id-dependency-discussion.md)（共有image embedding案）、[adapter学習](2026-09-30-temporal-mamba-adapter-training.md)
 - SAM2 repo `dev`: `sam2/modeling/sam/mask_decoder.py`、`sam2/modeling/sam2_base.py`、`sam2/modeling/temporal_mamba_adapter.py`（デコーダ構造と現行adapterの確認。読み取りのみ）
 - 10/9 MTGの前に実施。MTGの結果は未反映。
@@ -140,7 +140,7 @@ TODOには自動追加していない。
 - [図フォルダとmanifest](../../../lab/projects/sam2-mamba-motion-tracking/materials/figures/2026-10-09-temporal-mamba-design-options/manifest.md)（作図スクリプト `make_figs.py` を同梱）
 - [9/30 MTG議事録](../../../lab/projects/sam2-mamba-motion-tracking/meetings/2026-09-30-mtg.md)
 - [10/9 週次MTG資料](../../../lab/projects/sam2-mamba-motion-tracking/materials/2026-10-09-weekly-progress-mtg-materials.md)
-- [中間発表スライドレビュー](../../../lab/projects/sam2-mamba-motion-tracking/materials/2026-10-09-midterm-slide-review.md)
+- [中間発表スライドレビュー](../../../lab/projects/sam2-mamba-motion-tracking/papers/2026-midterm/2026-10-09-midterm-slide-review.md)
 - [temporal Mamba ID依存の議論](2026-09-27-temporal-mamba-id-dependency-discussion.md)
 - [temporal Mamba adapter学習](2026-09-30-temporal-mamba-adapter-training.md)
 - [temporal Mamba decoder最小統合spec](../../../lab/projects/sam2-mamba-motion-tracking/specs/2026-09-27-temporal-mamba-decoder-minimal-integration-spec.md)

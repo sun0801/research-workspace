@@ -71,7 +71,7 @@ tags: [meeting-materials, research, midterm, sam2mot, temporal-mamba, view]
 | SAMURAI | KF | マスク | △ 単一物体向け（並列化すれば適用可。比較実験でも並列化） |
 | 本研究 | 学習ベース（Mamba） | マスク | ○（評価では各対象の初出フレームでGT bbox promptを与えて初期化） |
 
-目的のスライドには、「KFは線形な運動を仮定するため，非線形な動きや遮蔽のもとで予測がずれやすい」（OC-SORTの指摘）を示す図として、[等速の仮定による予測のずれの例](figures/2026-10-14-kf-constant-velocity-example/manifest.md)（dancetrack0052、15フレーム後に約370 pxずれる）を入れた。KFそのものの出力ではなく、等速の仮定で延ばした模式例である。
+目的のスライドには、「KFは線形な運動を仮定するため，非線形な動きや遮蔽のもとで予測がずれやすい」（OC-SORTの指摘）を示す図として、[等速の仮定による予測のずれの例](../papers/2026-midterm/figures/2026-10-14-kf-constant-velocity-example/manifest.md)（dancetrack0052、15フレーム後に約370 pxずれる）を入れた。KFそのものの出力ではなく、等速の仮定で延ばした模式例である。
 
 ### 3.2 定量的評価の表（DanceTrack val 25系列）
 
@@ -202,7 +202,7 @@ V3で「対象別の64段からつなぐと、全段が対象別になり重い�
 
 ## 6. ViEW原稿（10/30締切）
 
-- 2ページの原稿（[PDF](VIEW/VIEW2026_油谷_2pages%20%283%29.pdf)）がある。タイトルは「状態保持型Mambaを用いたSAM2ベース物体追跡」。
+- 2ページの原稿（[PDF](../papers/2026-view/VIEW2026_油谷_2pages%20%283%29.pdf)）がある。タイトルは「状態保持型Mambaを用いたSAM2ベース物体追跡」。
 - 内容は、SAM2の候補マスクをMambaの動き予測との整合性で選ぶ手法と、sliding window型・state carry型の比較。表は3.2節の表と同じ値。
 - 結論は「state carry型がHOTA・DetA・AssA・IDF1でSAMURAIを上回り，有効性を確認した」。IDSWはSAMURAIが最少であることも書いている。
 - 確認したい点:
@@ -233,13 +233,13 @@ V3で「対象別の64段からつなぐと、全段が対象別になり重い�
 |---|---|---|
 | [01-sam2mot-test-gap-by-stage.png](figures/2026-10-14-weekly-progress/01-sam2mot-test-gap-by-stage.png) | SAM2MOTの段別HOTA（論文test・本再現test・本再現val） | 今回作成（[manifest](figures/2026-10-14-weekly-progress/manifest.md)） |
 | [temporal Mamba統合候補の図](figures/2026-10-14-temporal-mamba-variants/manifest.md) | V1〜V4、V3の詳細、V4、進め方 | 既存の図を引用 |
-| [等速の仮定による予測のずれ](figures/2026-10-14-kf-constant-velocity-example/manifest.md) | 中間発表の目的スライドの図 | 既存の図を引用 |
-| [中間発表スライド 再構成版](2026-10-12-midterm-slides-restructured.pptx) | 10/9の指摘を反映した版 | 既存 |
+| [等速の仮定による予測のずれ](../papers/2026-midterm/figures/2026-10-14-kf-constant-velocity-example/manifest.md) | 中間発表の目的スライドの図 | 既存の図を引用 |
+| [中間発表スライド 再構成版](../papers/2026-midterm/2026-10-12-midterm-slides-restructured.pptx) | 10/9の指摘を反映した版 | 既存 |
 
 ## 10. 参照ファイル
 
 - 前回: [10/9 MTG議事録](../meetings/2026-10-09-mtg.md)、[10/9週次MTG資料](2026-10-09-weekly-progress-mtg-materials.md)
-- 中間発表: [スライド再構成の記録](2026-10-12-midterm-slide-restructure.md)、[定性比較動画](../experiments/2026-10-12-qualitative-pattern-videos.md)
+- 中間発表: [スライド再構成の記録](../papers/2026-midterm/2026-10-12-midterm-slide-restructure.md)、[定性比較動画](../experiments/2026-10-12-qualitative-pattern-videos.md)
 - SAM2MOT:
   - [検出器o365tococoのval比較](../experiments/2026-10-13-sam2mot-o365tococo-val.md)
   - [test提出結果（S1は10/13追記）](../experiments/2026-10-09-sam2mot-test-runs.md)
@@ -250,4 +250,4 @@ V3で「対象別の64段からつなぐと、全段が対象別になり重い�
   - [MOSE追加学習の実験ログ](../experiments/2026-09-30-mose-temporal-mamba-finetuning.md)
   - [画像側の設計候補（brainstorm）](../../../../secretary/notes/brainstorm/2026-10-09-temporal-mamba-image-side-design-options.md)
   - [SAM 3.1 multiplexの論文メモ](../papers/2026-10-14-sam3-multiplex-object-sharing.md)
-- ViEW: [原稿PDF](VIEW/VIEW2026_油谷_2pages%20%283%29.pdf)
+- ViEW: [原稿PDF](../papers/2026-view/VIEW2026_油谷_2pages%20%283%29.pdf)

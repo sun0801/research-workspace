@@ -12,7 +12,7 @@ tags: [presentation, midterm, review]
 
 ## 対象と確認範囲
 
-- 対象: [20261017_中間発表_油谷.pptx](20261017_中間発表_油谷.pptx)
+- 対象: [20261017_中間発表_油谷.pptx](../../materials/20261017_中間発表_油谷.pptx)
 - 本文1〜17枚、補足18〜21枚、非表示22枚目を確認した。
 - PowerPoint内の文章・表・数式・図の画像・配置情報・動画を読み取り、研究記録と照合した。元PowerPointは変更していない。
 - PowerPointでの全スライドの描画、改行・重なり、実機での動画再生は未確認。図や文章のレビューと、表示・再生の確認を区別する。
@@ -117,13 +117,13 @@ ID維持を説明する場合は、実際のtracker ID・固定した軌跡を�
 
 ## 参照
 
-- [9/4資料: 既存SAM2統合reference表](2026-09-04-p4a-p4b-sam2-evaluation-mtg-materials.md)
-- [7/23: SAM2最小stateful統合25系列評価](../experiments/2026-07-23-sam2-minimal-integration-25seq.md)
-- [8/4: sequence-level標準HOTA比較](../experiments/2026-08-04-sequence-level-standard-hota-comparison.md)
-- [9/18議事録: 学習と初期GT prompt条件](../meetings/2026-09-18-mtg.md)
-- [9/30議事録: 最小構成と未確定の設計](../meetings/2026-09-30-mtg.md)
+- [9/4資料: 既存SAM2統合reference表](../../materials/2026-09-04-p4a-p4b-sam2-evaluation-mtg-materials.md)
+- [7/23: SAM2最小stateful統合25系列評価](../../experiments/2026-07-23-sam2-minimal-integration-25seq.md)
+- [8/4: sequence-level標準HOTA比較](../../experiments/2026-08-04-sequence-level-standard-hota-comparison.md)
+- [9/18議事録: 学習と初期GT prompt条件](../../meetings/2026-09-18-mtg.md)
+- [9/30議事録: 最小構成と未確定の設計](../../meetings/2026-09-30-mtg.md)
 - ユーザー提供の9/30高精度文字起こし: decoder位置を最適とする合意は確認できない。Rawはワークスペースへ複製していない。
-- [定性動画の表示条件](../experiments/figures/2026-10-08-dancetrack0034-frames300-340-qualitative.md): 埋め込み3動画と手元のcropped動画のSHA256が一致。
+- [定性動画の表示条件](../../experiments/figures/2026-10-08-dancetrack0034-frames300-340-qualitative.md): 埋め込み3動画と手元のcropped動画のSHA256が一致。
 - SAM2推論コード（読み取りのみ）: `/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/scripts/main_inference_mot.py`。
 - [TransTrack原論文](https://arxiv.org/abs/2012.15460): Sun et al.、初版2020年。
 - [SAM2原論文](https://arxiv.org/abs/2408.00714): streaming memoryを用いる動画セグメンテーションモデル。
