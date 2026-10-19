@@ -108,3 +108,4 @@ HOTA、DetA、AssA、MOTA、IDF1、IDSW、FP、FN（COMBINED と系列別）。F
 ## 改訂履歴
 
 - 2026-10-18: 初版（draft）。ユーザーが /goal で実施を指示し approved。同日、Blackwell を他の作業で使うため GPU を RTX A4000 に変更し、VRAM 対策として offload の1か所の改変を追加
+- 2026-10-19: R1・R2 を完了（結果 `experiments/2026-10-18-sam2mot-ref-sam2-animal-tracking-val.md`）。出力先は spec の `results/tracks/ref_sam2animal_{r1,r2}/` ではなく `results/ref_sam2animal/dancetrack/val/{r1,r2}/`（第三者の run.py の出力構成に合わせた）
