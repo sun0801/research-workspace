@@ -95,7 +95,13 @@ adapterが `pix_feat` と `high_res_features` の両方を受け取り、書き�
   - ② `--freeze-sam2` のとき、画像エンコーダを `no_grad`・evalにして、TBPTTの1区間（8フレーム）ごとにまとめて計算する。
   - ③ フレームごとにGPUを待たせる処理（lossやfinite判定の `.item()` / `.cpu()`）を、区間ごとにまとめる。
 
-### 7. 評価・集計
+### 7. 学習経過の記録（Comet）
+
+- Mamba_Trackersと同じ形でCometに記録する。APIキーは `~/.comet.config` から読む。記録先はSAM2 repoの `.comet.config` で一元管理し、既存のプロジェクト `samurai-mot`（workspace `sun0801`）に統合する。MOT推論の記録と区別するため、全experimentにタグ `temporal-mamba` を付け、Cometではこのタグで絞り込んだ表示で見る。
+- 更新ごと：loss、LR、フレーム数、1フレームあたりの時間、各段のα・残差の大きさ、勾配のノルム、VRAMのピーク。一定間隔ごと：各部の勾配のノルムと初期値からの重みの変化量。pilotでは診断用loss（F0との差を含む）。実行時の引数、gitのcommit、manifestも保存する。
+- Cometに接続できなくても学習は止めない（記録だけ無効になる）。`--no-comet` で無効化できる。
+
+### 8. 評価・集計
 
 - `training/eval_mose_fulltrack.py`：条件 V1・V3・V3-reset（と、使う段を減らした場合の条件）を評価できるようにする。
 - `training/summarize_mose_fulltrack.py`：今は条件名（`P0/F0/F1/F1-reset`）と比較の組（`F1−F0`、`F1−F1-reset`、`F0−P0`）が固定されているので、条件名・比較の組・入力パスを引数で指定できるようにする。比較の前に、125動画・313対象の期待するID集合、frameの網羅率、プロンプト、除外理由が条件間で一致することを確認する。
@@ -199,3 +205,5 @@ GPUを使う実行（段階0bのpilot、段階1の実測、段階2の学習、�
   - LRの確認をV1とV3の両方で行い、各段のMamba内部の勾配と重みの変化、SAM2本体の不変性を合格条件に加えた。
   - 共通の更新回数Nの決め方、軌跡の並び順、optimizerの設定、段を減らした場合の条件名を明記した。
   - 集計スクリプトを変更範囲に加え、F0の既存結果を再利用する条件を明記した。
+- 2026-10-19：Cometでの学習経過の記録を変更範囲に追加した。記録先は `.comet.config` で一元管理し、`samurai-mot` に統合する（一時的に作った `sam2-temporal-mamba` プロジェクトは空のまま削除）。
+- 2026-10-21：実装ファイルの構成を記録。旧F0/F1の学習・評価・集計スクリプトはlockboxの実装ハッシュを保つため変更せず、新しいファイル（`training/mose_adapter_train.py`・`mose_adapter_eval.py`・`mose_adapter_summary.py` など）として実装した。実行はMamba_Trackersと同じ形（`configs/temporal_adapters/*.yaml` と `experiments/temporal_adapters/*.sh`）。SAM2 repo `feat/temporal-mamba-v3` の `c2e928b`〜`80610fe`。
