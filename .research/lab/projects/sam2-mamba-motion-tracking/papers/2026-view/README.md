@@ -13,9 +13,11 @@ ViEW 2026 の原稿とコメント対応をまとめる。タイトルは「状�
 - Overleaf プロジェクト: `VIEW2026_油谷_2pages`
 - 同期フォルダ: `/mnt/HDD10TB-2/aburatani/overleaf/view/`
 - 2ページ版は `cameraready_view.tex` が `main_text.tex` を読み込む構成。8ページ版は `cameraready_view_full.tex` を使う想定。
+- 親フォルダ `/mnt/HDD10TB-2/aburatani/overleaf/` を1つの Git リポジトリ（ブランチ `main`、リモートなし）として、ViEW・MIRU をまとめて版管理している。`.git/` と `.gitignore` は親フォルダにあり、Overleaf へは送られない。`.overleaf/` とLaTeXのビルド生成物は `.gitignore` で除外。
 
 ## 更新履歴
 
+- 2026-10-23: 同期フォルダを Git で管理し始めた。
 - 2026-10-22: Overleaf の同期フォルダを追記した。
 
 - 2026-10-19: `materials/VIEW/` から移動してまとめた。
