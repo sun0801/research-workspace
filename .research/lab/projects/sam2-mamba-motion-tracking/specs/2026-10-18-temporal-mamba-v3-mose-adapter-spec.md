@@ -98,10 +98,24 @@ adapterが `pix_feat` と `high_res_features` の両方を受け取り、書き�
 ### 7. 学習経過の記録（Comet）
 
 - Mamba_Trackersと同じ形でCometに記録する。APIキーは `~/.comet.config` から読む。記録先はSAM2 repoの `.comet.config` で一元管理し、既存のプロジェクト `samurai-mot`（workspace `sun0801`）に統合する。MOT推論の記録と区別するため、全experimentにタグ `temporal-mamba` を付け、Cometではこのタグで絞り込んだ表示で見る。
-- 更新ごと：loss、LR、フレーム数、1フレームあたりの時間、各段のα・残差の大きさ、勾配のノルム、VRAMのピーク。一定間隔ごと：各部の勾配のノルムと初期値からの重みの変化量。pilotでは診断用loss（F0との差を含む）。実行時の引数、gitのcommit、manifestも保存する。
+- 記録の形はsimple_cnnに揃え、横軸はstep（1 step＝1更新＝1軌跡）とする（2026-10-22改訂）。`epoch`（step÷fitの軌跡数2,789）を補助の値として記録する。
+  - train（毎step）：`train_loss_step` とlossの内訳（`train_loss_mask_step`・`train_loss_dice_step`・`train_loss_iou_step`・`train_loss_class_step`。公式SAM2のtrainerと同じ内訳）、`train_J_step`（学習中の予測マスクと正解の、1024解像度でのIoU。先頭フレームを除く）、`train_lr`。
+  - train（valの区間ごと）：`train_loss_avg`、`train_J_avg`（直前のvalからの平均。simple_cnnの `_epoch` に当たる）。
+  - val：`val_loss` とその内訳、`val_J`・`val_F`・`val_J&F`（下の「学習中のval」）。
+  - 診断用（25 stepごと）：`diag/…`（各段のα、残差の大きさ、各部の勾配ノルム、初期値からの重みの変化量）、`system/…`（1フレームあたりの時間、VRAMのピーク）。
+  - pilotの診断用loss（学習に使った16軌跡で測るもの）は `pilot/…` として分ける。
+- valのたびにadapterのcheckpointを保存し、Cometにも上げる（simple_cnnと同じ）。実行時の引数、gitのcommit、manifest、`git.diff` も保存する。
 - Cometに接続できなくても学習は止めない（記録だけ無効になる）。`--no-comet` で無効化できる。
 
-### 8. 評価・集計
+### 8. 学習中のval（2026-10-22追加）
+
+- 目的：学習につれてadapterが効いてくるかを、学習中に確認する（simple_cnn・公式SAM2 trainerのvalと同じ位置づけ）。
+- データ：tuningの先頭25動画（64対象、5,159フレーム）。F0の学習には使っていない。tuningは最終評価にも使うため、**valは経過を見るためだけに使い、途中のcheckpointの選択や学習の打ち切りには使わない**（最終評価には最後のstepの重みを使う、という既存の規則のまま）。fitの一部はF0が学習済みのため、MOSE公式のvalidは先頭フレームにしか正解がないため、使わない。
+- 計算：評価と同じ経路（SAM2本体はeval、勾配なし、augmentationなし、プロンプトのseedは評価と同じ `1000003 + i`、先頭フレームはJ・Fから除外、動画単位で平均）で、J・F・J&Fと、学習と同じloss（とその内訳）を計算する。
+- 頻度：学習前（step 0。adapterは初期化直後でF0と同じ出力になるので、F0の基準値になる）、250 stepごと、最終step。所要は1回あたり約10分の見込み。
+- 確認：step 0のvalのJ・Fが、保存済みのF0のtuning結果（A4000）の該当25動画と一致することを確かめる。
+
+### 9. 評価・集計
 
 - `training/eval_mose_fulltrack.py`：条件 V1・V3・V3-reset（と、使う段を減らした場合の条件）を評価できるようにする。
 - `training/summarize_mose_fulltrack.py`：今は条件名（`P0/F0/F1/F1-reset`）と比較の組（`F1−F0`、`F1−F1-reset`、`F0−P0`）が固定されているので、条件名・比較の組・入力パスを引数で指定できるようにする。比較の前に、125動画・313対象の期待するID集合、frameの網羅率、プロンプト、除外理由が条件間で一致することを確認する。
@@ -158,7 +172,7 @@ adapterが `pix_feat` と `high_res_features` の両方を受け取り、書き�
 | 0a' 高速化の確認 | 同じ新しいadapter・初期重み・固定条件・モード・optimizer・乱数条件のもとで、高速化①〜③のオンとオフを比べる。まずFP32・deterministicの設定で照合し、その後bf16で、logit・loss・勾配・更新後の重みの絶対誤差と相対誤差を記録する。DataLoaderで軌跡の順序、フレームの順序、augmentationのretry、プロンプトのtensorが変わらないことも確認する | FP32で一致し、bf16の差がその精度で説明できる範囲であること。説明できない差が出たら原因を調べるまで高速化を使わない |
 | 0b LRの確認 | 固定した少数の軌跡（16本）で、V1とV3それぞれについてadapter LR 1e-4・3e-4・1e-3の短いpilotを行う（warmupは20更新）。同じ診断用の入力でlossを比べる | 採用するのは、lossがF0（adapterなし）より下がり、数値が有限で安定しているLR。あわせて、数回の更新の後に、各段のMamba・LayerNorm・`W_out`・段どうしの1×1 convに勾配が届き、重みがweight decay以外の理由で変化していることを確認する（最初の1回の更新ではMamba内部の勾配がゼロでも正常）。残差の大きさが育つだけでは合格としない |
 | 1 実測 | V3で、短い・典型的な・長い（最長500フレーム）軌跡について、forward・backward・optimizerの更新を含めたVRAMのピークと1フレームあたりの時間を測る。推論時間も測る | VRAMのピークが30GiBを超えたら256段を外して `V3-64-128` として測り直す（それでも超えたら `V3-64-only`）。測った速度から共通の更新回数Nを決める |
-| 2 学習 | V3で8時間以内に収まる更新回数Nを決め、V1も同じNで学習する。軌跡は前回保存したseed付きの並び順（`sample_order`）の先頭からN本を使い、使った軌跡のindexの一覧と合計フレーム数を記録する。optimizerはAdamW、weight decayは0.1（LayerNorm・bias・α・`A_log`・`D` は0）、勾配のclipは0.1、warmupの後はNまでcosineで0に下げる。1更新＝1軌跡（区間ごとにbackwardして勾配をためて、軌跡の最後に1回だけ更新する、今のやり方を踏襲） | 途中でcheckpointは選ばず、最後の更新の重みを使う。pilot・評価・checkpointの保存にかかった時間は、8時間の学習予算とは分けて記録する |
+| 2 学習 | V3で8時間以内に収まる更新回数Nを決め、V1も同じNで学習する。軌跡は前回保存したseed付きの並び順（`sample_order`）の先頭からN本を使い、使った軌跡のindexの一覧と合計フレーム数を記録する。optimizerはAdamW、weight decayは0.1（LayerNorm・bias・α・`A_log`・`D` は0）、勾配のclipは0.1、warmupの後はNまでcosineで0に下げる。1更新＝1軌跡（区間ごとにbackwardして勾配をためて、軌跡の最後に1回だけ更新する、今のやり方を踏襲） | 途中でcheckpointは選ばず、最後の更新の重みを使う（学習中のvalは経過の確認のみ）。pilot・評価・val・checkpointの保存にかかった時間は、8時間の学習予算とは分けて記録する |
 | 3 評価 | V1・V3・V3-resetをtuningの313対象で評価し、F0と比べる | 上の基準で判定する |
 
 GPUを使う実行（段階0bのpilot、段階1の実測、段階2の学習、段階3の評価）は、ユーザーが手元でtmuxを使って行う。実装が終わったら、各段階の実行コマンド（tmuxセッション名、GPU、出力先、ログの場所、終了後に確認すること）を渡す。
@@ -207,3 +221,4 @@ GPUを使う実行（段階0bのpilot、段階1の実測、段階2の学習、�
   - 集計スクリプトを変更範囲に加え、F0の既存結果を再利用する条件を明記した。
 - 2026-10-19：Cometでの学習経過の記録を変更範囲に追加した。記録先は `.comet.config` で一元管理し、`samurai-mot` に統合する（一時的に作った `sam2-temporal-mamba` プロジェクトは空のまま削除）。
 - 2026-10-21：実装ファイルの構成を記録。旧F0/F1の学習・評価・集計スクリプトはlockboxの実装ハッシュを保つため変更せず、新しいファイル（`training/mose_adapter_train.py`・`mose_adapter_eval.py`・`mose_adapter_summary.py` など）として実装した。実行はMamba_Trackersと同じ形（`configs/temporal_adapters/*.yaml` と `experiments/temporal_adapters/*.sh`）。SAM2 repo `feat/temporal-mamba-v3` の `c2e928b`〜`80610fe`。
+- 2026-10-22：学習経過の記録をsimple_cnnの形（横軸step、`train_*_step`・`train_*_avg`・`val_*`、valごとのcheckpoint保存）に揃え、学習中のval（tuningの先頭25動画、250 stepごと、経過確認のみ）を追加した。
