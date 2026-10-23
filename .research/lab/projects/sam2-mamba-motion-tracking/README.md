@@ -1,9 +1,9 @@
 ---
 project: sam2-mamba-motion-tracking
 status: active
-summary: 10/14 MTGで中間発表スライドをレビューし再修正へ（用語説明・TBD/TBA図・目的の1枚化、SAMURAI図ベースの手法説明）。temporal MambaはV3（FPN的統合）から着手し来週までに形にする。ViEWのコメントは8ページ原稿で優先度を付けて反映。SAM2MOTはo365tococoでtest S4 HOTA 70.8（論文75.5）、残る差の主因はboxの位置ずれで、第三者の再実装もval同水準。区切るかは次回相談。
+summary: 10/23 MTGでtemporal Mambaの学習を軌跡全体のTBPTTから8フレーム程度の短い区間に切り替え（安定したら16フレーム以上へ）、1週間で数値を出す方針に。V1は1周学習したが学習中のvalはF0とほぼ同じ。空間方向とSAM2MOTへの組み込みは学習が安定してから。SAM2MOT再現はtest HOTA約71で到達点とし、SAM3を比較に追加。ViEWは動き予測Mambaを本体に、内部状態の活用を今後の展望として原稿を修正中（10/26ごろSlackで確認）。
 created: 2026-07-07
-last_updated: 2026-10-19
+last_updated: 2026-10-23
 ---
 
 # Mambaによる動き予測を用いたSAM2ベースの物体追跡
@@ -87,6 +87,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 **再現実装 `sam2mot_repro/`（2026-09-08〜）**：同リポジトリ内に、承認済みspec [`specs/2026-09-08-sam2mot-reproduction-spec.md`](specs/2026-09-08-sam2mot-reproduction-spec.md) に基づく再現実装を新規に作成した（`sam2mot_lite/` は変更禁止・読み取り専用）。検出器はCo-DINO-L、セグメンタはSAM2.1-large per-instance。S0〜S4完了（2026-10-03）。段階実装のプロトコルは同リポジトリの `CLAUDE.md`、結果は [`experiments/2026-09-27-sam2mot-s0-s2-results.md`](experiments/2026-09-27-sam2mot-s0-s2-results.md)、[`experiments/2026-09-28-sam2mot-s3-coi-results.md`](experiments/2026-09-28-sam2mot-s3-coi-results.md) を参照。
 
 ## 現在の状況
+
+**10/23 MTGでの方針**：temporal MambaはV3（FPN的な統合）を実装し、V1・V3をSAM2本体固定でMOSEの1周（2,789更新）学習した。V1の学習中のval J&FはF0から−0.4〜+1.2ポイントで上下し、伸びる傾向はない（V3は学習途中まで同様）。V3は学習可能な部品が空間方向を混ぜない作りで、1周に十数時間かかることも課題として報告した。先生の指摘で、学習は軌跡全体を流す方式をやめ、まず8フレーム程度の短い区間で速く回し、うまくいけば16フレーム以上に延ばす（SAM2の段階的な学習にならう）。まずまともに学習できることを優先し、空間方向とSAM2MOTへの組み込みはその後。研究の手順と論文の提案の手順は混同せず、論文ではSAM2・SAMURAI・SAM2MOTのすべてにMambaを入れ、空間・時間の両方を提案する形で書く。修論は全部組み込んだ提案を2月までに。1週間で学習方法を見直して数値を報告する。SAM2MOT再現はtest HOTA約71（論文75.5、差は論文の系列別の検出閾値などの調整によると考える）を到達点として載せる。SAM3はプロンプト指定だけでトラッキングまで完結できるので、比較対象に加える。ViEW原稿は、動き予測にMambaを入れた手法を本体とし、内部状態の時系列情報の活用は今後の展望として書く。前書き（IDを維持しないと何が問題か、MOT/SOT）、SAM2と物体追跡のつながり、カルマンフィルタの記述（単純なカルマンフィルタの場合に限定）、Mambaの説明（図なし・数式）、結論を直し、10/26ごろSlackで確認してもらう。詳細は [`meetings/2026-10-23-mtg.md`](meetings/2026-10-23-mtg.md)。
 
 **10/19 SAM2MOT再現 testをo365tococoで更新・残る差の切り分け**：o365tococoの検出でtest S1〜S4を作り直してCodaBenchに提出し、S4 HOTA 70.79 / MOTA 80.04 / IDF1 78.53（論文75.5 / 89.2 / 83.4、3x_cocoでは70.64）となった。S1は論文とほぼ一致（HOTA +0.8）し、論文との差はAddの寄与不足（HOTA −2.5）、CoI（−1.5）、Q-R（−1.6）に分かれる。CodaBenchの採点ログとvalの診断から、MOTAの差はFPの多さで生じ、CoIの後に残る主因はbox の位置ずれ（人が重なる場面でマスクが見えている部分しか覆わず、boxがGTより小さくなる）と分かった。公式コードは未公開のままで、第三者の再実装（SAM2-Animal-Tracking）を同じ検出でvalに回すとHOTA 69.10（本再現S4 69.29）と同水準で、重複のFPは減るが位置ずれは同じだけ残った。SAM2MOTの深追いを区切るかは次回相談。詳細は [`experiments/2026-10-09-sam2mot-test-runs.md`](experiments/2026-10-09-sam2mot-test-runs.md)、[`experiments/2026-10-15-sam2mot-add-fp-diagnosis.md`](experiments/2026-10-15-sam2mot-add-fp-diagnosis.md)、[`experiments/2026-10-18-sam2mot-ref-sam2-animal-tracking-val.md`](experiments/2026-10-18-sam2mot-ref-sam2-animal-tracking-val.md)。
 
@@ -201,11 +203,16 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 - [x] SAM2MOTの検出器checkpointを公式版（Objects365→COCO、AP 64.1）に差し替え、valで比較する（10/13完了。val S4 ΔHOTA +0.05で当初は不採用、10/15に判断ルールにより採用に変更）
 - [x] SAM2MOTでCoIの寄与が論文より小さい原因（AssA低下）を調べる（10/19完了。原因はCoIのStage 2の判定の誤りで、Stage 2を外すとAssAは上がるが重複が増えてHOTAは変わらない。o365tococoのtestではCoIのAssA低下は−0.11とほぼ消えたが、valでは−1.83残る）
 - [ ] temporal Mambaの統合方法の候補（FPN的な階層的統合など）を並行して試す
-- [ ] 中間発表スライドを再構成する（ストーリー整理、手法比較表、3手法×4パターンの定性評価）
+- [x] 中間発表スライドを再構成する（ストーリー整理、手法比較表、3手法×4パターンの定性評価）（10/18発表）
 - [ ] ViEW原稿を提出する（締切 2026-10-30）
-- [ ] 10/14 MTGの指摘で中間発表スライドを再修正し、もう一度見てもらう
+- [x] 10/14 MTGの指摘で中間発表スライドを再修正し、もう一度見てもらう（10/15にFB、10/18発表）
 - [ ] temporal MambaのV3（FPN的な統合）を試し、ある程度形にする（10/14 MTG、来週まで）
 - [ ] ViEWのコメントを優先度付けし、8ページ程度の原稿に反映する
+- [ ] temporal Mambaの学習を8フレーム程度の短い区間に切り替え、安定したら16フレーム以上に延ばす。1週間で数値を報告する（10/23 MTG）
+- [ ] 学習が安定した後、空間方向の統合（V3とV4を合わせる案など）を検討する（10/23 MTG）
+- [ ] SAM3をトラッキングの比較手法に加える（10/23 MTG）
+- [ ] ViEW原稿を10/23 MTGの指摘で直し、10/26ごろSlackで確認してもらう
+- [ ] 修論：SAM2・SAMURAI・SAM2MOTのすべてにMambaを入れた提案手法を2月までにまとめる
 
 ### フェーズ2：修論 / CVPR
 - [ ] hidden state contaminationの定義・定量化指標の設計
@@ -217,6 +224,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-10-23 | MTG: temporal Mambaの学習を短い区間（8フレーム→16フレーム以上）に切り替えて1週間で数値を報告。まずまともな学習を優先し、空間方向とSAM2MOTへの組み込みは後。論文はSAM2・SAMURAI・SAM2MOTすべてにMambaを入れる提案として書き、修論は2月まで。SAM2MOT再現（test HOTA約71）を到達点とし、SAM3を比較に追加。ViEWは動き予測Mambaを本体に修正し、10/26ごろSlackで確認。 |
 | 2026-10-19 | SAM2MOT再現: o365tococoでtest S1〜S4を提出し、S4 HOTA 70.79 / MOTA 80.04 / IDF1 78.53。valのFP分類（10/15）で残る差の主因はboxの位置ずれと判明。第三者の再実装（SAM2-Animal-Tracking）はval HOTA 69.10で本再現（69.29）と同水準。 |
 | 2026-10-15 | SAM2MOT再現: 判断ルール（ノイズ範囲の差なら論文・公式設定に近い方、同等なら変更の少ない方）を採用し、検出器をo365tococo（公式README）に変更。val主値はS4 HOTA 69.29、testは作り直し未実施。CoI Stage 2を除外に使わない案はHOTA差なし（AssA↑とDetA・MOTA↓が相殺）で現行維持。 |
 | 2026-10-14 | MTG: 中間発表スライドをレビューし再修正へ（用語説明の1枚化、TBD/TBA図、目的の1枚化、チェック形式の比較表、SAMURAI図ベースの手法説明、問題点スライドに全体像の図）。temporal MambaはV3（FPN的統合）から着手し来週までに形にする。ViEWのコメントは8ページ原稿で優先度を付けて反映。SAM2MOTは未相談。 |
