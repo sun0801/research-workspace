@@ -224,6 +224,8 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-10-23 | 学習コード `mose_adapter_train.py` のリファクタリング（R0〜R5）を完了。変更前の出力との照合（fp32・決定論的設定）で全ステップ合格し、SAM2 repo `1002_seminar` に6コミット。valは凍結評価の `evaluate_track`（J/F）と学習経路のloss の2本立てになり、val lossは旧ログと対象ごとに最大6e-3ずれる。valの時間は約2倍になる見込み。本学習と同じ設定での完走とF0の一致も確認。`experiments/2026-10-23-mose-adapter-train-refactoring.md`に記録。 |
+| 2026-10-23 | 学習コード `mose_adapter_train.py` のリファクタリングspec（`specs/2026-10-23-mose-adapter-train-refactoring-spec.md`）を承認。挙動を変えない整理（R0〜R5）を、変更前の出力との照合で1段階ずつ進める。短い区間での学習とDanceTrackの定期評価は別spec。 |
 | 2026-10-23 | MTG: temporal Mambaの学習を短い区間（8フレーム→16フレーム以上）に切り替えて1週間で数値を報告。まずまともな学習を優先し、空間方向とSAM2MOTへの組み込みは後。論文はSAM2・SAMURAI・SAM2MOTすべてにMambaを入れる提案として書き、修論は2月まで。SAM2MOT再現（test HOTA約71）を到達点とし、SAM3を比較に追加。ViEWは動き予測Mambaを本体に修正し、10/26ごろSlackで確認。 |
 | 2026-10-19 | SAM2MOT再現: o365tococoでtest S1〜S4を提出し、S4 HOTA 70.79 / MOTA 80.04 / IDF1 78.53。valのFP分類（10/15）で残る差の主因はboxの位置ずれと判明。第三者の再実装（SAM2-Animal-Tracking）はval HOTA 69.10で本再現（69.29）と同水準。 |
 | 2026-10-15 | SAM2MOT再現: 判断ルール（ノイズ範囲の差なら論文・公式設定に近い方、同等なら変更の少ない方）を採用し、検出器をo365tococo（公式README）に変更。val主値はS4 HOTA 69.29、testは作り直し未実施。CoI Stage 2を除外に使わない案はHOTA差なし（AssA↑とDetA・MOTA↓が相殺）で現行維持。 |
