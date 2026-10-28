@@ -13,9 +13,11 @@ ViEW 2026 の原稿とコメント対応をまとめる。タイトルは「状�
 - Overleaf プロジェクト: `VIEW2026_油谷_2pages`
 - 同期フォルダ: `/mnt/HDD10TB-2/aburatani/overleaf/view/`
 - 2ページ版は `cameraready_view.tex` が `main_text.tex` を読み込む構成。8ページ版は `cameraready_view_full.tex` を使う想定。
-- 親フォルダ `/mnt/HDD10TB-2/aburatani/overleaf/` を1つの Git リポジトリ（ブランチ `main`、リモートなし）として、ViEW・MIRU をまとめて版管理している。`.git/` と `.gitignore` は親フォルダにあり、Overleaf へは送られない。`.overleaf/` とLaTeXのビルド生成物は `.gitignore` で除外。
+- 親フォルダ `/mnt/HDD10TB-2/aburatani/overleaf/` を1つの Git リポジトリ（ブランチ `main`）として、ViEW・MIRU をまとめて版管理している。141 と 142 の両方に同じパスでリポジトリがあり、ディスクは別。**作業は 142 で行い、142 のリポジトリを正とする**（2026-10-28 決定）。141 のリポジトリは 10/26 19:25 時点で止まっている。142 には 141 がリモート `141` として登録されているが、`main` は追跡させていない。`.git/` と `.gitignore` は親フォルダにあり、Overleaf へは送られない。`.overleaf/` とLaTeXのビルド生成物は `.gitignore` で除外。
 
 ## 更新履歴
+
+- 2026-10-28: 142 の Git を 141 の履歴（`94a77c2`、10/26 19:25）に揃え、141 をリモートに登録した。142 にだけあったコミット `764d188` はブランチ `backup-142-20261026` に残した（内容は 141 の `f2d4426` に含まれている）。以降は 142 を正として作業する。
 
 - 2026-10-23: 同期フォルダを Git で管理し始めた。
 - 2026-10-22: Overleaf の同期フォルダを追記した。
