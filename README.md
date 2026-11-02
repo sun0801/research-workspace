@@ -46,6 +46,8 @@ Research Workspace では、以下の作業をAIエージェントに依頼で�
 
 外部サービス連携は前提にしていません。基本はローカルMarkdownだけで動きます。
 
+Kaggleの実装・実行環境は、隣の [kaggle/](../kaggle/README.md) にあります。最初のコンペは [Name That LLM](.research/lab/projects/kaggle-name-that-llm/README.md) で、研究記録の正本はこのワークスペースの `.research/` に保存します。
+
 ## Quick Start
 
 ### 1. リポジトリをcloneする
