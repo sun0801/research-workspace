@@ -1,0 +1,23 @@
+{
+  "skill_name": "kaggle-workflow",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "NameThatLLMの新着と有力Notebookを調べて、前回との差分を保存して。",
+      "expected_output": "研究READMEと前回調査を読み、人気/新着を照合。本文とコードの確認範囲・version・認証失敗を明示し、根拠付きMarkdownと引き継ぎを更新する。",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "MCPがあるならCodeもModelも全部取れてるんだよね？今ある知見で良さそうな実験を動かして。",
+      "expected_output": "実際の取得範囲を確認。完全取得を主張せず、未認証/ソース未読を区別する。承認済みspec等のImplementation Gateが不足すれば計画を具体化し、実験を開始しない。",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "このDiscussionではCVが上がったのにLBが下がったらしい。どう捉える？次回にも引き継いで。",
+      "expected_output": "本文・条件・コメントを読み、投稿者の結果と推測を分けて記録する。自分たちの再現結果を捏造せず、未確定案はbrainstormへ保存する。",
+      "files": []
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+# Project-scoped official Kaggle MCP. Credentials stay out of this file.
+# Native Codex authentication: codex mcp login kaggle
+[mcp_servers.kaggle]
+url = "https://www.kaggle.com/mcp"
+startup_timeout_sec = 30
+tool_timeout_sec = 60
+enabled_tools = [
+  "get_competition", "list_competition_pages", "list_competition_data_files",
+  "get_competition_data_files_summary", "get_competition_leaderboard",
+  "search_competitions", "search_content", "search_notebooks", "get_notebook_info",
+  "list_notebook_files", "get_notebook_session_status", "list_notebook_session_output",
+  "list_competition_topics", "list_topic_messages", "get_forum_topic",
+  "list_forum_topics", "list_forums", "get_forum", "list_models", "get_model",
+  "get_model_variation", "list_model_variations", "list_model_variation_versions",
+  "list_model_variation_version_files", "search_datasets", "get_dataset_info",
+  "get_dataset_metadata", "list_dataset_files", "get_dataset_files_summary",
+  "get_writeup", "get_writeup_by_slug", "get_writeup_by_topic",
+]
