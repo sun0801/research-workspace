@@ -1,6 +1,7 @@
 # Project-scoped official Kaggle MCP. Credentials stay out of this file.
-# Native Codex authentication: codex mcp login kaggle
+# Authentication: private http_headers_helper reads kaggle/.env; use scripts/configure_token.py
 [mcp_servers.kaggle]
+http_headers_helper = "/mnt/HDD10TB-2/aburatani/kaggle/.venv/bin/python /mnt/HDD10TB-2/aburatani/kaggle/scripts/mcp_headers.py"
 url = "https://www.kaggle.com/mcp"
 startup_timeout_sec = 30
 tool_timeout_sec = 60

@@ -18,6 +18,7 @@ description: Kaggleコンペの調査・共同作業・知見更新・引き継�
 - ローカルで再現できる収集は実装ルート `/mnt/HDD10TB-2/aburatani/kaggle/` で `python3 scripts/workspace.py collect <slug>`。ツール一覧は `tools`、入力確認は `schema <name>`。
 - このクライアントは読み取りツールだけを許可する。`call <name> --request '<JSON>'` は内側のオブジェクトを受け取り、`request` の包みを追加する。実際のlive schemaに従う。
 - 認証が要求される場合は公開情報で進められる作業を続け、取得できなかった機能を明示する。認証情報の値を読んで表示したり、チャットへ貼るよう依頼したりしない。
+- この環境は2026-11-02のOAuth失敗（スコープ欠落、および正しいスコープでのclient_id拒否）を受け、APIトークン方式へ切り替えた。ユーザーの端末で `scripts/configure_token.py` を使い、MCPは `http_headers_helper` から同じ `.env` を読む。トークンを出力するヘルパーをエージェントの通常ツールで直接実行しない。実際の認証成功は必要権限のあるAPIの応答で確認する。
 - Codex OAuthとローカルCLIの認証は別。詳細は実装ルートの `README.md`。接続設定があることと、認証が成功したことを区別する。
 - Notebookソースは必要に応じて公式CLI `kaggle kernels pull OWNER/SLUG -p <cache-dir> --metadata` を併用。読む前に実行しない。
 - 一般Web検索を補助にできる。検索結果だけでコードの内容を読了したことにしない。
