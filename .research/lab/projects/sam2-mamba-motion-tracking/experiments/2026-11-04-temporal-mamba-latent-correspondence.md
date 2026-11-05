@@ -241,3 +241,8 @@ worktree `_lc`（`354e415`）から `eval.sh` で実行（ユーザー、tmux `a
 - ①-bの評価6本（そのまま・reset1・推論だけidentity・shuffle・diag・64段だけreset）のコマンドを、18 epochの重み（`checkpoint_18.pt`）と最初の1動画・4対象で試した（141のGPU 1、`runs/latent_corr/stage1/20261106_evalsmoke_ep18/`）。6本とも最後まで動き、summaryに上書きの種類（`corr_override`）・reset・`reset_levels` が記録された。`corr_stats.jsonl` での輸送の回数は、そのまま・shuffle・diag・reset64 で35回、identity・reset1 で0回（どちらも想定どおり）。Wの期待移動距離は、そのまま 0.26マス、shuffle 5.59マス、diag 0（shuffleは移動距離が大きく変わる。specの注意どおり、Wの統計を並べて読む）。数値は判断に使わない。
 - 集計に速さの層別（`mose_adapter_summary --speed slow|mid|fast|midfast`）を加えた（`1f3d18a`、141のworktreeも更新）。141に、段階0mの動きのファイル（`runs/spatial_mixing/motion/20261104/`）を複製した（sha256一致）。
 - 学習の終了を待って評価を自動で始める仕組み（`after_run.sh`）を、終わったrun（A'）で空打ちして、待機・正常終了の確認・コマンドの起動が動くこと、①-bの学習プロセスを検出できることを確かめた。
+
+### ①-b 学習完了（2026-11-06 06:56）
+
+- run `20261105T123304+0900_354e415` が正常終了（`check_run_done.py`：finished normally）。24,662更新、1更新の平均1.98秒。val-25（経過を見るためだけ）：0.7811（学習前）→ 0.7634 → 0.7660 → 0.7674 → 0.7840 → 0.7719 → 0.7496 → 0.7611 → 0.7705 → 0.7794 → 0.7815 → **0.7816（step 24662）**。A'の最後は0.7892。
+- `after_run.sh`（ユーザーが仕掛けた）が正常終了を確かめ、06:57に評価の1巡目（A_corr・A_corr-reset1：GPU 1、A_corr-id・A_corr-shuf：GPU 2）が始まった。2巡目（A_corr-diag：GPU 1、A_corr-reset64：GPU 2）は1巡目の後に自動で始まる。出力：runの `eval/tuning/A_corr*/`。
