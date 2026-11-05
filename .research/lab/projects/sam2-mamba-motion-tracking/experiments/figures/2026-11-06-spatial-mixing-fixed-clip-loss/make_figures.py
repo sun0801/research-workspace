@@ -85,7 +85,7 @@ def fig_fixed_clip(loss):
     fig.savefig(OUT / "01-fixed-clip-loss.png", facecolor=BG)
 
 
-TITLE = "固定した200区間のloss：②・②'もAと同じように下がる"
+TITLE = "固定した200区間のloss：②・②'もAと同じように下がり、Aとの差はほぼ0"
 
 if __name__ == "__main__":
     loss = load()
