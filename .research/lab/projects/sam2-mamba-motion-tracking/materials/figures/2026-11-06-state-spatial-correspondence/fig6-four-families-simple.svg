@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo','Noto Sans JP','Noto Sans CJK JP',sans-serif">
+<rect width="1600" height="900" fill="#FFFFFF"></rect>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A1A1A"></path></marker><marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1F6FD1"></path></marker><marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A8F96"></path></marker></defs>
+<text x="40" y="60" font-size="38" fill="#1A1A1A" text-anchor="start" font-weight="700">state に空間方向の対応を持たせる 4 パターン（実装したのは A と B）</text>
+<rect x="40" y="92" width="750" height="378" rx="16" fill="#EAF2FC" stroke="#1F6FD1" stroke-width="2.5"></rect>
+<text x="64" y="138" font-size="32" fill="#1F6FD1" text-anchor="start" font-weight="700">A. state を動かして位置を合わせる</text>
+<text x="64" y="180" font-size="27" fill="#1A1A1A" text-anchor="start" font-weight="400">対応先から state を運んでから更新する</text>
+<g transform="translate(110,212) scale(1.5) translate(-64,-192)">
+<rect x="64" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="64" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="64" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="64" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="86" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="86" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="86" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="86" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="108" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="108" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="108" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="108" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="130" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="130" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="130" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="130" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="65.5" y="243.5" width="19" height="19" fill="#1F6FD1" fill-opacity="0.9"></rect>
+<rect x="65.5" y="265.5" width="19" height="19" fill="#1F6FD1" fill-opacity="0.9"></rect>
+<rect x="194" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="194" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="194" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="194" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="216" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="216" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="216" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="216" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="238" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="238" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="238" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="238" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="260" y="220" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="260" y="242" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="260" y="264" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="260" y="286" width="22" height="22" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="239.5" y="243.5" width="19" height="19" fill="#1F6FD1" fill-opacity="0.9"></rect>
+<rect x="239.5" y="265.5" width="19" height="19" fill="#1F6FD1" fill-opacity="0.9"></rect>
+<text x="108" y="212" font-size="22" fill="#55595F" text-anchor="middle" font-weight="400">t−1</text>
+<text x="238" y="212" font-size="22" fill="#55595F" text-anchor="middle" font-weight="400">t</text>
+<path d="M86,253.0 C154,203.0 227.0,203.0 249.0,249.0" fill="none" stroke="#1F6FD1" stroke-width="3.5" marker-end="url(#ahb)"></path>
+</g>
+<rect x="520" y="240" width="190" height="48" rx="24" fill="#1F6FD1"></rect>
+<text x="615.0" y="274" font-size="27" fill="#FFFFFF" text-anchor="middle" font-weight="700">①-b 主案</text>
+<rect x="520" y="310" width="190" height="48" rx="24" fill="#FFFFFF" stroke="#1F6FD1" stroke-width="3"></rect>
+<text x="615.0" y="344" font-size="27" fill="#1F6FD1" text-anchor="middle" font-weight="700">①-a 上限</text>
+<rect x="810" y="92" width="750" height="378" rx="16" fill="#FDF1E4" stroke="#E07B10" stroke-width="2.5"></rect>
+<text x="834" y="138" font-size="32" fill="#E07B10" text-anchor="start" font-weight="700">B. 空間方向に混ぜる</text>
+<text x="834" y="180" font-size="27" fill="#1A1A1A" text-anchor="start" font-weight="400">対応は取らず、近傍と混ぜて届く範囲を広げる</text>
+<g transform="translate(900,212) scale(1.4) translate(-874,-210)">
+<rect x="874" y="210" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="874" y="236" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="874" y="262" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="874" y="288" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="874" y="314" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="900" y="210" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="900" y="236" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="900" y="262" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="900" y="288" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="900" y="314" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="926" y="210" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="926" y="236" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="926" y="262" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="926" y="288" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="926" y="314" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="952" y="210" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="952" y="236" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="952" y="262" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="952" y="288" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="952" y="314" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="978" y="210" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="978" y="236" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="978" y="262" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="978" y="288" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="978" y="314" width="26" height="26" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="927.5" y="263.5" width="23" height="23" fill="#E07B10" fill-opacity="0.95"></rect>
+<rect x="901.5" y="263.5" width="23" height="23" fill="#E07B10" fill-opacity="0.35"></rect>
+<rect x="953.5" y="263.5" width="23" height="23" fill="#E07B10" fill-opacity="0.35"></rect>
+<rect x="927.5" y="237.5" width="23" height="23" fill="#E07B10" fill-opacity="0.35"></rect>
+<rect x="927.5" y="289.5" width="23" height="23" fill="#E07B10" fill-opacity="0.35"></rect>
+<rect x="901.5" y="237.5" width="23" height="23" fill="#E07B10" fill-opacity="0.2"></rect>
+<rect x="953.5" y="237.5" width="23" height="23" fill="#E07B10" fill-opacity="0.2"></rect>
+<rect x="901.5" y="289.5" width="23" height="23" fill="#E07B10" fill-opacity="0.2"></rect>
+<rect x="953.5" y="289.5" width="23" height="23" fill="#E07B10" fill-opacity="0.2"></rect>
+<line x1="947.0" y1="275.0" x2="978.0" y2="275.0" stroke="#1A1A1A" stroke-width="2.5" marker-end="url(#ah)"></line>
+<line x1="931.0" y1="275.0" x2="900.0" y2="275.0" stroke="#1A1A1A" stroke-width="2.5" marker-end="url(#ah)"></line>
+<line x1="939.0" y1="283.0" x2="939.0" y2="314.0" stroke="#1A1A1A" stroke-width="2.5" marker-end="url(#ah)"></line>
+<line x1="939.0" y1="267.0" x2="939.0" y2="236.0" stroke="#1A1A1A" stroke-width="2.5" marker-end="url(#ah)"></line>
+</g>
+<rect x="1290" y="240" width="170" height="48" rx="24" fill="#E07B10"></rect>
+<text x="1375.0" y="274" font-size="27" fill="#FFFFFF" text-anchor="middle" font-weight="700">② 対照</text>
+<rect x="1290" y="310" width="170" height="48" rx="24" fill="#7D4BC2"></rect>
+<text x="1375.0" y="344" font-size="27" fill="#FFFFFF" text-anchor="middle" font-weight="700">②' 対照</text>
+<rect x="40" y="486" width="750" height="378" rx="16" fill="#F4F5F7" stroke="#8A8F96" stroke-width="2.5"></rect>
+<text x="64" y="532" font-size="32" fill="#1A1A1A" text-anchor="start" font-weight="700">C. 位置ではなく内容で引く state</text>
+<text x="64" y="574" font-size="27" fill="#1A1A1A" text-anchor="start" font-weight="400">key で state やメモリを引き、位置に依らない</text>
+<g transform="translate(110,606) scale(1.4) translate(-64,-598)">
+<rect x="64" y="644" width="34" height="34" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.2"></rect>
+<rect x="65.5" y="645.5" width="31" height="31" fill="#1A1A1A" fill-opacity="0.75"></rect>
+<text x="81" y="706" font-size="20" fill="#55595F" text-anchor="middle" font-weight="400">query</text>
+<rect x="174" y="602" width="110" height="26" rx="4" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.5"></rect>
+<rect x="180" y="607" width="16" height="16" fill="#1A1A1A" fill-opacity="0.25"></rect>
+<rect x="174" y="634" width="110" height="26" rx="4" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.5"></rect>
+<rect x="180" y="639" width="16" height="16" fill="#1A1A1A" fill-opacity="0.25"></rect>
+<rect x="174" y="666" width="110" height="26" rx="4" fill="#DADDE2" stroke="#1A1A1A" stroke-width="2.5"></rect>
+<rect x="180" y="671" width="16" height="16" fill="#1A1A1A" fill-opacity="0.75"></rect>
+<rect x="174" y="698" width="110" height="26" rx="4" fill="#FFFFFF" stroke="#C9CED4" stroke-width="1.5"></rect>
+<rect x="180" y="703" width="16" height="16" fill="#1A1A1A" fill-opacity="0.25"></rect>
+<text x="229" y="744" font-size="20" fill="#55595F" text-anchor="middle" font-weight="400">key → value</text>
+<line x1="102" y1="661" x2="168" y2="679" stroke="#1A1A1A" stroke-width="2.5" marker-end="url(#ah)"></line>
+</g>
+<rect x="520" y="670" width="170" height="48" rx="24" fill="#FFFFFF" stroke="#8A8F96" stroke-width="3"></rect>
+<text x="605.0" y="704" font-size="27" fill="#8A8F96" text-anchor="middle" font-weight="700">未着手</text>
+<rect x="810" y="486" width="750" height="378" rx="16" fill="#F4F5F7" stroke="#8A8F96" stroke-width="2.5"></rect>
+<text x="834" y="532" font-size="32" fill="#1A1A1A" text-anchor="start" font-weight="700">D. 物体単位の state</text>
+<text x="834" y="574" font-size="27" fill="#1A1A1A" text-anchor="start" font-weight="400">物体ごとに 1 本の state を持ち、位置を持たない</text>
+<g transform="translate(900,610) scale(1.5) translate(-836,-618)">
+<ellipse cx="879" cy="649" rx="38" ry="28" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="5 4"></ellipse>
+<circle cx="879" cy="649" r="13" fill="#1A1A1A" fill-opacity="0.8"></circle>
+<text x="879" y="706" font-size="22" fill="#55595F" text-anchor="middle" font-weight="400">t−1</text>
+<ellipse cx="1004" cy="649" rx="38" ry="28" fill="none" stroke="#1A1A1A" stroke-width="2.5" stroke-dasharray="5 4"></ellipse>
+<circle cx="1004" cy="649" r="13" fill="#1A1A1A" fill-opacity="0.8"></circle>
+<text x="1004" y="706" font-size="22" fill="#55595F" text-anchor="middle" font-weight="400">t</text>
+<line x1="894" y1="649" x2="984" y2="649" stroke="#1A1A1A" stroke-width="3" marker-end="url(#ah)"></line>
+<text x="942" y="739" font-size="20" fill="#55595F" text-anchor="middle" font-weight="400">物体ごとの token</text>
+</g>
+<rect x="1290" y="670" width="170" height="48" rx="24" fill="#FFFFFF" stroke="#8A8F96" stroke-width="3"></rect>
+<text x="1375.0" y="704" font-size="27" fill="#8A8F96" text-anchor="middle" font-weight="700">未着手</text>
+</svg>

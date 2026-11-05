@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo','Noto Sans JP','Noto Sans CJK JP',sans-serif">
+<rect width="1600" height="900" fill="#FFFFFF"></rect>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A1A1A"></path></marker><marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1F6FD1"></path></marker><marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A8F96"></path></marker></defs>
+<text x="40" y="62" font-size="38" fill="#1A1A1A" text-anchor="start" font-weight="700">①-b だけが対応を明示的に取る。②・②' はそれを確かめる対照</text>
+<rect x="300" y="92" width="430" height="778" fill="#EAF2FC"></rect>
+<text x="314" y="132" font-size="30" fill="#1F6FD1" text-anchor="start" font-weight="700">①-b 潜在相関で運ぶ</text>
+<text x="744" y="132" font-size="30" fill="#E07B10" text-anchor="start" font-weight="700">② 読み書きカーネル</text>
+<text x="1164" y="132" font-size="30" fill="#7D4BC2" text-anchor="start" font-weight="700">②' state 空間混合</text>
+<line x1="40" y1="150" x2="1570" y2="150" stroke="#1A1A1A" stroke-width="2.5"></line>
+<text x="44" y="199.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">仮定</text>
+<text x="314" y="182.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">1マス以上ずれ、</text>
+<text x="314" y="217.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">state が別物を指す</text>
+<text x="744" y="182.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">ずれは 2r 以内、</text>
+<text x="744" y="217.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">近傍を見れば足りる</text>
+<text x="1164" y="182.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">ずれは広がるが、</text>
+<text x="1164" y="217.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">混ぜ続ければ吸収</text>
+<line x1="40" y1="230" x2="1570" y2="230" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="279.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">対応の取り方</text>
+<text x="314" y="262.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">明示的：凍結特徴の</text>
+<text x="314" y="297.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">相関 argmax</text>
+<text x="744" y="262.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">暗黙的：読み書きの</text>
+<text x="744" y="297.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">固定カーネル</text>
+<text x="1164" y="262.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">暗黙的：state への</text>
+<text x="1164" y="297.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">固定カーネル</text>
+<line x1="40" y1="310" x2="1570" y2="310" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="359.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">効いたら</text>
+<text x="314" y="342.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">位置ずれが原因、</text>
+<text x="314" y="377.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">運べば state が効く</text>
+<text x="744" y="342.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">小さなずれが</text>
+<text x="744" y="377.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">原因の一部</text>
+<text x="1164" y="342.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">対応なしでも足りる</text>
+<text x="1164" y="377.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">→①-b は②'超えが必須</text>
+<line x1="40" y1="390" x2="1570" y2="390" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="439.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">効かなければ</text>
+<text x="314" y="422.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">対応の質か冗長か</text>
+<text x="314" y="457.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">→事前計測・①-a で判別</text>
+<text x="744" y="422.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">小さなずれは原因外</text>
+<text x="744" y="457.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">①-b の主張は無傷</text>
+<text x="1164" y="422.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">混ぜるだけでは不足</text>
+<text x="1164" y="457.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">→明示的対応を支持</text>
+<line x1="40" y1="470" x2="1570" y2="470" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="519.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">重さ（1本約12h）</text>
+<text x="314" y="502.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">実装 中・追加 0</text>
+<text x="314" y="537.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">＋事前計測（学習なし）</text>
+<text x="744" y="520.15" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">実装 軽・追加 約5万</text>
+<text x="1164" y="502.46" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">実装 軽・追加 約9万</text>
+<text x="1164" y="537.84" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">活性 +約1.1GB</text>
+<line x1="40" y1="550" x2="1570" y2="550" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="599.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">主なリスク</text>
+<text x="314" y="582.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">似た物体への乗り移り</text>
+<text x="314" y="617.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">1マス未満の動き</text>
+<text x="744" y="582.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">速い物体に届かない</text>
+<text x="744" y="617.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">容量増と区別しにくい</text>
+<text x="1164" y="582.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">前景 state が背景へ</text>
+<text x="1164" y="617.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">漏れる・ぼける</text>
+<line x1="40" y1="630" x2="1570" y2="630" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="679.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">新規性</text>
+<text x="314" y="662.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">Mamba state を対応で</text>
+<text x="314" y="697.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">運ぶ前例は未確認</text>
+<text x="744" y="662.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">低い</text>
+<text x="744" y="697.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">（ConvS5 の近似）</text>
+<text x="1164" y="662.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">低い</text>
+<text x="1164" y="697.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">（ConvLSTM と同型）</text>
+<line x1="40" y1="710" x2="1570" y2="710" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="759.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">先生の発言</text>
+<text x="314" y="742.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">直接対応</text>
+<text x="314" y="777.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">（潜在空間で明示的）</text>
+<text x="744" y="742.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">対応は取らない</text>
+<text x="744" y="777.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">→対照</text>
+<text x="1164" y="742.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">対応は取らない</text>
+<text x="1164" y="777.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">→対照</text>
+<line x1="40" y1="790" x2="1570" y2="790" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="44" y="839.1" font-size="26" fill="#55595F" text-anchor="start" font-weight="700">主題との整合</text>
+<text x="314" y="822.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">高：運んで carry、</text>
+<text x="314" y="857.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">リセットで汚染を抑制</text>
+<text x="744" y="822.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">中：carry は保つが</text>
+<text x="744" y="857.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">state は位置固定</text>
+<text x="1164" y="822.4599999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">中：carry は保つが</text>
+<text x="1164" y="857.8399999999999" font-size="29" fill="#1A1A1A" text-anchor="start" font-weight="400">混合が汚染源になる</text>
+<line x1="40" y1="870" x2="1570" y2="870" stroke="#C9CED4" stroke-width="1.5"></line>
+</svg>

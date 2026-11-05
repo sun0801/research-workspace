@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="'Hiragino Sans','Hiragino Kaku Gothic ProN','Yu Gothic','Meiryo','Noto Sans JP','Noto Sans CJK JP',sans-serif">
+<rect width="1600" height="900" fill="#FFFFFF"></rect>
+<defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1A1A1A"></path></marker><marker id="ahb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#1F6FD1"></path></marker><marker id="ahg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#8A8F96"></path></marker></defs>
+<text x="60" y="70" font-size="40" fill="#1A1A1A" text-anchor="start" font-weight="700">② から始め、①-b は対応の質を確かめてから学習する</text>
+<text x="72" y="148" font-size="28" fill="#55595F" text-anchor="start" font-weight="700">順</text>
+<text x="202" y="148" font-size="28" fill="#55595F" text-anchor="start" font-weight="700">条件</text>
+<text x="612" y="148" font-size="28" fill="#55595F" text-anchor="start" font-weight="700">内容</text>
+<text x="1092" y="148" font-size="28" fill="#55595F" text-anchor="start" font-weight="700">分かること</text>
+<line x1="60" y1="166" x2="1540" y2="166" stroke="#1A1A1A" stroke-width="2.5"></line>
+<text x="72" y="216.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">基準</text>
+<rect x="202" y="190.0" width="32" height="32" rx="6" fill="#8A8F96"></rect>
+<text x="248" y="216.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">k=1（= V3）</text>
+<text x="612" y="216.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">位置に固定（既存）</text>
+<text x="1092" y="216.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">比較の基準</text>
+<line x1="60" y1="246" x2="1540" y2="246" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="72" y="296.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">1</text>
+<rect x="202" y="270.0" width="32" height="32" rx="6" fill="#E07B10"></rect>
+<text x="248" y="296.5" font-size="30" fill="#E07B10" text-anchor="start" font-weight="700">②（k=7）</text>
+<text x="612" y="278.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">読み書きで</text>
+<text x="612" y="314.8" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">近傍 2r まで見る</text>
+<text x="1092" y="278.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">近くを見るだけで</text>
+<text x="1092" y="314.8" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">足りるか</text>
+<line x1="60" y1="326" x2="1540" y2="326" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="72" y="376.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">1</text>
+<rect x="202" y="350.0" width="32" height="32" rx="6" fill="#7D4BC2"></rect>
+<text x="248" y="376.5" font-size="30" fill="#7D4BC2" text-anchor="start" font-weight="700">②'（3×3）</text>
+<text x="612" y="358.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">state を毎フレーム</text>
+<text x="612" y="394.8" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">近傍と混ぜる</text>
+<text x="1092" y="358.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">対応なしで広く</text>
+<text x="1092" y="394.8" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">混ぜれば足りるか</text>
+<line x1="60" y1="406" x2="1540" y2="406" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="72" y="456.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">並行</text>
+<rect x="204" y="432.0" width="28" height="28" rx="6" fill="#FFFFFF" stroke="#8A8F96" stroke-width="4"></rect>
+<text x="248" y="456.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">D2</text>
+<text x="612" y="438.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">既存 checkpoint で</text>
+<text x="612" y="474.8" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">memory を絞り推論</text>
+<text x="1092" y="438.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">冗長 (a) の兆候</text>
+<text x="1092" y="474.8" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">（関門にしない）</text>
+<line x1="60" y1="486" x2="1540" y2="486" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="72" y="536.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">2</text>
+<rect x="204" y="512.0" width="28" height="28" rx="6" fill="#FFFFFF" stroke="#1F6FD1" stroke-width="4"></rect>
+<text x="248" y="536.5" font-size="30" fill="#1F6FD1" text-anchor="start" font-weight="700">①-b 事前計測</text>
+<text x="612" y="518.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">GT で前景→前景の</text>
+<text x="612" y="554.8000000000001" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">対応率を測る</text>
+<text x="1092" y="518.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">対応の質が</text>
+<text x="1092" y="554.8000000000001" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">q*=p より高いか</text>
+<line x1="60" y1="566" x2="1540" y2="566" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="72" y="616.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">3</text>
+<rect x="202" y="590.0" width="32" height="32" rx="6" fill="#1F6FD1"></rect>
+<text x="248" y="616.5" font-size="30" fill="#1F6FD1" text-anchor="start" font-weight="700">①-b</text>
+<text x="612" y="598.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">対応 q* へ</text>
+<text x="612" y="634.8000000000001" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">state を運ぶ</text>
+<text x="1092" y="598.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">運ぶことが効くか</text>
+<text x="1092" y="634.8000000000001" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">（②' との差）</text>
+<line x1="60" y1="646" x2="1540" y2="646" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="72" y="696.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">3</text>
+<rect x="204" y="672.0" width="28" height="28" rx="6" fill="#FFFFFF" stroke="#1F6FD1" stroke-width="4"></rect>
+<text x="248" y="678.2" font-size="30" fill="#1F6FD1" text-anchor="start" font-weight="700">①-b で学習</text>
+<text x="248" y="714.8000000000001" font-size="30" fill="#1F6FD1" text-anchor="start" font-weight="700">→ q*=p で推論</text>
+<text x="612" y="696.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">学習時だけ運ぶ</text>
+<text x="1092" y="678.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">運ばれた state を</text>
+<text x="1092" y="714.8000000000001" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">使っているか</text>
+<line x1="60" y1="726" x2="1540" y2="726" stroke="#C9CED4" stroke-width="1.5"></line>
+<text x="72" y="776.5" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="700">4</text>
+<rect x="204" y="752.0" width="28" height="28" rx="6" fill="#FFFFFF" stroke="#1F6FD1" stroke-width="4" stroke-dasharray="6 5"></rect>
+<text x="248" y="776.5" font-size="30" fill="#1F6FD1" text-anchor="start" font-weight="700">①-a（条件付き）</text>
+<text x="612" y="758.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">外部 flow で運ぶ</text>
+<text x="612" y="794.8000000000001" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">（上限）</text>
+<text x="1092" y="758.2" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">対応の質が</text>
+<text x="1092" y="794.8000000000001" font-size="30" fill="#1A1A1A" text-anchor="start" font-weight="400">足りないのか</text>
+<line x1="60" y1="806" x2="1540" y2="806" stroke="#C9CED4" stroke-width="1.5"></line>
+<rect x="62" y="830" width="28" height="28" rx="6" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="4"></rect>
+<text x="104" y="854" font-size="24" fill="#55595F" text-anchor="start" font-weight="400">＝学習なし（推論・計測のみ）。評価は全条件とも memory そのまま／絞る（直近 N 枚・object pointer なし）の 2 設定。</text>
+</svg>
