@@ -170,7 +170,48 @@ specでは141のA4000で測る予定だったが、141のGPU 2と同じ機種（
 |---|---|
 | c1 identityでの一致（①） | 合格。マスク・クリック・boxの3種類、初期化直後とW_outに同じ非ゼロ値を入れた場合の両方で、全フレームのマスクのlogit・IoUと全段のstateがAと差0。softmaxのv3_corrは、adapterの呼び出しのうち最初以外のすべてで輸送した（マスクのプロンプトでは最初のフレームがadapterを通らないので、呼び出し3回・輸送2回） |
 | c2 パラメータ（②） | 合格。v3_corr（identity・softmax）のパラメータの名前と初期値がAと完全に一致 |
-| c5 オフのときの一致（⑤） | 合格。F0とAを最初の1動画・4対象で評価し、`191ca8b`（git worktree）とJ・F・J&Fとも差0 |
 | c3 数回の更新（③） | 合格。3更新で、学習するのはadapterだけ（46個のパラメータがすべて動いた）、固定したパラメータはF0から不変。学習パラメータの名前・最適化のグループ・weight decayの除外がAと同じ。manifestに対応の設定（softmax・image・窓15・τ=0.02）が記録された |
-| c4 サンプル列（④） | 合格。最初の3更新の動画・物体・フレーム・augmentation後の画像の和・プロンプトの種類が、A'（141のGPU 1）と一致。この3更新では、クリックの座標と修正したフレームも一致した。GPU 0〜2はすべてRTX A4000 |
-| c6 時間とVRAM（⑥） | 300更新で1更新の平均1.94秒（中央値2.10秒）。同じ300更新のA'は平均1.76秒（中央値1.90秒）で、**比は1.10倍**（1.5倍の条件の内）。24,662更新で約13.3時間（val-25を除く）。VRAMはtrainerのログで最大11 GB（A'も最大11 GB）。lossはすべて有限 |
+| c4 サンプル列（④） | 合格。最初の3更新の動画・物体・フレーム・augmentation後の画像の和（img_sum）・プロンプトの種類が、A'（141のGPU 1）と一致。この3更新では、クリックの座標と修正したフレームも一致した。GPU 0〜2はすべてRTX A4000 |
+| c5 オフのときの一致（⑤） | 合格。F0とAを最初の1動画・4対象で評価し、`191ca8b`（git worktree）とJ・F・J&Fとも差0。下記の復元処理の修正後にも再実行して合格 |
+| c6 時間とVRAM（⑥） | 合格。300更新で1更新の平均1.94秒（中央値2.10秒）。同じ300更新のA'は平均1.76秒（中央値1.90秒）で、**比は1.10倍**（1.5倍の条件の内）。24,662更新で約13.3時間（val-25を除く）、val-25込みで約18時間の見込み。VRAMはtrainerのログで最大11 GB（A'も最大11 GB）。lossはすべて有限 |
+| c7 Aの重みのコピー（⑦） | 合格。tuningの1対象（`03c21af7`/1、36フレーム）で、v3_corr（identity）にAの重みを入れると、全36回の呼び出しでadapterの出力・高解像度の特徴・stateがバイト単位でAと一致し、フレームごとのJ・Fも一致（J&F 0.9728）。softmaxでは36回の呼び出しのうち35回で輸送した（J&F 0.9724） |
+| c8 長い系列での安定性（⑧） | 合格（02:49〜02:59の再実行）。c6の300更新の重みを `v3_corr`（softmax・τ=0.02）として読み込み、最長の3対象とも最後まで有限。輸送はフレーム数−1回（299・274・265回）。初回の無効判定と再実行の詳細は下記 |
+| c9 診断と学習の計算の一致（⑨） | 合格。実際のフレームの組（`03c21af7` の3→4フレーム目）で、段階0の計算（`local_similarity` ＋ `correspondence_weights`）とadapterの `_corr_weights`（autocastの中）の重みが差0 |
+
+### c8の無効判定・修正・再実行（2026-11-05）
+
+- **初回（02:48）は無効**。確認用のrun（c6の `corr_time`）は `trainer.run()` だけで学習し、`config_resolved.yaml` がなかった。評価側が `v3_corr` を判定できずV3として復元し、輸送0回のまま合格と表示された。数値は有限だったが、①-bの確認には使えない。
+- 修正（02:49、`26df1ec`）：`training/mose_adapter_eval.py` の `load_trainer_checkpoint` は、runの `manifest.json` の `adapter`（`CorrespondencePyramidAdapter` と対応の設定）を優先し、なければ従来どおり `config_resolved.yaml` から復元する形にした。c8の合格条件に「`v3_corr` として復元され、最初以外の全フレームで輸送した」を加え、141へ送って再実行した。
+- 再実行（02:49〜02:59）は合格。64段のssm_stateのRMSは8フレーム目0.007〜0.009、最後0.017〜0.030（Aは8フレーム目0.004、最後0.009〜0.026）。RMSの最大は0.017〜0.031でAの約1.2〜2倍、最後の100フレームの増加率は1フレームあたり1.0000〜1.0007倍（概数1.000〜1.001倍）で、指数的な増加なし。最大絶対値は1.4〜1.8（Aは0.5〜1.7）、conv_stateのRMSは0.30〜0.74。
+- Wの統計の平均：行の和1、期待移動距離0.19〜1.50マス、列の和の最大2.6〜7.7（1つのstateが最大で約8マス分に複製される）。
+- J&F（参考）：0.274・0.179・0.912、Aは0.866・0.145・0.919。①-bは300更新の重みなので、性能比較には使わない。
+
+### 段階1完了とコミット
+
+- 段階1のc1〜c9はすべて合格。
+- コードはworktreeのブランチ `feat/latent-correspondence` にコミット済み。`db8bba8`〜`e2346e2`（並行セッションによるコミット。対応の計算・診断・adapter・評価・設定と確認スクリプト・確認結果）と、`26df1ec`（上の復元処理の修正）。段階1完了時のHEADは `26df1ec`。
+
+## 段階2 本学習（2026-11-05 03:04〜）
+
+### 開始準備
+
+- 実行先は141のGPU 2、設定は `A_corr_ckpt`。runは元の作業ツリーの `runs/short_clip/A_corr_ckpt/` に置く。
+- 141へブランチを送り、同じコミットのgit worktree `/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2_lc`（開始準備時は `26df1ec`、`git status` クリーン、F0・索引へのリンクあり）を作った。主要なファイルのsha256が142と一致することを確認した。
+- venvのeditable installは元の作業ツリーを指すため、`PYTHONPATH` をworktreeに設定し、`sam2`・`training` がworktreeから読まれることを確認した。本学習もこの設定で実行する。
+
+### ①-b（`A_corr_ckpt`）
+
+- run：141 SAM2 repo `runs/short_clip/A_corr_ckpt/20261105T030413+0900_26df1ec`（141のGPU 2、RTX A4000、03:04開始。tmuxは当初 `corr_train` と記録したが、12:20ごろに `sam2` と訂正、詳細は下記）。worktree `2025_03_aburatani_sam2_lc` から、`PYTHONPATH` をworktreeにして実行。
+- 開始直後の確認（03:05、Claudeがsshで確認）：プロセスのcwd・`PYTHONPATH` はworktree、`CUDA_VISIBLE_DEVICES=2`。manifestは条件A_corr、コミット `26df1ec`・dirtyなし、adapterは `CorrespondencePyramidAdapter`（softmax・image・窓15・τ=0.02、checkpointingあり）、学習パラメータ570,563個（Aと同じ）、24,662更新。ログにエラーなし。
+- 見込み：1更新 約1.94秒（段階1のc6）で約13.3時間、val-25を含めて約16〜17時間（11/5の19〜20時ごろ）。
+- **03:29に停止（2026-11-05 12:04に確認）**：学習前のval-25（J&F 0.7811、A'の学習前と同じ値）を書いた直後にプロセスが終わり、更新は1回も行われていない。ログにtracebackはない。141にtmux `corr_train` がなく、ユーザーの142からのsshログインが03:03〜03:19だったので、tmuxの外で起動し、sshが切れた後の最初の標準出力への書き込みで止まったと考えている（推測）。このrunは「途中で中止（更新0回）」として扱い、結果には使わない。tmuxの中で再開する。
+- **再開（2026-11-05 12:12）**：run `runs/short_clip/A_corr_ckpt/20261105T121253+0900_26df1ec`（141のGPU 2、tmux `corr_train`）。12:14に確認：tmuxの中で動いている。cwd・`PYTHONPATH` はworktree、`CUDA_VISIBLE_DEVICES=2`、manifestはコミット `26df1ec`・dirtyなし・`CorrespondencePyramidAdapter`（softmax・τ=0.02）。学習前のval-25の途中。完了は11/6の4〜5時ごろの見込み。
+- **停止の原因の訂正（2026-11-05 12:20ごろ）**：上の「tmuxの外で起動し、sshが切れて止まった」という推測は誤り。最初のrunはtmux `sam2`（使い回し）の中で動いていて、ペインに次のエラーが残っていた：`RuntimeError: Inference tensors cannot be saved for backward`。学習前のval-25（`torch.inference_mode`）の間に、`latent_correspondence` の索引表のキャッシュ（`_tiling`・`_gather_index`、`lru_cache`）が推論テンソルとして作られ、学習の最初の更新で `save_for_backward` が失敗した。段階1の確認（c3・c6）は val-25 を切った trainer で回していたので、見つからなかった。修正前のコードで同じエラーを再現し、修正後に通ることを確かめた。
+  - 修正：`354e415`。索引表を `torch.inference_mode(False)` の中で作る。確認c10（推論モードで1回通した後に学習のbackwardが通る）を追加し、142のRTX A4000で合格。141のworktree `2025_03_aburatani_sam2_lc` を `354e415` に更新した（`git status` クリーン）。
+  - 12:12に再開したrun（`20261105T121253+0900_26df1ec`、修正前のコード）も、val-25の後に同じ理由で止まる。止めて、`354e415` で再開する。
+- **再開（2026-11-05 12:33）**：run `runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415`（141のGPU 2、tmux `corr_train`）。12:34に確認：cwd・`PYTHONPATH` はworktree、`CUDA_VISIBLE_DEVICES=2`、manifestはコミット `354e415`・dirtyなし・softmax・τ=0.02。12:12のrun（`20261105T121253+0900_26df1ec`）は学習前のval-25の途中でユーザーが止めた（更新0回、結果には使わない）。学習前のval-25の途中。
+
+### A'（`A_v3`、141のGPU 1）完了
+
+- 2026-11-05 12:42に正常終了（`check_run_done.py`：finished normally）。24,662更新、1更新の平均1.80秒。val-25（経過を見るためだけ）：0.7811（学習前）→ 0.7835 → … → 0.7630（step 22420）→ **0.7892（step 24662）**。元のA（RTX PRO 4500）の最後（step 24662）は0.7931（runの `val_history.jsonl`）。
+- 評価の準備：worktree `_lc`（`354e415`）から `eval.sh` で、最初の1動画・4対象で試した（`runs/latent_corr/stage1/20261105_evalsmoke/`）。そのまま（J&F 0.9061）と `--reset-levels 64`（0.9079、manifestに `reset_levels: ["64"]`）とも最後まで動いた。
