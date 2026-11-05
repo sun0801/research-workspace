@@ -3,7 +3,7 @@ date: 2026-11-05
 project: kaggle-name-that-llm
 source: brainstorm
 status: approved
-execution_status: not-started
+execution_status: implementation-tested-awaiting-execution
 tags: [spec, experiment, goal, cpu]
 ---
 
@@ -11,7 +11,9 @@ tags: [spec, experiment, goal, cpu]
 
 ## 目的と承認
 
-公式Starterを再現可能な比較基準として実装し、共通の評価で改善候補を比較する。ユーザーが2026-11-05に運用案とOOM回避条件へ「OK」と回答したため、合意内容を本specに保存する。実装・実験の開始指示は、このspecを参照するgoalの開始時に受ける。現時点でgoal・実装・実験は未開始。
+公式Starterを再現可能な比較基準として実装し、共通の評価で改善候補を比較する。ユーザーが2026-11-05に運用案とOOM回避条件へ「OK」と回答したため、合意内容を本specに保存する。実装・実験の開始指示は、このspecを参照するgoalの開始時に受ける。
+
+2026-11-06追記: specを参照するgoalの開始指示を受けて実装済み。合成データの5テストが成功し、公式データも取得済み。実データでの実験は未開始。[CLI引き継ぎ](../experiments/2026-11-06-cpu-cycle-handoff.md)から再開する。承認した設計・実行範囲に変更はない。
 
 元の運用案: [自動goalのbrainstorm](../../../../secretary/notes/brainstorm/2026-11-05-kaggle-autonomous-goal.md)。調査根拠: [公開Notebook比較](../experiments/2026-11-02-public-notebook-comparison.md)。
 
