@@ -42,11 +42,11 @@ tags: [master-thesis, outline]
 | 4.1 提案手法：概要 | 2か所にMambaを入れる全体像と、3つのベースへの適用 | （新規） | 書ける（図は新規） |
 | 4.2 提案手法：動き予測 | state carry型とsliding window型、候補マスクの選択 | ViEW原稿 3.3〜3.4 | 書ける |
 | 4.3 提案手法：内部特徴の時系列モデリング | temporal Mamba（V3）の構造と、短い区間での学習 | `specs/2026-10-18-…v3…`、`specs/2026-10-27-…short-clip…` | 手法は書ける／空間方向は未着手 |
-| 4.4 提案手法：SAM2MOTへの統合 | 検出による補正と(i)(ii)の組み合わせ方 | `experiments/2026-10-09-sam2mot-test-runs.md` | 未着手 |
+| ~~4.4 提案手法：SAM2MOTへの統合~~ | （11/6：手法の節としては一旦書かない。統合の仕方は5.4の実験設定で短く述べる） | `experiments/2026-10-09-sam2mot-test-runs.md` | 保留 |
 | 5.1 実験設定 | DanceTrack（評価）、MOSE（(ii)の学習）、指標、正解ボックスでの初期化と検出からの初期化の違い | ViEW原稿 4.1 | 書ける（MOSE分は追記） |
 | 5.2 動き予測の評価 | SAM2・SAMURAI・Ours 2種（DanceTrack val） | ViEW 表1：HOTA 55.5（SAMURAI 54.1） | 書ける |
 | 5.3 内部特徴の評価 | MOSE valのJ&F、Mambaの有無、stateのreset | `experiments/2026-10-27-…`、`experiments/2026-10-29-…from-p0.md` | 結果待ち |
-| 5.4 SAM2MOTへの統合と既存手法との比較 | DanceTrack test、SAM2MOT再現（HOTA 70.8）、SAM3 | `experiments/2026-10-09-sam2mot-test-runs.md` | 再現は書ける／統合・SAM3は未着手 |
+| 5.4 SAM2MOTへの統合と既存手法との比較 | DanceTrack test、SAM2MOT再現（HOTA 70.8）、SAM3。統合の仕方（検出による補正と(i)(ii)の組み合わせ）はここで短く述べる | `experiments/2026-10-09-sam2mot-test-runs.md` | 再現は書ける／統合・SAM3は未着手 |
 | 5.5 アブレーション | (i)(ii)それぞれの寄与、state carry型とsliding window型、学習の区間長 | ViEW、temporal Mambaの実験 | 一部書ける |
 | 5.6 速度・メモリ | FPSとGPUメモリ | `experiments/2026-10-26-view-speed-memory-benchmark.md` | 書ける（(ii)の分は追記） |
 | 5.7 定性的評価 | 成功例・失敗例 | `experiments/2026-10-12-qualitative-pattern-videos.md`、`experiments/2026-09-25-sam2-sequence-*` | 書ける |
@@ -90,3 +90,4 @@ tags: [master-thesis, outline]
 ## 更新履歴
 
 - 2026-10-30: 初版を作成した（10/30 MTGで相談）。
+- 2026-11-06: 4.4（SAM2MOTへの統合）は手法の節としては一旦書かず、5.4の実験で統合の仕方を短く述べる形にした。
