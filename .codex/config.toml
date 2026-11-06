@@ -1,8 +1,5 @@
 # Project-scoped official Kaggle MCP. Credentials stay out of this file.
 # Authentication: private http_headers_helper reads kaggle/.env; use scripts/configure_token.py
-model = "gpt-6-luna"
-model_reasoning_effort = "high"
-
 [mcp_servers.kaggle]
 http_headers_helper = "/mnt/HDD10TB-2/aburatani/kaggle/.venv/bin/python /mnt/HDD10TB-2/aburatani/kaggle/scripts/mcp_headers.py"
 url = "https://www.kaggle.com/mcp"
