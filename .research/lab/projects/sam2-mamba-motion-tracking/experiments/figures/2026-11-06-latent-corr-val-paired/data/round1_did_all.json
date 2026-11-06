@@ -1,0 +1,339 @@
+{
+  "checks": {
+    "Ap": "object set, prompts and frames_scored match Bc",
+    "Ap-reset1": "object set, prompts and frames_scored match Bc",
+    "Bc-id": "object set, prompts and frames_scored match Bc",
+    "Bc-reset1": "object set, prompts and frames_scored match Bc",
+    "Bc-shuf": "object set, prompts and frames_scored match Bc",
+    "F0": "object set, prompts and frames_scored match Bc"
+  },
+  "conditions": {
+    "Ap": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3/20261104T194605+0900_2f90e77/eval/tuning/Ap",
+    "Ap-reset1": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3/20261104T194605+0900_2f90e77/eval/tuning/Ap-reset1",
+    "Bc": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr",
+    "Bc-id": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr-id",
+    "Bc-reset1": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr-reset1",
+    "Bc-shuf": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr-shuf",
+    "F0": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/tuning/F0_step_002789"
+  },
+  "diff_of_diffs": {
+    "Bc_F0": {
+      "F": {
+        "ci95": [
+          0.0019645001401011114,
+          0.03235187168314177
+        ],
+        "ci95_pp": [
+          0.19645001401011114,
+          3.235187168314177
+        ],
+        "left_mean": 0.01634980066679107,
+        "mean": 0.01634980066679107,
+        "mean_pp": 1.6349800666791072,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": true
+      },
+      "J": {
+        "ci95": [
+          0.001066234643572777,
+          0.027780138751033117
+        ],
+        "ci95_pp": [
+          0.1066234643572777,
+          2.7780138751033117
+        ],
+        "left_mean": 0.014041717191005188,
+        "mean": 0.014041717191005188,
+        "mean_pp": 1.4041717191005187,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": true
+      },
+      "J&F": {
+        "ci95": [
+          0.0016945027376513513,
+          0.029802111805260233
+        ],
+        "ci95_pp": [
+          0.16945027376513513,
+          2.980211180526023
+        ],
+        "left_mean": 0.015195758928898137,
+        "mean": 0.015195758928898137,
+        "mean_pp": 1.5195758928898138,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": true
+      },
+      "left": "Bc-F0",
+      "right": "Ap-Ap"
+    },
+    "I": {
+      "F": {
+        "ci95": [
+          -0.008107128043671736,
+          0.021981779003413384
+        ],
+        "ci95_pp": [
+          -0.8107128043671736,
+          2.198177900341338
+        ],
+        "left_mean": 0.006392861961338236,
+        "mean": 0.006401005761383847,
+        "mean_pp": 0.6401005761383847,
+        "n_videos": 125,
+        "right_mean": -8.143800045609773e-06,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.007111726809874406,
+          0.01933055722908088
+        ],
+        "ci95_pp": [
+          -0.7111726809874406,
+          1.933055722908088
+        ],
+        "left_mean": 0.005277405846553653,
+        "mean": 0.005875022212540521,
+        "mean_pp": 0.5875022212540522,
+        "n_videos": 125,
+        "right_mean": -0.0005976163659868678,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.007494126431654494,
+          0.020157865796741094
+        ],
+        "ci95_pp": [
+          -0.7494126431654493,
+          2.0157865796741095
+        ],
+        "left_mean": 0.005835133903945954,
+        "mean": 0.006138013986962189,
+        "mean_pp": 0.613801398696219,
+        "n_videos": 125,
+        "right_mean": -0.00030288008301623657,
+        "supported": false
+      },
+      "left": "Bc-Bc-reset1",
+      "right": "Ap-Ap-reset1"
+    },
+    "R_Bc": {
+      "F": {
+        "ci95": [
+          -0.0008597205942765443,
+          0.015599328515597113
+        ],
+        "ci95_pp": [
+          -0.08597205942765443,
+          1.5599328515597113
+        ],
+        "left_mean": 0.006392861961338236,
+        "mean": 0.006392861961338236,
+        "mean_pp": 0.6392861961338236,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.0007066087475455511,
+          0.011719825572642003
+        ],
+        "ci95_pp": [
+          -0.07066087475455511,
+          1.1719825572642002
+        ],
+        "left_mean": 0.005277405846553653,
+        "mean": 0.005277405846553653,
+        "mean_pp": 0.5277405846553653,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.0005469571375914834,
+          0.0132345557701083
+        ],
+        "ci95_pp": [
+          -0.05469571375914834,
+          1.32345557701083
+        ],
+        "left_mean": 0.005835133903945954,
+        "mean": 0.005835133903945954,
+        "mean_pp": 0.5835133903945954,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "left": "Bc-Bc-reset1",
+      "right": "Ap-Ap"
+    },
+    "U_id": {
+      "F": {
+        "ci95": [
+          -0.0012395506292872422,
+          0.01756320175265157
+        ],
+        "ci95_pp": [
+          -0.12395506292872421,
+          1.756320175265157
+        ],
+        "left_mean": 0.006689829660846831,
+        "mean": 0.006689829660846831,
+        "mean_pp": 0.6689829660846831,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.0003965406301209393,
+          0.010525091947762489
+        ],
+        "ci95_pp": [
+          -0.039654063012093926,
+          1.0525091947762488
+        ],
+        "left_mean": 0.004508868789095075,
+        "mean": 0.004508868789095075,
+        "mean_pp": 0.4508868789095075,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.0007141183433917168,
+          0.013996056397885842
+        ],
+        "ci95_pp": [
+          -0.07141183433917168,
+          1.399605639788584
+        ],
+        "left_mean": 0.00559934922497096,
+        "mean": 0.00559934922497096,
+        "mean_pp": 0.559934922497096,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "left": "Bc-Bc-id",
+      "right": "Ap-Ap"
+    },
+    "U_shuf": {
+      "F": {
+        "ci95": [
+          -0.002099790532817812,
+          0.009145808142392993
+        ],
+        "ci95_pp": [
+          -0.20997905328178118,
+          0.9145808142392994
+        ],
+        "left_mean": 0.0032589930713393007,
+        "mean": 0.0032589930713393007,
+        "mean_pp": 0.32589930713393006,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.002514527026376281,
+          0.007022884289131999
+        ],
+        "ci95_pp": [
+          -0.2514527026376281,
+          0.7022884289131999
+        ],
+        "left_mean": 0.0021375040867097675,
+        "mean": 0.0021375040867097675,
+        "mean_pp": 0.21375040867097675,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.0021452342912332955,
+          0.007904131644909213
+        ],
+        "ci95_pp": [
+          -0.21452342912332956,
+          0.7904131644909212
+        ],
+        "left_mean": 0.00269824857902453,
+        "mean": 0.00269824857902453,
+        "mean_pp": 0.26982485790245303,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "left": "Bc-Bc-shuf",
+      "right": "Ap-Ap"
+    },
+    "perf": {
+      "F": {
+        "ci95": [
+          -0.0046194344972168636,
+          0.018687313626687834
+        ],
+        "ci95_pp": [
+          -0.46194344972168633,
+          1.8687313626687834
+        ],
+        "left_mean": 0.006435881256888467,
+        "mean": 0.006435881256888467,
+        "mean_pp": 0.6435881256888467,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.0036186200187944034,
+          0.01780423542961193
+        ],
+        "ci95_pp": [
+          -0.36186200187944034,
+          1.7804235429611932
+        ],
+        "left_mean": 0.006405055717411851,
+        "mean": 0.006405055717411851,
+        "mean_pp": 0.640505571741185,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.004072699887618522,
+          0.018047250580774922
+        ],
+        "ci95_pp": [
+          -0.4072699887618522,
+          1.8047250580774923
+        ],
+        "left_mean": 0.006420468487150164,
+        "mean": 0.006420468487150164,
+        "mean_pp": 0.6420468487150164,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "left": "Bc-Ap",
+      "right": "Ap-Ap"
+    }
+  },
+  "expected_index": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/tuning_trajectories.json",
+  "expected_index_sha256": "1cef53ce1e804e0ad8472c8f5c8a206b54652619173b993ecfef057a110b59ce",
+  "n_objects": 313,
+  "n_videos": 125,
+  "note": "Per-video (A-B)-(C-D) with one paired video bootstrap; exploratory, tuning split. CIs cover video sampling only, not design choices or training seeds.",
+  "speed_stratum": null
+}

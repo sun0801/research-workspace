@@ -1,0 +1,233 @@
+{
+  "checks": {
+    "Ap": "object set, prompts and frames_scored match Bc",
+    "Ap-reset64": "object set, prompts and frames_scored match Bc",
+    "Bc-diag": "object set, prompts and frames_scored match Bc",
+    "Bc-id": "object set, prompts and frames_scored match Bc",
+    "Bc-reset64": "object set, prompts and frames_scored match Bc"
+  },
+  "conditions": {
+    "Ap": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3/20261104T194605+0900_2f90e77/eval/tuning/Ap",
+    "Ap-reset64": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3/20261104T194605+0900_2f90e77/eval/tuning/Ap-reset64",
+    "Bc": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr",
+    "Bc-diag": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr-diag",
+    "Bc-id": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr-id",
+    "Bc-reset64": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_corr_ckpt/20261105T123304+0900_354e415/eval/tuning/A_corr-reset64"
+  },
+  "diff_of_diffs": {
+    "I64": {
+      "F": {
+        "ci95": [
+          -0.008204339932093878,
+          0.018493932031901448
+        ],
+        "ci95_pp": [
+          -0.8204339932093877,
+          1.8493932031901448
+        ],
+        "left_mean": 0.006150598840123071,
+        "mean": 0.004663863526121624,
+        "mean_pp": 0.46638635261216244,
+        "n_videos": 125,
+        "right_mean": 0.0014867353140014456,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.0073837696089918605,
+          0.014938799080657213
+        ],
+        "ci95_pp": [
+          -0.738376960899186,
+          1.4938799080657212
+        ],
+        "left_mean": 0.005257369975871591,
+        "mean": 0.004003848554500384,
+        "mean_pp": 0.4003848554500384,
+        "n_videos": 125,
+        "right_mean": 0.0012535214213712069,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.007545176612097729,
+          0.016368960768029742
+        ],
+        "ci95_pp": [
+          -0.7545176612097729,
+          1.6368960768029743
+        ],
+        "left_mean": 0.005703984407997337,
+        "mean": 0.004333856040311007,
+        "mean_pp": 0.43338560403110066,
+        "n_videos": 125,
+        "right_mean": 0.0013701283676863314,
+        "supported": false
+      },
+      "left": "Bc-Bc-reset64",
+      "right": "Ap-Ap-reset64"
+    },
+    "R64_Bc": {
+      "F": {
+        "ci95": [
+          -0.0010192282413296265,
+          0.0152546824286975
+        ],
+        "ci95_pp": [
+          -0.10192282413296265,
+          1.52546824286975
+        ],
+        "left_mean": 0.006150598840123071,
+        "mean": 0.006150598840123071,
+        "mean_pp": 0.6150598840123072,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.0006359617750480282,
+          0.011682648024615891
+        ],
+        "ci95_pp": [
+          -0.06359617750480283,
+          1.1682648024615891
+        ],
+        "left_mean": 0.005257369975871591,
+        "mean": 0.005257369975871591,
+        "mean_pp": 0.5257369975871591,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.0006115496289625977,
+          0.013064295850379302
+        ],
+        "ci95_pp": [
+          -0.06115496289625977,
+          1.3064295850379302
+        ],
+        "left_mean": 0.005703984407997337,
+        "mean": 0.005703984407997337,
+        "mean_pp": 0.5703984407997337,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "left": "Bc-Bc-reset64",
+      "right": "Ap-Ap"
+    },
+    "U_diag": {
+      "F": {
+        "ci95": [
+          -0.0012137104870338757,
+          0.01769280067988218
+        ],
+        "ci95_pp": [
+          -0.12137104870338757,
+          1.769280067988218
+        ],
+        "left_mean": 0.006690877546614079,
+        "mean": 0.006690877546614079,
+        "mean_pp": 0.6690877546614079,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.001079372267875347,
+          0.009711151857969662
+        ],
+        "ci95_pp": [
+          -0.1079372267875347,
+          0.9711151857969662
+        ],
+        "left_mean": 0.00378277244277749,
+        "mean": 0.00378277244277749,
+        "mean_pp": 0.378277244277749,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.0010159984724589213,
+          0.013617804572403478
+        ],
+        "ci95_pp": [
+          -0.10159984724589213,
+          1.3617804572403478
+        ],
+        "left_mean": 0.005236824994695794,
+        "mean": 0.005236824994695794,
+        "mean_pp": 0.5236824994695793,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "left": "Bc-Bc-diag",
+      "right": "Ap-Ap"
+    },
+    "diag_id": {
+      "F": {
+        "ci95": [
+          -0.00041040999393315906,
+          0.0003723221206113232
+        ],
+        "ci95_pp": [
+          -0.04104099939331591,
+          0.03723221206113232
+        ],
+        "left_mean": -1.0478857672471808e-06,
+        "mean": -1.0478857672471808e-06,
+        "mean_pp": -0.00010478857672471809,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -7.929960643434943e-05,
+          0.002104531919774301
+        ],
+        "ci95_pp": [
+          -0.007929960643434944,
+          0.21045319197743012
+        ],
+        "left_mean": 0.0007260963463175854,
+        "mean": 0.0007260963463175854,
+        "mean_pp": 0.07260963463175854,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.00019981780053716447,
+          0.0012033598849446145
+        ],
+        "ci95_pp": [
+          -0.019981780053716446,
+          0.12033598849446145
+        ],
+        "left_mean": 0.0003625242302751667,
+        "mean": 0.0003625242302751667,
+        "mean_pp": 0.03625242302751667,
+        "n_videos": 125,
+        "right_mean": 0.0,
+        "supported": false
+      },
+      "left": "Bc-diag-Bc-id",
+      "right": "Ap-Ap"
+    }
+  },
+  "expected_index": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/tuning_trajectories.json",
+  "expected_index_sha256": "1cef53ce1e804e0ad8472c8f5c8a206b54652619173b993ecfef057a110b59ce",
+  "n_objects": 313,
+  "n_videos": 125,
+  "note": "Per-video (A-B)-(C-D) with one paired video bootstrap; exploratory, tuning split. CIs cover video sampling only, not design choices or training seeds.",
+  "speed_stratum": null
+}

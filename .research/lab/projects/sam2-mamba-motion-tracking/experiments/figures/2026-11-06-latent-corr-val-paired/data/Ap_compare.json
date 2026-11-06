@@ -1,0 +1,174 @@
+{
+  "checks": {
+    "Ap-reset1": "object set, prompts and frames_scored match Ap",
+    "Ap-reset64": "object set, prompts and frames_scored match Ap",
+    "F0": "object set, prompts and frames_scored match Ap"
+  },
+  "comparisons": {
+    "Ap-Ap-reset1": {
+      "F": {
+        "ci95": [
+          -0.013080529282238606,
+          0.012827386640570116
+        ],
+        "ci95_pp": [
+          -1.3080529282238607,
+          1.2827386640570115
+        ],
+        "mean": -8.143800045609773e-06,
+        "mean_pp": -0.0008143800045609773,
+        "n_videos": 125,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.013513958886121068,
+          0.011717244787896316
+        ],
+        "ci95_pp": [
+          -1.351395888612107,
+          1.1717244787896315
+        ],
+        "mean": -0.0005976163659868678,
+        "mean_pp": -0.05976163659868678,
+        "n_videos": 125,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.013242366109698093,
+          0.012290997511252415
+        ],
+        "ci95_pp": [
+          -1.3242366109698094,
+          1.2290997511252415
+        ],
+        "mean": -0.00030288008301623657,
+        "mean_pp": -0.03028800830162366,
+        "n_videos": 125,
+        "supported": false
+      }
+    },
+    "Ap-Ap-reset64": {
+      "F": {
+        "ci95": [
+          -0.00880666501903066,
+          0.01232541100317015
+        ],
+        "ci95_pp": [
+          -0.8806665019030661,
+          1.232541100317015
+        ],
+        "mean": 0.0014867353140014456,
+        "mean_pp": 0.14867353140014455,
+        "n_videos": 125,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.008700107429791635,
+          0.011728012227815396
+        ],
+        "ci95_pp": [
+          -0.8700107429791635,
+          1.1728012227815396
+        ],
+        "mean": 0.0012535214213712069,
+        "mean_pp": 0.12535214213712068,
+        "n_videos": 125,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.008712799403024392,
+          0.011950239951236973
+        ],
+        "ci95_pp": [
+          -0.8712799403024392,
+          1.1950239951236972
+        ],
+        "mean": 0.0013701283676863314,
+        "mean_pp": 0.13701283676863316,
+        "n_videos": 125,
+        "supported": false
+      }
+    },
+    "Ap-F0": {
+      "F": {
+        "ci95": [
+          -0.0008318674788435845,
+          0.021676390962189717
+        ],
+        "ci95_pp": [
+          -0.08318674788435845,
+          2.1676390962189718
+        ],
+        "mean": 0.00991391940990261,
+        "mean_pp": 0.9913919409902611,
+        "n_videos": 125,
+        "supported": false
+      },
+      "J": {
+        "ci95": [
+          -0.0024152831204455336,
+          0.017120741326977468
+        ],
+        "ci95_pp": [
+          -0.24152831204455336,
+          1.7120741326977469
+        ],
+        "mean": 0.007636661473593339,
+        "mean_pp": 0.7636661473593339,
+        "n_videos": 125,
+        "supported": false
+      },
+      "J&F": {
+        "ci95": [
+          -0.0013845087371084062,
+          0.01899739001973488
+        ],
+        "ci95_pp": [
+          -0.1384508737108406,
+          1.8997390019734879
+        ],
+        "mean": 0.008775290441747973,
+        "mean_pp": 0.8775290441747973,
+        "n_videos": 125,
+        "supported": false
+      }
+    }
+  },
+  "conditions": {
+    "Ap": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3/20261104T194605+0900_2f90e77/eval/tuning/Ap",
+    "Ap-reset1": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3/20261104T194605+0900_2f90e77/eval/tuning/Ap-reset1",
+    "Ap-reset64": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3/20261104T194605+0900_2f90e77/eval/tuning/Ap-reset64",
+    "F0": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/tuning/F0_step_002789"
+  },
+  "expected_index": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2_lc/runs/mose_temporal_mamba_20260930/tuning_trajectories.json",
+  "expected_index_sha256": "1cef53ce1e804e0ad8472c8f5c8a206b54652619173b993ecfef057a110b59ce",
+  "n_objects": 313,
+  "n_videos": 125,
+  "note": "Exploratory comparison on the tuning split (also used to select F0). CIs cover video sampling only, not design choices or training seeds.",
+  "video_mean": {
+    "Ap": {
+      "F": 0.8164683242888562,
+      "J": 0.7412432768150232,
+      "J&F": 0.7788558005519396
+    },
+    "Ap-reset1": {
+      "F": 0.8164764680889017,
+      "J": 0.7418408931810102,
+      "J&F": 0.7791586806349559
+    },
+    "Ap-reset64": {
+      "F": 0.8149815889748547,
+      "J": 0.739989755393652,
+      "J&F": 0.7774856721842536
+    },
+    "F0": {
+      "F": 0.8065544048789535,
+      "J": 0.7336066153414298,
+      "J&F": 0.7700805101101916
+    }
+  }
+}
