@@ -1,11 +1,15 @@
 ---
 date: 2026-11-06
 project: kaggle-name-that-llm
-status: ready-for-cli
+status: superseded-by-completed-cycle
 tags: [handoff, cpu, goal, verification]
 ---
 
 # CPU自動実験のCLI引き継ぎ
+
+2026-11-06 17:09 JST追記: ユーザーの再開指示後、CPUサイクルは完了。baseline＋5候補を比較し、最良の4-view＋LRはOOF BA 0.384504（baseline 0.314479）、再CVのOOF/score完全一致、全件fit・保存モデル再推論・独立検査passを確認した。[最終比較報告](2026-11-06-cpu-cycle-results.md)が最新の入口。既存cycleを再初期化・追加探索しない。
+
+2026-11-06 16:54 JST追記: 本文は実行開始前の引き継ぎ。現在は実データcycle作成・baseline CV完了後、ユーザーの指示で候補1を中断し一時停止している。最新状態と再開位置は[CPU実験の途中比較](2026-11-06-cpu-cycle-results.md)を参照。既存cycleをinitし直さない。
 
 ## 到達点
 
