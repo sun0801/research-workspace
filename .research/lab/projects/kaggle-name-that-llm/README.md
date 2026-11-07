@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: pool weight 0.10のprompt-centered SVCをOOF比較baselineとして採用。weight 0.05とfamily-local residualはいずれもprimary CI下限が0を超えず不採用。Qwen02/04はfold1学習中。
+summary: pool weight 0.10のprompt-centered SVCをOOF比較baselineとして採用。weight 0.05、family-local residual、family-mass rerank、固定SVC blendはゲート未通過。Qwen02/04はfold1学習中。
 created: 2026-11-02
 last_updated: 2026-11-07
 ---
@@ -102,6 +102,8 @@ last_updated: 2026-11-07
 - [Open Pool v15 階層型SVC候補plan](experiments/2026-11-07-openpool-hierarchical-svc-candidate.md)
 
 - [Open Pool v15 family-mass-preserving rerank spec](specs/2026-11-07-openpool-family-mass-rerank-spec.md)
+
+- [Open Pool SVC complementary fixed probability blend spec](specs/2026-11-07-openpool-svc-complementary-fixed-probability-blend-spec.md)
 
 - [Qwen + Open Pool SVC probability ensemble spec](specs/2026-11-07-qwen-svc-probability-ensemble-spec.md)
 
