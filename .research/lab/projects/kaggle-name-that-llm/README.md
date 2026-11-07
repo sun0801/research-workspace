@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Open Pool v15 SVCはprimary/confirmation OOFでbaseline比+0.04927/+0.05963。Qwen GPU候補02はprimary fold0 BA 0.54444（1/5、未確定）、family-mass rerankと候補02/04を実行中。
+summary: pool weight 0.10のprompt-centered SVCをOOF比較baselineとして採用。weight 0.05とfamily-local residualはいずれもprimary CI下限が0を超えず不採用。Qwen02/04はfold1学習中。
 created: 2026-11-02
 last_updated: 2026-11-07
 ---
@@ -53,7 +53,24 @@ last_updated: 2026-11-07
 - 2026-11-07 06:33 JSTに利用枠ガードを再確認（5時間86%、週75%）。Qwen候補02はfold0 OOF BA 0.544444でfold1へ、候補04はfold0 stage2 epoch1まで進行。family-mass rerankはfold1継続、tree RSS約4.23 GB・MemAvailable約198 GiB。いずれもprimary 5-fold未完了で採否保留、Kaggle提出なし。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
 - 06:35 JSTにfamily-mass rerank fold1完了（BA 0.405556, α=0.50）、primary fold2へ。累積2/5 foldのため採否は保留。[family-mass spec](specs/2026-11-07-openpool-family-mass-rerank-spec.md)
 - 06:42 JSTの監視で5h/週ガードはreset後100% pass。GPU02/04のprocessとGPU使用を再確認、CPU family-mass fold2も継続しRAM余裕あり。Kaggle提出なし。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 06:50 JSTにQwen候補04 fold0がBA 0.518519で完了しfold1へ。候補02 fold0は0.544444。どちらもprimary 1/5のため採否保留。Family-mass rerank fold2はRSS約4.00 GiB、MemAvailable約196 GiBで継続。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 06:52 JSTの資源監視でGPU02/04とCPU rerankは継続、CPU MemAvailable約198 GiB。ガードは5h97%・週100%でpass。fold0以降の新checkpointはまだなく、各候補を停止・再起動せず継続。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 06:57 JSTにfamily-mass rerank fold2 BA 0.422222（flat同fold 0.416667、差+0.005556）で完了しfold3へ。fold0/1との差は負、3/5 foldのため採否保留。Leaderboard topは0.747のまま。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 07:02 JST資源確認でGPU候補02/04・CPU rerankは継続。GPU compute processとPID対応を確認、CPU MemAvailable約197 GiB、利用枠ガード97%/99%でpass。新checkpoint待ち。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 07:12 JSTもGPU02/04とfamily-mass fold3が継続。GPU utilization/compute PIDを確認し、MemAvailable約196 GiB、rate guard 96%/99%でpass。新checkpointはまだなし。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 07:19 JSTにfamily-mass rerank fold3完了（BA 0.475926, α=0.75）。同fold flat SVC比+0.005556、primary fold4へ。4/5 foldsのpaired CIは未算出。[family-mass spec](specs/2026-11-07-openpool-family-mass-rerank-spec.md)
+- 07:22 JSTにGPU02/04・CPU fold4の継続を確認。2候補のGPU fold0はflat SVCを上回るが各1/5。Kaggle 9h上限に向け、採用候補のT4互換エンドツーエンドruntime実測を提出前ゲートとして明記。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 07:28 JST公式Leaderboard topは引き続き0.747。CPU rerank fold4継続、MemAvailable約198 GiB、利用枠95%/99% pass。GPU候補はfold1の実行継続中。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 07:32 JSTの監視でGPU02/04とCPU fold4が継続、GPU使用率37%/28%、MemAvailable約197 GiB、ガード95%/99% pass。checkpoint待ち。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 07:46 JST family-mass rerank primary完了: BA 0.434154 vs flat SVC 0.433776、prompt-paired 95% CI [-0.007778, +0.008534]（2,000 replicates）。下限が0を超えないためspecの規則で不採用、confirmationは実施せず。分析結果は[専用artifact summary](../../../../../kaggle/name-that-llm/artifacts/cpu-openpool-family-mass-rerank-v15-retry1/primary-comparison-flat-svc/summary.json)と[manifest](../../../../../kaggle/name-that-llm/artifacts/cpu-openpool-family-mass-rerank-v15-retry1/primary-comparison-flat-svc/analysis-manifest.json)に保存。Qwen候補02/04は継続中。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
 - 公式Evaluation pageはhidden testのモデル別件数が均等でなく、Public/Privateのmixが異なると明記。test prompt群に18モデル1件ずつを課す制約は採用しない。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 08:38 JST公式状態確認でLeaderboard topはLe Viet/Hod Carriersの`.747`同点。公式metadata deadline Jan 14、Timeline final deadline Jan 13 23:59 UTCのためJan 13を採用。日次5提出・最終2件、Notebookのみ、9時間以内、Internet off、hidden test各class件数不均等。
+- 公開Notebook `ozertuu/0-672-dual-svc-better` v9のprompt-centered stylegram SVCは、著者報告OOF BA`.423`→`.435`。この単独寄与は自己申告として扱い、4-view Open Pool SVCでprompt-ID-freeのtext clusterを使う別候補を事前登録。[候補spec](specs/2026-11-07-openpool-prompt-centered-twin-spec.md)
+- 08:49 JSTにprompt-centered twin primaryを2-thread CPU・resource guard付きで開始。初回fold0はSciPy sparse subtractionの非broadcast shape errorで失敗したため、そのfold logと旧runnerを保存。修正版を別`retry1` artifactで再開し、primary fold0 BA`.448148`、同fold flat SVC`.431481`（差`+.016667`）。single-fold探索値のため採否根拠ではない。text-only cluster推定は45群/540行、9 singletonで、validation prompt IDは予測に使っていない。fold1へ継続。
+- 08:57 JSTのrate guardは5h`90%`/week`98%`でpass。GPU02/04はfold1でalive、util`27%`/`34%`、VRAM`15,835`/`3,907 MiB`、MemAvailable約`187 GiB`; 新checkpointなし。prompt-centered CPU workerはfold1で継続、前foldの最大RSSは約`13.2 GiB`で32 GiB上限以内。Kaggle提出なし。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 09:06-09:07 JST prompt-centered retry1 primary fold1完了、BA`.429630` vs 同fold flat SVC`.416667`（差`+.012963`）。fold0/1がともに改善だが2/5のみで採否保留、fold2へ移行。GPU02/04はfold1で継続しutil`31%`/`26%`、VRAM`15,835`/`3,907 MiB`、MemAvailable約`197.6 GiB`; 新checkpointなし。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 09:15 JST prompt-centered retry1 primary fold2完了、BA`.470370` vs flat SVC`.416667`（差`+.053704`）。最初の3/5 foldは差がすべて正。fold3へ移行、採否保留。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 09:23 JST prompt-centered retry1 primary fold3完了、BA`.509259` vs flat SVC`.470370`（差`+.038889`）。4/5 foldすべてで差が正。最後のfold4実行中で、採否は全OOFのprompt-paired bootstrap後。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
 
 ## マイルストーン
 
@@ -86,6 +103,12 @@ last_updated: 2026-11-07
 
 - [Open Pool v15 family-mass-preserving rerank spec](specs/2026-11-07-openpool-family-mass-rerank-spec.md)
 
+- [Qwen + Open Pool SVC probability ensemble spec](specs/2026-11-07-qwen-svc-probability-ensemble-spec.md)
+
+- [Qwen + prompt-centered SVC probability ensemble spec](specs/2026-11-07-qwen-prompt-centered-svc-probability-ensemble-spec.md)
+
+- [Prompt-centered SVC low-pool-weight spec](specs/2026-11-07-openpool-prompt-centered-low-pool-weight-spec.md)
+
 ## 共同作業の引き継ぎ
 
 ユーザーの希望: Kaggleコンペを複数管理したい。今回はNameThatLLM。基本作業はAIへ委ね、各タブの有力資料から知見を蓄積し、情報共有・指示出し・自動化を整える。
@@ -114,3 +137,13 @@ CPU baseline cycleは完了し、既存成果物を保持する。正本cycleは
 | 2026-11-07 | Hierarchical SVC primary BA 0.406358。flat SVCに対するprompt-paired bootstrap差の95% CIが全域で負のため候補不採用、confirmationは省略。family-mass-preserving rerank specを用意し、GPU候補02/04を継続。 |
 | 2026-11-07 | nested family-mass-preserving rerankを2-thread CPUで開始。sparse matrixの長さ取得例外を修正し、別retry1 artifact dirでprimaryを再開。GPU候補02/04の稼働とRAM/GPU条件を再確認。 |
 | 2026-11-07 | 06:00 JSTに公式Leaderboard/Rules/Timeline/Code Requirements再確認。top 0.747、GPU02 fold0 stage2 epoch1 checkpointを確認。family-mass rerank primaryは継続中、Kaggle提出なし。 |
+- 07:54 JST再開後、レートガードpass（5h 93% / week 99%）。公式Leaderboard topは0.747同点、保守期限は2027-01-13 UTC。Qwen候補02/04はGPUでfold1継続、fold0 BAは.544444/.518519。両候補の全fold完了前に採否を決めず、family-mass rerankはCI下限が0未満のため棄却済み。新規提出なし。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 08:07 JSTのCPU tokenization診断では、Open Pool各label 500件（計9,000文）の平均token長145.2/384、固定長paddingで有効tokenは37.8%だった。実行時間短縮率は未測定。GPU OOFを保全し、dynamic paddingは採用候補の9時間runtime検証時に別runnerで評価する。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 08:12 JST、Qwen候補02/04と採用SVCのfold0 OOFをID/ラベル/プロンプト/fold/class順で整列確認。固定temperature 1の等重みsoftmax融合はQwen8B+Qwen1.7B+SVCでBA .564815（各単体.544444/.518519/.431481）。fold0を見た候補選定なので探索値としてのみ扱い、固定手法のprimary/confirmation採否ゲートをspec化。[融合spec](specs/2026-11-07-qwen-svc-probability-ensemble-spec.md)・[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 08:25 JST、fold1のGPU02/04は継続し安全条件内。CPU-only等重みsoftmax融合解析器を実装し、canonical prompt-fold/ID/label/class alignmentと各base比較のpaired bootstrapを含めた。構文確認pass、未実行（Qwen primary OOFは未完了）。[解析spec](specs/2026-11-07-qwen-svc-probability-ensemble-spec.md)・[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 10:20 JST prompt-centered SVCがprimary/confirmationの両bootstrapゲートを通過し、次のOOF比較用候補baselineに採用。等重みQwen融合の別specを登録し、既存analyzerにmanifest candidate IDを指定できる変更を追加。Qwen02/04はprimary OOF fold0のみ完了、fold1の学習を継続中。全foldが揃うまで融合は開始しない。Kaggle提出なし。
+- 10:37 JST pool weight 0.10の単一変更候補を事前登録し、2-thread CPU primary OOFを新artifact directoryで開始。Preflight MemAvailableは`210,166,168 kB`、採用済みSVC primary OOFあり。Qwen02/04は停止・変更せず並行継続。採否は採用済みprompt-centered SVCとのpaired bootstrap後に判定、Kaggle提出なし。
+- 12:01 JST pool weight 0.10のSVC候補がprimary CI [+0.0248, +0.0467]、independent confirmation CI [+0.0203, +0.0415]を通過し、次のOOF比較用baselineに採用。Qwen fusion specを新baselineに合わせて更新。LB改善は未確認、Kaggle提出なし。
+- 12:06 JST 0.10候補をbaselineとし、Open Pool row weightだけを0.05へ変更した固定候補のprimaryを開始。2-thread CPU、tree RSS cap 32 GiB、MemAvailable floor 16 GiB。Qwen02/04は維持、Kaggle提出なし。[spec](specs/2026-11-07-openpool-prompt-centered-very-low-pool-weight-spec.md)
+- 12:46 JST 0.05候補primary BA 0.506366。0.10 baseline比+0.004432、prompt-paired 95% CI [−0.004460, +0.012970]でprimary gate不通過のためconfirmationを省略し、不採用。0.10 baselineを維持。
+- 12:57 JST family-local style residualの初回OOFにvalidation-label routing漏洩を発見。初回値を無効化し、修正版を再実行。13:08 JSTの正しいprimaryはBA 0.509339、prompt-paired 95% CI [−0.001481, +0.016664]でgate不通過のためconfirmationを省略し、不採用。[spec](specs/2026-11-07-prompt-family-style-residual-spec.md)
