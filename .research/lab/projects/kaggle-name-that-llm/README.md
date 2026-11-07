@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: pool weight 0.10のprompt-centered SVCをOOF比較baselineとして採用。weight 0.05、family-local residual、family-mass rerank、固定SVC blendはゲート未通過。Qwen02/04はfold1学習中。
+summary: pool weight 0.10のprompt-centered SVCをOOF比較baselineとして採用。weight 0.05、family-local residual、family-mass rerank、固定SVC blendはゲート未通過。Qwen02/04はfold2学習中。DeBERTa-v3-small候補は実装・重み準備済みでGPU pilot待ち。
 created: 2026-11-02
 last_updated: 2026-11-07
 ---
@@ -71,6 +71,7 @@ last_updated: 2026-11-07
 - 09:06-09:07 JST prompt-centered retry1 primary fold1完了、BA`.429630` vs 同fold flat SVC`.416667`（差`+.012963`）。fold0/1がともに改善だが2/5のみで採否保留、fold2へ移行。GPU02/04はfold1で継続しutil`31%`/`26%`、VRAM`15,835`/`3,907 MiB`、MemAvailable約`197.6 GiB`; 新checkpointなし。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
 - 09:15 JST prompt-centered retry1 primary fold2完了、BA`.470370` vs flat SVC`.416667`（差`+.053704`）。最初の3/5 foldは差がすべて正。fold3へ移行、採否保留。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
 - 09:23 JST prompt-centered retry1 primary fold3完了、BA`.509259` vs flat SVC`.470370`（差`+.038889`）。4/5 foldすべてで差が正。最後のfold4実行中で、採否は全OOFのprompt-paired bootstrap後。[実験ログ](experiments/2026-11-06-gpu-autonomous-initial-check.md)
+- 14:55 JST公式状態・資源を再確認。公開LB topはLe Viet/Hod Carriersの`.747`同点、保守期限Jan 13 23:59 UTC、Notebookのみ・Internet無効・9時間以内・1日5提出・最終2件。Qwen02/04はfold2稼働中で、最新GPU0/1利用率`38%`/`26%`、VRAM使用`3,907`/`15,835 MiB`、MemAvailable約`200 GiB`。DeBERTa-v3-small候補の[spec](specs/2026-11-07-deberta-v3-small-prompt-grouped-spec.md)、runner/config、tokenizer依存lockを用意し、公式Microsoft checkpointをoffline loadとCPU forwardで検証。GPUを共有しないpreflight/pilotができるまで学習は開始しない。[詳細](experiments/2026-11-06-gpu-autonomous-initial-check.md)
 
 ## マイルストーン
 
