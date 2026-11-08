@@ -3,7 +3,7 @@ date: 2026-11-07
 project: kaggle-name-that-llm
 source: autonomous-goal
 status: approved
-execution_status: implemented-awaiting-resource-window
+execution_status: rejected-primary-gate
 tags: [spec, experiment, gpu, text-classification]
 ---
 
@@ -42,3 +42,9 @@ The public inspiration is `goutamsharma12/stylodeberta` v1 (Kaggle, run 2026-11-
 - Kaggle model mirror: [mtnash/deberta-v3-small](https://www.kaggle.com/models/mtnash/deberta-v3-small), Transformers/default/1, MIT, with a listed 286,059,269-byte PyTorch file. The local OOF model is pinned directly to the official Microsoft revision above; verify the Kaggle mirror weights before relying on it in a final Notebook.
 - Public inspiration: [StyloDeBERTa](https://www.kaggle.com/code/goutamsharma12/stylodeberta), v1. Its code is inspiration only; its notebook enables Internet and supplies no saved OOF results.
 - This candidate's CV measures generalization to held-out training prompts, not hidden-test performance or LB rank. The independent confirmation split is still drawn from the same 150 prompts and cannot establish final leaderboard performance by itself.
+
+## 実行結果
+
+- 2026-11-08 primary OOFをhost141 GPU1（RTX A4000、UUID `GPU-51b57ca0-53ca-3266-7105-efc692a6c834`）で5fold完了。pilot peak 2,725 MiB、reserve 8,192 MiB、開始時free 15,958 MiB、MemAvailable約121 GiB。pilot config SHA-256 `f5fd55dbf8ade917c67d2cb1de57dfde641e00969678b1b590e74b04051a97af`、runner SHA-256 `a424e3e63b06f3350795800871c1d64cf2d68d7f38947a8cfd73a7791d472c86`。5fold OOFは2,699行・150 promptで、保存splitは基準primary assignmentsとID/fold単位に一致。
+- 採用済みSVCとのbalanced accuracyはDeBERTa `.290050`、SVC `.501934`、差 `−.211884`。prompt-paired bootstrap 5,000回、seed 42、95% CI `[−.234169, −.190373]`、adoption=`reject`。primary gate不通過のため独立confirmationとfinal fitは行わない。
+- 正本出力: `artifacts/gpu05-deberta-v3-small-prompt-grouped/primary/primary/summary.json`（外部experiment repo）。pilot/run logとOOFも同じrun directoryに保持。

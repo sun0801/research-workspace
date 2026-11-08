@@ -22,3 +22,9 @@ Test a fixed equal mean of the flat four-view Open Pool SVC and the adopted prom
 - External files may be changed only in `src/cpu_openpool_svc.py`, `src/cpu_openpool_prompt_centered_twin.py`, and a new fixed-blend evaluator. Add only the two named split IDs and their seed mapping; preserve existing `primary` and `confirmation` behavior. Do not alter candidate configs or unrelated runners.
 - CPU-only, two threads per run, process-tree RSS cap 32 GiB, and minimum host `MemAvailable` 16 GiB. Recheck active GPU jobs and memory before each run; do not stop or modify them. Do not submit or publish any Kaggle object.
 - Verification consists of syntax compilation, runner preflight and built-in data/convergence assertions, artifact alignment checks, and the preregistered paired bootstrap. Do not run a general test suite.
+
+## Screen result (2026-11-08)
+
+- Both fixed base SVCs completed all five OOF folds on the preregistered `blend-screen` assignment (seed 314159); their fold assignment hashes match (`744ba53f4fd8ddec3e57053c1b131e09ad8759e1b0279e3c6b4a48c26be91dc1`). The evaluator confirmed 2,699 unique aligned rows and 150 prompt groups.
+- Equal-temperature-1.0 softmax blend BA was `0.476744`, versus `0.493768` for the adopted prompt-centered 0.10-pool SVC (`delta -0.017025`). Prompt-paired bootstrap (2,000 replicates, seed 42) 95% CI: `[-0.031111, -0.002572]`; gate failed. Reject this blend and do not run `blend-confirm`.
+- Authoritative evaluator output: `/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/cpu-fixed-svc-probability-blend-v1/blend-screen/metrics.json`. No Kaggle object or submission was created.
