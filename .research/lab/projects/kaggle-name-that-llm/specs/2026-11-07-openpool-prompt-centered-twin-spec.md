@@ -3,7 +3,7 @@ date: 2026-11-07
 project: kaggle-name-that-llm
 source: autonomous-experiment
 status: approved
-execution_status: in-progress
+execution_status: completed-gates-passed-not-current-best
 tags: [spec, experiment, cpu, prompt-grouping, svc]
 ---
 
@@ -44,3 +44,7 @@ Promptごとの題材語彙をtrain/validationで除去すると、モデル由�
 - Independent confirmation: candidate BA `0.469714` vs same-split flat SVC `0.433403`, delta `+0.036311`; paired bootstrap 95% CI `[+0.020380, +0.053000]`.
 - Both preregistered lower-bound gates are above zero. Confirmation fold convergence was true for all five folds (`n_iter` 39/41/41/41/41). The primary parent aggregation initially failed only because its metrics omitted the expected convergence field; all five fold artifacts were intact and the independent analysis completed. The corrected runner successfully aggregated confirmation.
 - Adopt this method as a candidate baseline for subsequent OOF comparisons. This does not establish Public/Private LB performance or authorize a Kaggle submission; Notebook packaging, runtime, and license checks remain required.
+
+## Current status clarification (2026-11-08)
+
+The primary/confirmation artifacts are complete and no runner remains active. The reported gates compare against the older flat SVC (`0.433776` primary / `0.433403` confirmation), not the currently adopted prompt-centered low-pool SVC (`0.501934` / `0.500818`). Therefore this method is a completed experimental candidate, not the current best and not independently shown to improve over the current adopted baseline. Any blend using its outputs requires a separately registered evaluation.

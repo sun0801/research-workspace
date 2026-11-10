@@ -3,7 +3,7 @@ date: 2026-11-08
 project: kaggle-name-that-llm
 source: autonomous-goal
 status: approved
-execution_status: preregistered-awaiting-gpu142
+execution_status: pilot-failed-vram-reserve
 tags: [spec, experiment, gpu, qwen3, mixture-of-experts, prompt-grouped]
 ---
 
@@ -47,3 +47,7 @@ Use the official Qwen3-30B-A3B-Base checkpoint, loaded in 4-bit NF4 at inference
 - [BitsAndBytes 0.50.2 release](https://github.com/bitsandbytes-foundation/bitsandbytes/releases/tag/0.50.2) and [CUDA build targets](https://github.com/bitsandbytes-foundation/bitsandbytes/blob/main/docs/source/installation.mdx) indicate NF4 support on T4-class SM75 and Blackwell SM120 with CUDA 12.8 wheels. [Transformers AWQ integration](https://github.com/huggingface/transformers/blob/main/src/transformers/quantizers/quantizer_awq.py) was checked when choosing NF4 over the unmaintained community AWQ path. Official docs support is not a substitute for the required runtime pilot; the installed package and actual Blackwell/T4 execution remain unverified.
 
 This screen measures transfer to held-out official prompts. It does not establish hidden-test/Public LB performance; the independent confirmation split is still drawn from the same 150 official prompts.
+
+## Execution amendment log
+
+- 2026-11-08 13:22 JST: The registered GPU142 pilot first failed before model loading because PyTorch reports the selected UUID without the `GPU-` prefix. Candidate runner `src/gpu_qwen30b_embeddings.py` was corrected to normalize only that prefix; updated runner SHA-256 is `a7e260dec3a7a0b8cff44d60b5235f156dd3e08d9c94bc03b5d201f117a9a24a` (config remains `ffcb9f217afc552835afea24d3c8c7f2748756d294905118d9c6f115de72d933`). The retry passed the UUID/resource preflight on GPU1 UUID `GPU-8a059266-7ede-0427-ff30-08ba7a9b5224`, but the 4-bit 30B model load reached 27,718 MiB GPU use, leaving 4,382 MiB free against the required 8,156 MiB reserve, then raised CUDA OOM with 8 MiB free. The candidate process was terminated and GPU1 release verified. No `pilot.json`, embedding cache, or OOF was produced. Do not start full OOF or repeat the unchanged pilot; this candidate requires a separately preregistered, resource-safe method/placement before reconsideration.
