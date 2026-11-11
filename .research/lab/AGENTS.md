@@ -47,6 +47,8 @@
 ## スキルの使い分け
 
 - MTG前資料は `meeting-materials` スキルに委ねてください。
+  - 実験・実装・調査・原稿などの作業が一区切りしたら（実験ログを書いた・宿題を片付けたなど）、頼まれなくても `meeting-materials` の記録モードで、次回MTG資料（`materials/` の `status: recording` のファイル）に短いエントリを追記してください。
+  - MTG直前は、同じスキルの仕上げモードでエントリを並べ替え・削って資料にします。
 - MTG後議事録は `meeting-minutes` スキルに委ねてください。
 - 研究相談、仮説整理、spec化前の壁打ちは `brainstorm` スキルに委ねてください。
 - プロジェクト作成、TODO、ダッシュボード、README/frontmatter管理は `research-workspace` スキルに委ねてください。

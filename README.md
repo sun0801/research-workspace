@@ -218,26 +218,31 @@ research-workspace スキルで初回セットアップして。
 
 ### `meeting-materials`
 
-MTG前の相談資料、進捗報告資料、実験レビュー資料を作成します。
+MTG資料を2段階で作ります。
+
+- 記録モード: 実験・実装などの作業が一区切りするたびに、次回MTG資料へ5〜10行のエントリを追記します。AIは頼まれなくても区切りで追記します。
+- 仕上げモード: MTG直前に、エントリを並べ替え・削り、各トピック末尾の相談を整えて、話せる資料にします。
+
+資料はNotionの「やったこと／次やること」にそのまま貼れる形です。
 
 頼み方:
 
 ```text
-次回MTGの資料を作ってください。プロジェクトは <project> です。
+この結果を次回MTG資料に記録しておいてください。
 ```
 
 ```text
-この実験結果を先生に説明する資料にしてください。
+明日のMTGの資料を仕上げてください。
 ```
 
 ```text
-さっきのbrainstormをMTG資料化してください。
+さっきのbrainstormを先生に相談する資料にしてください。
 ```
 
 保存先:
 
 ```text
-.research/lab/projects/<project>/materials/YYYY-MM-DD-topic-mtg-materials.md
+.research/lab/projects/<project>/materials/YYYY-MM-DD-weekly-progress-mtg-materials.md  # 日付はMTGの日
 .research/lab/projects/<project>/materials/figures/YYYY-MM-DD-topic/
 ```
 
