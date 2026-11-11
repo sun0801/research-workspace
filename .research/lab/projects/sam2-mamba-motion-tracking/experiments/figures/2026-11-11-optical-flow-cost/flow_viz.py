@@ -6,6 +6,8 @@ median step of that object. Flow parameters are the same as flow_cost.py.
 Usage:
   python flow_viz.py --selection data/selected_videos.json --stratum fast --out 01-flow-fast.png
   python flow_viz.py --selection data/selected_videos.json --stratum slow --out 02-flow-slow.png
+  CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=0 python flow_viz.py --selection data/selected_videos.json \
+      --stratum fast --panels raft --out 03-raft-fast.png   (and --stratum slow --out 04-raft-slow.png)
 """
 import json
 import argparse, os
@@ -32,8 +34,19 @@ def flow_rgb(flow, vmax):
     return cv2.cvtColor(hsv, cv2.COLOR_HSV2RGB)
 
 
+_RAFT = {}
+
+
 def compute(a, b, method, size):
-    H, W = a.shape[:2]
+    if method.startswith("raft"):
+        import torch
+        from flow_raft import load, to_input, raft_flow
+        if method not in _RAFT:
+            assert "RTX A4000" in torch.cuda.get_device_name(0), "set CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=0"
+            _RAFT[method] = load(method, torch.device("cuda"))[0]
+        f = raft_flow(_RAFT[method], to_input(a, size[0], "cuda"), to_input(b, size[0], "cuda"), 12)
+        f = f[0].permute(1, 2, 0).cpu().numpy()
+        return np.dstack([f[..., 0] * 64 / size[0], f[..., 1] * 64 / size[1]])
     ga = cv2.cvtColor(cv2.resize(a, size, interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2GRAY)
     gb = cv2.cvtColor(cv2.resize(b, size, interpolation=cv2.INTER_AREA), cv2.COLOR_BGR2GRAY)
     if method == "farneback":
@@ -46,9 +59,12 @@ def compute(a, b, method, size):
     return np.dstack([f[..., 0] * 64 / size[0], f[..., 1] * 64 / size[1]])
 
 
-PANELS = [("farneback", (1024, 1024), "Farneback @1024"), ("ultrafast", (1024, 1024), "DIS ultrafast @1024"),
+OPENCV_PANELS = [("farneback", (1024, 1024), "Farneback @1024"), ("ultrafast", (1024, 1024), "DIS ultrafast @1024"),
           ("fast", (1024, 1024), "DIS fast @1024"), ("medium", (1024, 1024), "DIS medium @1024"),
           ("ultrafast", (256, 256), "DIS ultrafast @256")]
+RAFT_PANELS = [("ultrafast", (1024, 1024), "DIS ultrafast @1024"), ("raft_small", (1024, 1024), "RAFT small @1024"),
+               ("raft_large", (1024, 1024), "RAFT large @1024"), ("raft_small", (256, 256), "RAFT small @256"),
+               ("raft_large", (256, 256), "RAFT large @256")]
 
 
 def main():
@@ -56,8 +72,10 @@ def main():
     ap.add_argument("--selection", required=True)
     ap.add_argument("--stratum", choices=["fast", "slow"], required=True)
     ap.add_argument("--pairs", type=int, default=20)
+    ap.add_argument("--panels", choices=["opencv", "raft"], default="opencv")
     ap.add_argument("--out", required=True)
     args = ap.parse_args()
+    PANELS = RAFT_PANELS if args.panels == "raft" else OPENCV_PANELS
     sel = json.load(open(args.selection))[args.stratum]
     args.videos = [c["video"] for c in sel]
     args.title = f"{args.stratum} videos"
