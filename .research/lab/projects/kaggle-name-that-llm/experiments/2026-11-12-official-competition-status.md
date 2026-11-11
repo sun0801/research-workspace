@@ -93,3 +93,9 @@ Kaggle公式MCPのmetadata、Rules、Timeline、Code Requirements、public leade
 - Public leaderboard首位`.768`（NguyenThanhNhan）、チーム数5,545。Rulesは日次最大5件・Final最大2件。Timeline Final deadlineは2027-01-13 23:59 UTC、metadata deadlineはJan 14と引き続き不一致。Code RequirementsはNotebook-only、Internet無効、GPU 9時間以内、`submission.parquet`。
 - CLIは当日5件許可、過去提出なし。Remote version 9 metadataはprivate、GPU enabled、Internet disabled、`NvidiaTeslaT4`、所定のprivate Dataset/competition/model sources。
 - v9のsample runから`submission.parquet`を取得して形式を確認し、runtime projectionは2.5303時間でgate通過。06:39 JSTにversion9をcode submissionし、ref `58251076`、残り4件。初回statusは`PENDING`でscore待ち。[実験ログ](2026-11-12-baseline-benchmark-push.md)
+
+## 2026-11-12 07:21 JST — private v10 diagnostic push前の確認
+
+- Official MCP: public leader`.768`（NguyenThanhNhan）、team count 5,549。Rulesは5 submissions/day・Final最大2件。Timeline締切2027-01-13 23:59 UTC、metadataはJan 14表記。Code RequirementsはNotebook-only・offline・GPU <=9h・`submission.parquet`。
+- CLI提出枠: 当日1・累積1・残り4。v9 hidden rerunは既にfailedで、v10は非scored診断Notebookとしてpushするため提出枠は消費しない。
+- rate guard: 5h 83%、weekly 33%。変更範囲は公開train本文を使うfull-text diagnosticのみで、baseline model/blend設定は不変。

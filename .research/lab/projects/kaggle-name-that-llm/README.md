@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestは固定Spectral補正のconfirmation BA`.653828`（LB未検証）。基準blend v9はhidden rerunで失敗し、原因不明のため構成変更前に報告する。
+summary: 現bestは固定Spectral補正のconfirmation BA`.653828`（LB未検証）。private v10で全train本文の推論診断中、次の状態確認は08:22 JST。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -23,7 +23,8 @@ last_updated: 2026-11-12
 - SVCのKaggle/local sklearn差は64×18出力のmax abs差0.0で通過。モデル/adapter/blend・重み・bfloat16・384-token上限は維持。v9はsample `submission.parquet`の3行・schema/ID検査を通過。
 - 基準Notebook version 9を06:39 JSTに1回提出。ref `58251076`はhidden rerun時に`COMPLETE`/unhandled error、Public/Private scoreなし。提出時残り4件。
 - v9のinteractive sample runと2.5303時間runtime gateは通ったが、hidden rerunの詳細原因は不明。kernel logsはsample runのみ、submission-downloadは403。
-- baseline構成は未変更。specに従い、推定時間・不足情報・失敗を報告してから次の構成変更を判断する。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md) · [公式確認](experiments/2026-11-12-official-competition-status.md)
+- baseline構成は未変更。private kernel v10で公式train本文2,699件をtext-onlyで同じ推論・blend経路に通し、hidden rerunの失敗条件を切り分け中。v10は非scored・提出ファイルなし。
+- v10の最新statusは`RUNNING`。次の軽量pollは08:22 JSTごろ。結果後、構成変更が必要なら測定と不足を共有してから進める。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md) · [公式確認](experiments/2026-11-12-official-competition-status.md)
 - [Notebook readiness](experiments/2026-11-10-private-baseline-notebook-readiness.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md) · [Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md)
 
 ## マイルストーン
