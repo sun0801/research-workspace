@@ -1,0 +1,93 @@
+{
+ "rule": "Select fast / slow MOSE tuning videos for the optical flow cost check (2026-11-11).\n\nRule: tuning videos (runs/mose_temporal_mamba_20260930/tuning_trajectories.json, 125 videos from MOSE train)\nwhose native size is 1920x1080, whose objects are all in the same speed stratum\n(motion_summary.json tertile cuts; per-object median step in stride-16 cells of the 1024x1024 input),\nand which have at least --min-frames frames. fast = top 3 by the video median of object medians,\nslow = bottom 3.",
+ "cuts_cells": [
+  0.6201862142364104,
+  1.2327169820960704
+ ],
+ "min_frames": 21,
+ "candidates": 18,
+ "fast": [
+  {
+   "video": "24df9789",
+   "stratum": "fast",
+   "video_median_cells": 7.887560468171622,
+   "objects": [
+    1
+   ],
+   "object_medians_cells": [
+    7.887560468171622
+   ],
+   "frames": 53
+  },
+  {
+   "video": "b6cadd11",
+   "stratum": "fast",
+   "video_median_cells": 5.551575522300722,
+   "objects": [
+    1,
+    2
+   ],
+   "object_medians_cells": [
+    7.141593990597876,
+    3.9615570540035683
+   ],
+   "frames": 42
+  },
+  {
+   "video": "2e85e790",
+   "stratum": "fast",
+   "video_median_cells": 4.507953852352252,
+   "objects": [
+    1
+   ],
+   "object_medians_cells": [
+    4.507953852352252
+   ],
+   "frames": 22
+  }
+ ],
+ "slow": [
+  {
+   "video": "198021ad",
+   "stratum": "slow",
+   "video_median_cells": 0.19817225038085554,
+   "objects": [
+    1
+   ],
+   "object_medians_cells": [
+    0.19817225038085554
+   ],
+   "frames": 171
+  },
+  {
+   "video": "5f14e5d2",
+   "stratum": "slow",
+   "video_median_cells": 0.2550791235255036,
+   "objects": [
+    1,
+    2,
+    3,
+    4
+   ],
+   "object_medians_cells": [
+    0.22827067669172887,
+    0.22645836225640703,
+    0.5203472229296595,
+    0.28188757035927836
+   ],
+   "frames": 42
+  },
+  {
+   "video": "f28b429a",
+   "stratum": "slow",
+   "video_median_cells": 0.32187748231931435,
+   "objects": [
+    1
+   ],
+   "object_medians_cells": [
+    0.32187748231931435
+   ],
+   "frames": 28
+  }
+ ]
+}
