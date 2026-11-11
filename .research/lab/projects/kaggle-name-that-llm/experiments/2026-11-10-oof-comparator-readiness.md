@@ -63,3 +63,35 @@ This makes Host141 a viable CPU evaluation host once the missing baseline predic
 The implementation checkout at `/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm` has `src/gpu_analyze.py`, official `data/train.csv`, its `.venv/bin/python`, and all three complete comparator OOFs listed above (early CPU 4-view, adopted SVC, and current Qwen+SVC blend). The required baseline ID/prompt/fold/label alignment was already verified in this note. Host141's active candidate11/13 runs remain incomplete, so no candidate OOF was transferred and no analysis was run.
 
 When a registered candidate completes all five primary folds on Host141, retrieve only its five prediction OOF parquet files into a fresh temporary run directory under `/tmp` and run the existing local analyzer with one `--baseline-path` per invocation (`--split primary --bootstrap 2000 --seed 42`). Archive each invocation's six outputs under comparator-specific directories before the next call, because the analyzer writes into `<run-dir>/<split>/` and would otherwise overwrite the prior report. Keep model weights, checkpoints, and implementation environment on their current hosts. This local route avoids dependence on the still-untrusted Host142 SSH identity and does not allocate GPU resources.
+
+## 2026-11-10 16:45 JST full-fold candidate13 decision
+
+Host141 candidate13 completed all five primary OOF folds and its runner/wrapper were absent on the 16:45 poll. Only the five prediction parquet files were staged under `/tmp/ntllm-c13-oof-20261110-1645`; no weights or checkpoints moved. The analyzer passed the full 2,699-row / 150-prompt OOF and exact ID, prompt, fold, and label alignment checks. All comparisons used 2,000 prompt-grouped paired bootstrap replicates, seed 42:
+
+| Comparator | Candidate BA | Comparator BA | Delta | 95% paired CI | Gate |
+|---|---:|---:|---:|---:|---|
+| Early CPU 4-view | `.499734` | `.384504` | `+.115230` | `[+.096659,+.134816]` | Positive, but superseded by current baselines |
+| Adopted prompt-centered SVC | `.499734` | `.501934` | `−.002200` | `[−.022593,+.017778]` | Reject |
+| Current Qwen+SVC blend | `.499734` | `.586408` | `−.086674` | `[−.105556,−.067407]` | Reject |
+
+Therefore candidate13 is not adopted and no confirmation is run. Its six-file comparator reports are preserved in `/tmp/ntllm-c13-analyze-20261110-1645/primary/comparators/{early-cpu,adopted-svc,current-qwen-svc-blend}` for this session; this Markdown contains the durable decision. Host141 candidate11 remained active on GPU2 with fold3 newly complete and fold4 continuing. CPU-best `model.joblib` rehashed to the recorded SHA-256. No GPU, candidate config, Kaggle object, or submission changed.
+
+## 2026-11-10 17:54 JST candidate11 OOF transfer attempt
+
+Host141's candidate11 runner/wrapper are absent and all five primary fold OOF parquet files are present; the run completed naturally. A transfer attempt for only those five prediction files failed because this environment could not resolve the configured Host141 alias. No candidate files were copied, and no weights, checkpoints, jobs, or host allocations were changed. Full comparator analysis remains pending until Host141 is reachable; then use the existing local analyzer procedure above against early CPU, adopted SVC, and current Qwen+SVC blend with 2,000 prompt-paired bootstrap replicates (seed 42).
+
+## 2026-11-10 18:00 JST route diagnosis
+
+`hostname` identifies the current executor as `142-X10DAi`, and `getent hosts 142-X10DAi` resolves it to local loopback. `141-X9DAi` has no name-service result. The comparator code, official train data, environment, and three complete baseline OOFs are already available in the local implementation checkout, so the only missing input for candidate11 analysis is its five prediction parquet files from Host141. Once retrieved, run the documented analyzer locally; do not transfer weights/checkpoints or modify either host's jobs.
+
+## 2026-11-10 18:05 JST full-fold candidate11 decision
+
+Resolved Host141 via `141-X9DAi.local` / `10.10.40.141` and retrieved only its five completed `primary/fold-{0..4}/oof.parquet` prediction files. `sha256sum -c` against a temporary source manifest returned `OK` for all five; recorded prefixes: `1cac54a9`, `8138a3bc`, `a2d12266`, `b37a6fc7`, `e005899b`. No model weights or checkpoints moved. The local analyzer verified 2,699 rows, 150 prompt groups, and baseline alignment; each comparison used 2,000 prompt-paired bootstrap replicates, seed 42:
+
+| Comparator | Candidate BA | Comparator BA | Delta | 95% paired CI | Decision |
+|---|---:|---:|---:|---:|---|
+| Early CPU 4-view | `.542329` | `.384504` | `+.157825` | `[+.137399,+.180455]` | Positive, superseded by stronger baselines |
+| Adopted prompt-centered SVC | `.542329` | `.501934` | `+.040395` | `[+.018531,+.061588]` | Positive, but below current best |
+| Current Qwen+SVC blend | `.542329` | `.586408` | `−.044079` | `[−.057427,−.029681]` | Reject |
+
+Candidate11 is not adopted under the current-best gate and confirmation is skipped. Its six report files for each comparator are preserved in `/tmp/ntllm-c11-oof-20261110-1800/artifacts/gpu11-qwen3-4b-base-openpool-v15/primary/comparators/{early-cpu,adopted-svc,current-qwen-svc-blend}` for this session; this Markdown is the durable decision. No candidate config, job, Kaggle object, or submission changed.

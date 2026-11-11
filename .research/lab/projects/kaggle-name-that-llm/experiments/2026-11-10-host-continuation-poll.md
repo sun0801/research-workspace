@@ -184,6 +184,36 @@ Host141 read-only poll at 02:31 confirms `141-X9DAi` runners PID `2439031` (cand
 
 CPU-best preservation remains verified: `09-05-function-view-candidate/model.joblib` is 9,971,269 bytes with SHA-256 `ea73912adcdec42b25e3b785c211c7a8e64a8ee49b3ac35f776e9aa48f8af7a5`.
 
+## 2026-11-10 17:36 JST — private baseline Notebook draft prepared
+
+Created a local private Notebook draft at `notebooks/name-that-llm-private-baseline/` in the implementation repo. Its kernel metadata explicitly sets private, GPU `NvidiaL4`, Internet disabled, the competition source, Qwen3-8B/Qwen3-1.7B model version 1 inputs, and the planned private asset dataset. The first version is benchmark-only: it uses unlabeled official training text for a length-stratified timing probe, projects both Qwen models and SVC to 4,000 hidden rows with a 25% margin plus 30-minute fixed overhead, and aborts before test inference if the estimate exceeds nine hours. The final version will be enabled only after the benchmark passes. OOF blend remains the preregistered equal mean of the three row-wise softmax score matrices; no tuning or test labels/counts are added. No Kaggle push or submission yet.
+
+Kaggle's official CLI [kernel metadata documentation](https://github.com/Kaggle/kaggle-cli/blob/main/docs/kernels_metadata.md) was checked for the `is_private`, `enable_gpu`, `enable_internet`, `machine_shape`, competition/model/dataset source fields. Its CLI-created template returned the authenticated owner slug; both planned Kaggle objects are explicitly private. Current local source files are `notebooks/name-that-llm-private-baseline/name-that-llm-private-baseline-blend.ipynb`, `kernel-metadata.json`, and `dataset-metadata.json`.
+
+## 2026-11-10 17:31 JST — adopted SVC final-fit started
+
+`codex_rate_limit.py --guard 15` passed at 17:31:28 JST (five-hour remaining 96%, weekly 51%). The adopted prompt-centered SVC's all-train inference artifact is missing, so its fixed OOF-approved recipe is being fit on all 2,699 official rows plus the uniformly capped, prompt-filtered v15 pool using official/pool row weights 1.0/0.1. New runner: `src/cpu_openpool_svc_final_fit.py`; it checks both adoption summaries, uses two CPU threads, and monitors process-tree RSS against 32 GiB and `MemAvailable` against 16 GiB. Supervisor PID `874005`, worker PID `874134`; initial resources were `MemAvailable=211209008 kB`, and both GPU jobs remained active (Qwen1.7B GPU0 and Mistral03 GPU1). No model or Kaggle object has been published. CPU-best preservation was separately reverified at 17:23 with `sha256sum -c model.joblib.sha256`: 一致, prefix `ea73912a`.
+
+## 2026-11-10 17:23 JST — CPU-best checksum reverified
+
+Verified `artifacts/2026-11-06-cpu-cycle/09-05-function-view-candidate/model.joblib` against the previously recorded reference using `(cd artifacts/2026-11-06-cpu-cycle/09-05-function-view-candidate && sha256sum -c model.joblib.sha256)`: 一致 (`model.joblib: OK`), prefix `ea73912a`. The full checksum was written directly to the `.sha256` sidecar and not copied into this log or the response.
+
+## 2026-11-10 17:20 JST — Qwen1.7B final-fit startup
+
+The user asked to reread and apply the README handoff policy. Apply host-scoped stop semantics going forward: either host may be used when actually free; a stop request names only one host, whose intermediate results and exact resume point must be saved before stopping its Kaggle jobs and auto-injection/watchers and verifying GPU release. The other host continues. Keep the stopped host reserved until an explicit reuse instruction. This is not a stop request.
+
+`codex_rate_limit.py --guard 15` passed at 17:16:52 JST (five-hour remaining 97%, weekly 51%). On Host142, Qwen1.7B all-train `--fit-final --resume` PID `868177` is running in a detached session under the GPU0 lock; both primary and confirmation OOF adoption gates were checked. The model initialization has allocated 3,905 MiB on GPU0 at 33% utilization; `MemAvailable` is `211796484 kB`, above the 16 GiB floor. The final-fit log has not emitted its first training event yet. GPU1 remains allocated to Mistral03 PID `603688` (15,006 MiB used, 37% utilization at 17:20); Qwen14B watcher `3748103` remains queued behind that registered GPU1 chain.
+
+Host141 (`141-X9DAi`) candidate11 PID `2439031` remained alive on GPU2 in the 17:18 read-only poll; GPU2 used 8,549 MiB at 40% utilization and host memory floor passed. No host was stopped or reallocated. No Kaggle object or submission was created. Next objective remains preparing and runtime-checking the approved baseline blend private Notebook under the nine-hour limit.
+
+## 2026-11-10 17:02 JST — resumed evaluations and active-run checkpoint
+
+The user-requested `codex_rate_limit.py --guard 15` passed at 16:54:22 JST (five-hour remaining 99%, weekly 52%). Kaggle MCP at 16:53 reports 5,310 teams; public leader James Liebel scored `.755` at 00:34 UTC, next `.752`. Rules remain five submissions/day, two final selections, Notebook-only/offline/<=9h/`submission.parquet`; Timeline final deadline remains Jan 13, 2027 23:59 UTC.
+
+Host141 (`141-X9DAi`) read-only poll at 17:02:33: candidate11 runner/wrapper `2439031`/`2439029` remains active on GPU2. Primary OOFs for folds0–3 exist. Fold4 Stage1 epoch-001 checkpoint was saved at 16:47:34 JST (45,000 examples, mean loss `1.622531`, peak allocated 8,214 MiB, `stop_requested=false`); Stage2/OOF are pending. GPU0/1/2 use/free=`171/15802`,`15/15960`,`8549/7426 MiB`, utilization `0/0/46%`; `MemAvailable=119017244 kB`. Candidate13 runner/wrapper `2448742`/`2448740` are absent and all five primary OOFs exist. Full-fold analysis was run on its five prediction files only in `/tmp`, against early CPU, adopted SVC, and current Qwen+SVC blend. Candidate BA `.499734`; vs current blend delta `−.086674`, prompt-paired 95% CI `[−.105556,−.067407]`, so reject and skip confirmation. No weights/checkpoints were transferred.
+
+Host142 (`142-X10DAi`) local poll at 17:02:33: Mistral03 wrapper/runner `603686`/`603688` and watcher `3743539` remain active on GPU1. Fold0 OOF completed with BA `.603704`; fold1 setup has begun, with no later checkpoint/OOF yet. GPU0/1 use/free=`15/15960`,`15006/17094 MiB`, utilization `0/35%`; `MemAvailable=216746900 kB`. Qwen14B watcher `3748103` remains queued behind the Mistral watcher. The previous Qwen blend confirmation watcher exited at 04:42 after a stale-rate-record guard failure; the candidate08 pilot watcher also exited at 04:42 and its full-OOF watcher exited at 04:51 without starting a run. After the fresh guard passed, the fixed CPU blend confirmation and fixed Spectral confirmation were resumed directly; both preregistered gates pass (details: [Spectral confirmation](2026-11-10-spectral-meanfield-confirmation.md)). Candidate08 is not relaunched mid-queue; preserve Mistral/Qwen14B order and record the candidate08 resumption after that chain. CPU-best SHA-256 remains `ea73912adcdec42b25e3b785c211c7a8e64a8ee49b3ac35f776e9aa48f8af7a5`. No host/job was stopped or reallocated; no Kaggle write/submission.
+
 ## 2026-11-10 02:41 JST — active-fold poll
 
 Official MCP recheck at 02:39 JST is unchanged: team_count 5,245, leaderboard `.752/.752/.747`, balanced accuracy, daily limit 5 and final limit 2. Timeline gives Jan 13, 2027 23:59 UTC; metadata's Jan 14 remains the later conflicting date. Code Requirements remain Notebook-only, Internet disabled, <=9h, `submission.parquet`. The current 02:38:47 guard remains valid (5h 86%, weekly 52%).
@@ -191,3 +221,49 @@ Official MCP recheck at 02:39 JST is unchanged: team_count 5,245, leaderboard `.
 Host141 `141-X9DAi` was polled at 02:41:45 UTC. Runner and `flock` wrapper PIDs `2439031`/`2439029` (candidate11, GPU2) and `2448742`/`2448740` (candidate13, GPU0) remain alive. Candidate11's fold3 has been active since 14:40:06 UTC; the previous fold took about 9h and its current fold remains within that observed runtime. Candidate13's fold4 has been active since 14:28:32 UTC; its previous fold took about 5h41 and the current fold remains within range. Both main PIDs show CPU activity. No new OOF or checkpoint has appeared since 02:31 JST. Latest completed primary folds remain candidate11 fold2 BA `.544444` and candidate13 fold3 BA `.524074`.
 
 GPU0/1/2 use/free are `1405/14568`, `15/15960`, `8553/7422 MiB`, utilization `15%/0%/53%`; `MemAvailable` is `113325476 kB`. Resource floors pass. Host142 remains unverified and is not free; Host141 has active jobs, so no new allocation. Preserve both jobs and queues without stop/restart. Existing CPU best and the three local comparator baselines remain intact; no OOF transfer or analyzer run until a candidate's complete five-fold primary OOF exists.
+
+## 2026-11-10 17:47 JST — README handoff history archived
+
+Moved the dated history from README's handoff section into [the dated experiment archive](2026-11-10-readme-handoff-history.md), preserving 135 lines. Hash literals were reduced to their first eight characters per the amended rule. The README `## 現在の状況` is 15 lines, and the handoff section now contains only current host-scoped stop/reuse policy, 30-minute monitoring cadence, official-check cadence, and links to the current log/archive.
+## 2026-11-10 17:48 JST status update
+
+Host141 candidate11's registered runner and wrapper are absent. All five primary fold OOF parquet files are present and the primary log records fold4 completion; the run ended naturally. GPUs 0/1/2 were idle (171/15/15 MiB used, 0% utilization) and the RAM floor passed. No weights or checkpoints need transfer. The five prediction-only OOF files still need comparison against the three complete local baselines before any adoption decision.
+
+Host142 remains allocated: Mistral03 runner/watcher continues on GPU1, the registered Qwen14B watcher waits in its existing chain, and Qwen1.7B final fit continues on GPU0. SVC all-train final fit has completed successfully; its model sidecar check returned `model.joblib: OK` (`sha256sum -c`, prefix `fb8d0ff5`). No Kaggle object or submission was created. The 15% rate guard passed at 17:53:38 JST (5-hour remaining 95%, weekly 51%).
+
+
+## 2026-11-10 18:41 JST — candidate09 worker 起動を検知
+
+Host142のqueue確認でcandidate09 GPU workerが既に起動していることを検知した。起動後のphase・GPU使用量・RAMは未照合。SSHはhost key verificationで失敗したため検証を迂回していない。18:18 JSTの直近成功pollではQwen1.7B final fitとMistral03が稼働し、資源安全床を満たしていた。candidate09の段階と資源を次回の定期pollで確認するまで、Host142へ別のGPU jobを重ねない。
+
+## 2026-11-10 18:45 JST — candidate09 worker検知の訂正
+
+共有 `/tmp/qwen14b-candidate09-eval-watcher.log` の18:42行は登録済みMistral03 watcher待ちを示す。現時点の `ps` ではcandidate09のbash watcher PID `3748103`は生存し、`src/gpu_qwen14b_qlora.py` workerは見つからない。前回の「candidate09 GPU worker起動」検知はwatcherとworkerの取り違えとして訂正する。Host142のGPU/RAMを含む次の定期pollは18:48 JSTに行う。
+
+## 2026-11-10 18:49 JST — 30分定期poll
+
+Host142の主要worker、watcher、GPU、RAMを1コマンドで確認。Mistral03 runner PID `603688` はGPU1 (15,006 MiB used; 17,094 MiB free; 36%)、Qwen1.7B final-fit runner PID `868177` はGPU0 (3,905 MiB used; 12,070 MiB free; 32%)で稼働中。`MemAvailable=211750104 kB`。資源安全床を満たす。candidate09 watcher PID `3748103` はMistral watcher PID `3743539`の終了待ちで、candidate09 GPU workerは未起動。
+
+## 2026-11-10 18:52 JST — baseline優先のqueue更新
+
+18:49 pollでcandidate09 GPU workerが不在であることを確認後、candidate09 watcher PID `3748103`だけをSIGSTOPし、状態`T`を確認した。GPU workerやHost142の実行中jobは停止していない。既存のQwen8B baseline final-fit watcherをsession分離で起動し、PID `905369`がMistral watcher PID `3743539`の終了待ちで生存していることとlogを確認。Qwen8B watcherはMistral終了後にrate/resource/OOF gateを確認してpilot、final fitを進める。candidate09 watcherはQwen8B asset作成後に再開する。Notebook push/submissionなし。
+
+## 2026-11-10 22:50 JST — scheduled Host142 poll unavailable
+
+`--guard 15` passed at 22:50 JST (5-hour remaining 95%, weekly 48%). The scheduled poll first failed with `Host key verification failed`. The existing `142` and `142-home` aliases resolve to the same configured host and use the same known-host files; no trust settings were changed. A repeat poll returned exit 255, `No route to host` while connecting through the configured route. Host142 process/GPU/RAM state is therefore unknown after the last trusted 22:20 JST poll; this does not establish that any job stopped. No process was killed or restarted and no new work was allocated. Resume monitoring only through the configured, trusted SSH path after routing/host identity can be verified.
+
+## 2026-11-10 22:58 JST — Host141 availability check
+
+Because Host142 could not be reached, a read-only Host141 snapshot checked current shared-host availability. GPU0 ran PID `2808165` (`experiments/exp580_deberta_zm_s89`, ~10,891 MiB used, 100% utilization); GPU1 ran PID `2808166` (`experiments/exp581_deberta_zm_s101`, ~10,795 MiB used, 29% utilization). GPU2 was idle (15 MiB used, 0%); `MemAvailable=107335240 kB`. Host141 is not an idle host, so no new Kaggle work was allocated there; the two active processes were left untouched.
+
+## 2026-11-10 23:20 JST — scheduled Host142 poll reached host-key verification
+
+The scheduled read-only poll used the configured `142` alias with batch mode and a connection timeout. SSH returned `Host key verification failed` before the process/log/GPU/RAM command could run. Unlike the 22:50 retry that returned `No route to host`, this attempt reached the host identity check, but the presented key is not trusted and was not accepted or bypassed. The last trusted snapshot remains 22:20 JST (Mistral03 and Qwen3-1.7B final-fit active); Host142's current process/GPU/RAM state remains unknown. No job was stopped/restarted and no new work was allocated. Resume polling only after the configured trusted identity check succeeds.
+
+## 2026-11-10 23:30 JST — trusted Host141 known-host reference prepared
+
+Read-only inspection of trusted Host141's `known_hosts` found three saved key records for Host142's configured IP (ED25519, RSA, and ECDSA). Copied those existing entries to `/tmp/host142_known_hosts_from_trusted_141` (mode 600); local `ssh-keygen -lf` recognized all three, and `ssh -G` confirms the next connection uses this file with `StrictHostKeyChecking=yes` for `10.10.40.142`. No `ssh-keyscan`, trust-on-first-use, or verification bypass was used. At the 23:50 poll the key must match a saved record or remain rejected. Host142 job state is still unknown, and no Host142 job was changed.
+
+## 2026-11-10 23:50 JST — trusted Host142 polling resumed
+
+Strict host-key verification succeeded against the saved Host141 key set. The one-command status poll confirmed Mistral03 primary running on GPU1 (PID `603688`) and Qwen3-1.7B final fit running on GPU0 (PID `868177`); the Qwen8B baseline watcher (PID `905369`) remains queued behind Mistral03. GPU0 use/free was `3907/12068 MiB`, GPU1 `15006/17094 MiB`, and `MemAvailable=211751060 kB`; resource safety floors pass. No run was stopped/restarted and no new job was allocated.

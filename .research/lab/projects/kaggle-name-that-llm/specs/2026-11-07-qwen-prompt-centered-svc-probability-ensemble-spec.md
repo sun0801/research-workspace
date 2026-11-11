@@ -3,7 +3,7 @@ date: 2026-11-07
 project: kaggle-name-that-llm
 source: active-goal / adopted-low-pool-weight-prompt-centered-svc
 status: approved
-execution_status: primary-screen-passed-confirmation-running
+execution_status: primary-and-confirmation-gates-passed
 tags: [spec, experiment, ensemble, gpu, prompt-grouped]
 ---
 
