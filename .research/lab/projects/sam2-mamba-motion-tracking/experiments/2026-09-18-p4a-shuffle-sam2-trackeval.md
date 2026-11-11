@@ -70,3 +70,8 @@ date: 2026-09-18
 - [P4a unroll/TBPTT hyperparameter search](2026-09-17-p4a-unroll-tbptt-hyperparameter-search.md)
 - [L0/P4a epoch100 tracker単体・SAM2統合比較](2026-09-04-l0-p4a-tracker-sam2-comparison.md)
 - [P4b checkpoint tracking evaluation spec](../specs/2026-09-02-p4b-checkpoint-tracking-evaluation-spec.md)
+
+## 2026-11-11 注記：kf_score_weight は0.5で回っている
+
+- 本run（`sam2_p4a_shuffle_epoch100_25seq_20260917`、commit `cdf5478`、`git.diff` にkfwの変更なし）は `kf_score_weight=0.5`。表のL0（HOTA 55.520）は0.25なので、L0との差（−1.576）にはkfwの違いが混ざる。P4a（9/4 run、0.5の可能性が高い）との差はkfwがそろっている見込み。
+- devの設定は2026-11-11に0.25へ戻した（SAM2 repo `53b890c`）。

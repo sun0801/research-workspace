@@ -98,3 +98,10 @@ P4aの25系列SAM2 TrackEval結果の正本:
 - [P0.5 sliding-window baseline比較](2026-07-21-p0-5-sliding-window-baseline-comparison.md)
 - [P4b checkpoint tracking評価](2026-09-02-p4b-checkpoint-tracking-evaluation.md)
 - [P4a/P4b/SAM2 MTG資料](../materials/2026-09-04-p4a-p4b-sam2-evaluation-mtg-materials.md)
+
+## 2026-11-11 注記：SAM2統合の比較に kf_score_weight の違いが混ざっている
+
+- 比較相手の L0（HOTA 55.520、7/23 run）は `kf_score_weight=0.25`。
+- 本ログのP4aのSAM2統合run（`sam2_p4a_epoch100_25seq_20260904`）は、9/1のコミット `844c8bc` 以降の `samurai_mamba_stateful/sam2.1_hiera_t.yaml`（`kf_score_weight=0.5`）で回っている可能性が高い（runに `git_commit.txt` がなく、推論ログの設定ファイル名と日付からの推定）。同じL0 checkpointでも0.5ではHOTA 53.915（7/27 run）。
+- したがって上の「P4aはL0より低い」（−1.129）は、checkpointの違いとkfwの違いを分けられていない。比べ直すなら同じkfwでそろえる。
+- devの設定は2026-11-11に0.25へ戻した（SAM2 repo `53b890c`）。

@@ -55,3 +55,8 @@ run名 `20261026_25seq_pro4500`（2026-10-27 06:09 完了）。sliding window型
 
 - GPU・系列数・同時実行の有無が異なる2つの計測で，手法の順序と「state carry型の増分は小さく，sliding window型だけがはっきり遅い」という結論が同じだった。
 - 論文で FPS の小さな差（SAM2・SAMURAI・state carry型の間）を主張しない限り，ばらつき（約5%）は結論に影響しない。
+
+## 2026-11-11 注記：worktreeの削除と結果の移動
+
+- worktree `_sam2_bench`（ブランチ `view-benchmark`）は削除した。計測結果は SAM2 repo の `results/view_benchmark/`（メインの作業ツリー、git管理外）に移した（中身は `diff -r` で一致を確認）。`run_view_benchmark.sh` の `cd` 先は削除したworktreeのままなので、使うときは書き換える。
+- `scripts/benchmark_mot_speed.py` は `dev` に取り込んだ（`a03e132`）。devの state carry型 tiny 設定は `kf_score_weight: 0.25` に戻し（`53b890c`）、dancetrack0005 の出力が本ログの `20261026_5seq_a4000` とバイト単位で一致した（`results/view_benchmark/20261111_dev_repro_check/`）。

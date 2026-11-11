@@ -46,7 +46,9 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 ### SAM2/SAMURAI推論・統合リポジトリ
 `/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2`
 
-現在の実装状況（ブランチ：`mot`）：
+**ブランチの運用（2026-11-11〜）**：開発は `dev` で行い、区切りで `main` に反映する。手法1（動き予測）の旧 `mot` ブランチ、手法2の空間方向の案 B（旧②・②'、`feat/spatial-mixing-adapter`）と A-b（旧①-b、`feat/latent-correspondence`）、ViEW表2の計測スクリプト（`scripts/benchmark_mot_speed.py`）は、すべて `dev` に統合済み（マージ `411a09f` まで）。同日に `main` を `dev`（`53b890c`）まで進め、origin の `mot` ブランチとworktreeは削除した。MOTに対応する前のコード（旧 `main`、SAMURAIをSOTで動かす段階）はタグ `base/samurai-sot`（`38aee27`）で残す。並行して試すときだけ `dev` から短いブランチやworktreeを切り、終わったらすぐ `dev` にマージして消す。
+
+**ViEW・中間発表の手法1の結果の再現**：`dev` の `samurai_mamba_stateful/sam2.1_hiera_t.yaml` で再現できる（`kf_score_weight: 0.25`、`53b890c` で0.5から戻した）。2026-11-11 に、dancetrack0005 の出力が評価runのコード（`a6253e7`＋7/23 runの `git.diff`）の出力とバイト単位で一致することを確認した（同じRTX A4000）。ただし今の `.venv-sam2`（torch 2.10）では `sam2/_C.so` が読み込めず、マスクの穴埋め（fill_hole_area）なしで動くため、7/23 当時の出力そのものとは一致しない。
 
 | 機能 | 状態 |
 |---|---|
@@ -54,6 +56,7 @@ SAM2/SAMURAIは研究の実験基盤として使い，Mamba motion priorを外�
 | SAMURAI + state carry型Mamba（`samurai_mamba_stateful`モード） | ✅ 最小版統合・25系列推論・TrackEval評価済み |
 | `MambaStatefulMotionFilter`の状態管理 | ✅ 元repo checkpointのstrict load・track別cache・state carryを実装済み |
 | MOT推論エントリ | `scripts/main_inference_mot.py` |
+| temporal Mamba（手法2）の学習・評価 | `training/short_clip_trainer.py`、`training/mose_adapter_eval.py`（V3・B・A-b は設定で選ぶ） |
 
 ---
 
@@ -236,6 +239,7 @@ SAMURAI forkをベースにSAM2部分のみを残し、`sam2mot_lite/`を自作�
 
 | 日付 | 内容 |
 |------|--------|
+| 2026-11-11 | SAM2 repoの整理：B・A-bのブランチとViEWの計測スクリプトを `dev` に統合し、state carry型tinyの `kf_score_weight` を0.25に戻した（ViEWのHOTA 55.52の設定。9/1に0.5へ変わっていた）。devでViEWの評価runのコードと出力が一致することを確認。9/4・9/17のSAM2統合評価（P4a・P4a-shuffle）は0.5で回っており、7/23（0.25）との比較にはkfwの違いが混ざる。 |
 | 2026-11-06 | MTG: ①-bは点推定がそろって正（区間はわずかに0を含む）。①-bを主軸に、対応付けをノイズに強くする（空間的な制約、差し替え可能な実装）。②・②'は深追いしない。optical flowは計算して計算量を確かめる。英論文紹介は4本。説明は画像処理の共通の用語で。 |
 | 2026-10-30 | MTG: 8フレームの短い区間の学習の結果（valは上がるがMambaの効果・記憶の使用は0を含む）を報告。開発中はMambaだけを10 epoch程度で学習し、学習設定の調整ではなくアーキテクチャの追加開発（空間方向、潜在空間での対応）へ進む。ViEWは送付済みでクローズ。修論は手法1・手法2の構成で方針OK。 |
 | 2026-10-23 | 学習コード `mose_adapter_train.py` のリファクタリング（R0〜R5）を完了。変更前の出力との照合（fp32・決定論的設定）で全ステップ合格し、SAM2 repo `1002_seminar` に6コミット。valは凍結評価の `evaluate_track`（J/F）と学習経路のloss の2本立てになり、val lossは旧ログと対象ごとに最大6e-3ずれる。valの時間は約2倍になる見込み。本学習と同じ設定での完走とF0の一致も確認。`experiments/2026-10-23-mose-adapter-train-refactoring.md`に記録。 |
