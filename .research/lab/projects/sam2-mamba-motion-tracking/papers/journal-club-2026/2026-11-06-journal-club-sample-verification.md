@@ -7,6 +7,8 @@
 | 2026-11-06 | 初版（全45枚、本編39枚）を作成し、照合と見た目の確認を行った |
 | 2026-11-07 | 別チャットのレビュー（[2026-11-07-journal-club-sample-review.md](2026-11-07-journal-club-sample-review.md)）を受けて改訂した。本編36枚・補足9枚（計45枚）になった。照合表とスライド番号は改訂版のもの |
 | 2026-11-07 | 研究室テンプレートの枠と文字サイズをそのまま使う版（[2026-11-07-journal-club-sample-lab-template.pptx](2026-11-07-journal-club-sample-lab-template.pptx)、47枚）を別名で作った。末尾の「テンプレート準拠版」を参照 |
+| 2026-11-11 | テンプレート準拠版の4本すべてに「実験設定」スライドを足した（同じファイル名で更新、50枚）。末尾の「実験設定スライドの追加」を参照 |
+| 2026-11-11 | 出典の書き方を研究室の形に直し、配置を見直した（同じファイル名で更新、50枚）。末尾の「出典の書き方の変更」を参照 |
 
 ## 対象
 
@@ -295,3 +297,91 @@
 
 - PowerPoint で開いたときの折り返し位置は、LibreOffice での描画とわずかに違う可能性がある。収まらない枠は、テンプレートの設定によって自動で縮小される。
 - 赤枠の位置の注意（座標から計算しているため微調整が要るかもしれない）と、補足の全体表の文字が小さい点は、改訂版と同じ。
+
+## 実験設定スライドの追加（2026-11-11）
+
+参考スライドでは、各論文の結果の前に「実験設定」スライドがある（小林 20250724 の2本、村川 20260409 の2本、自分の 20260709 の3本など）。これにならい、テンプレート準拠版の4本すべてで結果の前に実験設定を置いた。
+
+- 全50枚。内訳は本編42枚（1〜42枚目）、補足の扉（43枚目）、補足7枚（44〜50枚目）。
+- 足した・動かしたスライド
+  - 7枚目「実験設定：MambaOut」：新規。
+  - 15枚目「実験設定：TV3S」：補足にあった実験設定を本編へ移し、学習の設定を足した。補足からは消した。
+  - 25枚目「実験設定：TS-Mamba」：新規。
+  - 37枚目「実験設定：Memory as Dynamics」：新規。あわせて、概要スライドの学習の項目をこちらへ移した（概要には「前提」だけを残した）。
+
+### 照合（原典 PDF のテキスト抽出で確認）
+
+| スライド | 記載 | 原典 | 確認 |
+|---|---|---|---|
+| 7 | ImageNet 約130万枚・224²、top-1 | MambaOut Sec. 4.2 "approximately 1.3 million training images" | ✓ |
+| 7 | DeiT の学習方法（蒸留なし）、AdamW、batch 4096、lr 0.004、TPU v3 | Sec. 4.2 "follows DeiT [79] without distillation"、"batch size to 4096, so the learning rate is 0.004"、"trained on TPU v3" | ✓ |
+| 7 | COCO は Mask R-CNN、1× schedule（12 epochs）、AdamW lr 0.0001、batch 16 | Sec. 4.3、Table 2 | ✓ |
+| 7 | ADE20K 150 クラス、UperNet、160,000 iterations、lr 0.0001、batch 16 | Sec. 4.4、Table 3 | ✓ |
+| 7 | NVIDIA 4090 × 4 | Sec. 4.3–4.4 "4 GPUs of NVIDIA 4090" | ✓ |
+| 15 | VSPW の内訳と mIoU・mVC | 改訂版の補足（照合済み）と同じ | ✓ |
+| 15 | Cityscapes でも評価 | TV3S Table 2（Cityscapes、512 × 1024） | ✓ |
+| 15 | 4フレーム、480×480 crop、AdamW、lr 6e−5、poly、A100 × 2 | Sec. 3.3, 4.1 | ✓ |
+| 15 | 全体を end-to-end で学習 | 本文に凍結の記述がなく、公開コードも backbone を凍結していない（改訂版の補足と同じ扱い） | コード |
+| 25 | REDS→REDS4、Vimeo-90K→Vimeo-90K-T・Vid4、BI・BD（σ = 1.6）、ŝ = 4 | TS-Mamba Sec. 4.1 | ✓ |
+| 25 | PSNR・SSIM、180×320 で速度・計算量を計測 | Sec. 4.1 "computed on an LR frame of size 180×320" | ✓ |
+| 25 | T = 15、token 4×4、s = 3、Adam ＋ Cosine Annealing、256×256、batch 8、600K、RTX 3090 × 2 | Sec. 4.1 | ✓ |
+| 37 | SA-V・MOSE・YouTube-VOS 2019、AdamW lr 1×10^−4、batch 1、tracklet 8、50 epochs | MaD Appendix A.1 | ✓ |
+| 37 | SOT は zero-shot で LaSOT・LaSOT_ext（長期）・GOT-10k、指標 AUC・P_norm・P／AO・SR | Sec. 4.1、Table 1 | ✓ |
+| 37 | VOS 7種の J&F | Table 6 | ✓ |
+| 37 | A100 1枚での1フレームあたりの推論時間 | Appendix B.3 | ✓ |
+
+### 見た目の確認（2026-11-11）
+
+- 全50枚を、本文枠の自動縮小がある状態とない状態の両方で画像化し、画素単位で比べた。全50枚が一致し、どの枠も縮小なしで収まっている。
+- 足した4枚は拡大して目視で確認した。25枚目で1文字だけ改行される箇所があり、文を短くした。
+- validate.py：**All validations PASSED**。ノートは45枚に入っている。
+- 本編が42枚になった。時間配分は、発表練習のあとで補足との入れ替えなどで調整する前提。
+
+## 出典の書き方の変更（2026-11-11）
+
+参考スライド（小林・村川・福沢・自分の過去スライド）の書き方に合わせた。
+
+- 紹介している論文自身の図表：スライドごとの出典行（「TV3S Fig. 2, Eq. (1)(2), Sec. 3.2」など）をすべて消した。図表・節の対応は、この照合メモの照合表に残っている。
+- 他の論文の図や名前：「名前 [第一著者+, 会議名年]」で書いた。
+  - 図の出典：スライド下端の中央に 16pt で置いた（3枚目の MambaOut の図、31枚目の SAM 2）。
+  - それ以外：本文の中に書いた（例：Swin [Liu+, ICCV2021]）。
+  - 実験設定スライドは、参考スライドと同じく、データセット・指標の枠組み・比較手法を「名前 [著者+, 会議名年]」で並べる2段組にした。
+- 出典行に入れていた補足は、本文・注記・ノートへ移した。
+  - 本文へ：「4個にしても +0.01 dB」「遮蔽明け5フレームの IoU」「mIoU (SS)」「解消数 δ」。表の単位（MACs [G]、PSNR [dB]）は表の見出しに入れた。
+  - ノートへ：「④ は R(·) ＋ bicubic」「SSIM は補足の全体表」「③ は mask と同じ形の prompt」「VOS 7種の内訳と速度の測り方」。
+  - 「window の画素数は公開コードの設定」は、本文に元から書いてある。
+
+### 引用した文献と確認元
+
+会議名と年は、紹介4本の参考文献欄の表記で確かめた。参考文献欄にないもの、または arXiv の表記しかないものは、表の「確認元」に理由を書いた。
+
+| 引用 | 確認元 |
+|---|---|
+| Mamba [Gu+, COLM2024] | MaD の参考文献（MambaOut の参考文献では arXiv 2023） |
+| Mamba2 [Dao+, ICML2024] | 4本の参考文献欄にない。"Transformers are SSMs"（ICML 2024）として発表者が把握している採録先 |
+| ViT [Dosovitskiy+, ICLR2021] | MambaOut の参考文献は arXiv 2020。採録先の ICLR 2021 を使った |
+| Gated CNN [Dauphin+, ICML2017]、ImageNet [Deng+, CVPR2009]、COCO [Lin+, ECCV2014]、Mask R-CNN [He+, ICCV2017]、ADE20K [Zhou+, CVPR2017]、UperNet [Xiao+, ECCV2018]、DeiT [Touvron+, ICML2021]、VMamba [Liu+, NeurIPS2024]、LocalVMamba [Huang+, arXiv2024] | MambaOut の参考文献 |
+| VSPW [Miao+, CVPR2021]、Cityscapes [Cordts+, CVPR2016]、SegFormer [Xie+, NeurIPS2021]、Swin [Liu+, ICCV2021]、CFFM [Sun+, CVPR2022]、MRCFA [Sun+, ECCV2022] | TV3S の参考文献 |
+| FastFlowNet [Kong+, ICRA2021]、TTVSR [Liu+, CVPR2022]、REDS [Nah+, CVPRW2019]、Vimeo-90K [Xue+, IJCV2019]、Vid4 [Liu+, TPAMI2013]、RRN [Isobe+, arXiv2020]、DAP [Fuoli+, WACV2023]、FDAN [Yang+, ICIP2023]、KSNet [Jin+, ACMMM2023]、TMP [Zhang+, TIP2024] | TS-Mamba の参考文献 |
+| SAM 2 / SA-V [Ravi+, ICLR2025]、HiM2SAM [Chen+, PRCV2025]、YouTube-VOS [Xu+, ECCV2018]、LaSOT_ext [Fan+, IJCV2021]、GOT-10k [Huang+, TPAMI2021]、LVOS [Hong+, ICCV2023]、SAMURAI [Yang+, arXiv2024]、DAM4SAM [Videnovic+, CVPR2025] | MaD の参考文献と Table 1 |
+| LaSOT [Fan+, CVPR2019] | MaD の参考文献には IJCV 2021 版だけがある。自分の過去スライド（20260709）の表記に合わせた |
+| MOSE [Ding+, ICCV2023] | MaD の参考文献欄に見つからない。発表者が把握している採録先 |
+
+### 配置の見直し
+
+出典行がなくなった分の余白と、全50枚の見た目を見直して次を直した。
+
+- 5枚目：吹き出しの文字が枠からはみ出す → 図を少し縮め、吹き出しを3行分の高さにした。
+- 24枚目：SS3D の図が小さく、全体図の縮小版は読めない → 縮小版をやめ、SS3D の図を左の列いっぱいに広げた。
+- 25・37枚目：比較手法・データセットが1行に詰まって読みにくい → 1項目1行にした。
+- 31枚目：SAM2 の図を大きくした。
+- 32・44・50枚目：1文字だけ次の行に落ちる → 文を短くした。
+
+### 確認（2026-11-11）
+
+- 全50枚を、本文枠の自動縮小がある状態とない状態の両方で画像化し、画素単位で比べた。全50枚が一致し、どの枠も縮小なしで収まっている。
+- 全50枚を目視で確認した。
+- validate.py：**All validations PASSED**。ノートは45枚に入っている。
+- 自動で確認したこと：
+  - 本文以外の文字に「Fig.」「Table」「Sec.」「Eq.」が残っていない。
+  - スライド上の「名前 [著者+, 会議名年]」形式の引用は45件。
