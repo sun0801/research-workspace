@@ -49,3 +49,21 @@ The scheduled Host142 poll found the existing Qwen8B watcher had passed its pilo
 ### Current resume point
 
 At the next 30-minute poll, inspect the Qwen8B final-fit process and latest relevant log/status lines, GPU/RAM. If it exits successfully, verify the bundle's manifest with `sha256sum -c SHA256SUMS` and exact file-set coverage, then run the existing private-asset helper. After both Qwen bundles are staged and verified, continue the same-composition Notebook runtime gate. Keep Mistral confirmation retry deferred; no composition changes or Kaggle push/submission.
+
+## 23:20 JST — Qwen8B final-fit fold0 Stage 1 checkpoint
+
+The scheduled poll found a new final-fit log event timestamped 22:56 JST: fold0 Stage 1 epoch 1 completed (45,000 examples, mean loss `1.574243`, peak allocated VRAM 15,197 MiB, `stop_requested=false`). Qwen8B worker PID `1414477` remains active on GPU1 under watcher PID `905369`. GPU1 had 15,830 MiB used / 16,270 MiB free; `MemAvailable=212,094,856 kB`; GPU0 remained idle. Continue the existing fit and wait for later checkpoint/exit status. No Kaggle push or submission.
+
+## 23:55 JST — Qwen8B final fit complete; baseline assets staged
+
+The Qwen8B final-fit log records `final_fit_complete` at 22:47 JST and the bundle checksum check as successful. Qwen8B source manifests were rechecked with `sha256sum -c SOURCE-SHA256SUMS` and `sha256sum -c SHA256SUMS`; both reported 一致. Qwen17's earlier `SHA256SUMS` check also passed, but its manifest paths carried a `./` prefix and failed the helper's exact relative-path coverage check. Regenerated that manifest with bundle-relative paths and reran `sha256sum -c SHA256SUMS`; all 13 files reported 一致. No digest values were copied into this log.
+
+The local packaging helper then revalidated both Qwen primary and confirmation adoption gates, bundle file coverage, label order, SVC checksum, private/offline GPU Notebook metadata, and the aggregate asset manifest. It staged 35 files (213,118,504 bytes) under the private baseline Notebook assets. All source/destination checks returned 一致 using `sha256sum -c SHA256SUMS`, `sha256sum -c model.joblib.sha256`, and `(cd dataset-assets && sha256sum -c ASSET-SHA256SUMS)`. No Kaggle upload, Notebook push, or submission occurred.
+
+Qwen8B final-fit worker and lock were absent at the 23:51 JST poll; GPU1 had only 172 MiB allocated and the watcher had no active worker. Continue using the 30-minute lightweight poll for the registered watcher/host. Next work is the unchanged baseline Notebook's <=9-hour runtime gate; do not alter blend composition before reporting if it does not fit. Mistral03 confirmation retry remains deferred. No host was stopped or reserved.
+
+## 23:58 JST — Kaggle private asset upload blocked by missing authentication
+
+The local asset stage is complete, but the configured shared Kaggle CLI reports that authentication is required. `KAGGLE_API_TOKEN` is unset, and the standard `~/.kaggle/access_token`, `~/.kaggle/kaggle.json`, and `~/.config/kaggle/access_token` files are absent; credential contents were not read. The Kaggle MCP `get_dataset_info` request was rejected with `datasets.get` permission denied. No remote Dataset, Notebook version, or submission was created. The intended private Dataset slug from local metadata is `suntree0801/name-that-llm-private-blend-assets`.
+
+Resume after Kaggle CLI OAuth authentication (`kaggle auth login`) or equivalent account authorization is available: create the Dataset without public visibility, verify remote privacy, then perform the just-before-push official status check and run the benchmark-only Notebook. Its unchanged composition must pass the <=9-hour gate before the one scored submission. Do not expose or copy any API token. Local asset staging and all checksum verification remain valid; no host was stopped.

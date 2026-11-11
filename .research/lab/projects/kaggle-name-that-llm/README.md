@@ -1,9 +1,9 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: OOF confirmation bestは固定Spectral補正BA 0.65383（未LB検証）。Host142ではpilot合格後のQwen3-8B baseline final fitがGPU1で進行中。Mistral03 primaryはadopt、confirmationはpilot evidence errorで保留。次は両Qwen bundle検証後にNotebook runtime gate。
+summary: 現bestは固定Spectral補正のconfirmation BA`.653828`（LB未検証）。基準blend v9はhidden rerunで失敗し、原因不明のため構成変更前に報告する。
 created: 2026-11-02
-last_updated: 2026-11-11
+last_updated: 2026-11-12
 ---
 
 # Kaggle — Name That LLM
@@ -18,10 +18,12 @@ last_updated: 2026-11-11
 
 ## 現在の状況
 
-- 現bestは固定Spectral補正の独立confirmation BA`.653828`（public LB未検証）。提出対象の基準blendはprimary BA`.586431`、confirmation BA`.567870`。
-- 採用済み基準blendと同一構成のNotebookで9時間以内の実行見積もりを通し、1回提出してOOF BAとpublic LBの対応を確認する。見積もり超過なら構成を変えず、不足を報告する。
-- Host141はGPU0/1が他runで稼働中のため新規投入不可。Host142ではpilot gate合格後のQwen3-8B baseline final fitがGPU1で進行中。Mistral03 primaryはfold4完了・採用ゲートadoptで終了し、confirmationはpilot evidence validation errorで保留。
-- 実行中jobは30分間隔の軽量pollで監視する。Qwen3-1.7B bundleは`sha256sum -c SHA256SUMS`で一致を確認済み。Qwen8B final fit完了後に両bundleを検証・stagingし、基準blend Notebookのruntime gateへ進む。再開先は[11/11継続ログ](experiments/2026-11-11-host-continuation-poll.md)。
+- 現bestは固定Spectral補正の独立confirmation BA`.653828`（LB未検証）。採用中の提出基準blendはprimary BA`.586408`（confirmation BA`.567870`）。
+- private benchmark v8はT4×2で完了し、Qwen8を両GPUへ分配。v9実測ベースの4,000行推定は2.53時間（25% margin・固定30分込み）で9時間gateを通過。
+- SVCのKaggle/local sklearn差は64×18出力のmax abs差0.0で通過。モデル/adapter/blend・重み・bfloat16・384-token上限は維持。v9はsample `submission.parquet`の3行・schema/ID検査を通過。
+- 基準Notebook version 9を06:39 JSTに1回提出。ref `58251076`はhidden rerun時に`COMPLETE`/unhandled error、Public/Private scoreなし。提出時残り4件。
+- v9のinteractive sample runと2.5303時間runtime gateは通ったが、hidden rerunの詳細原因は不明。kernel logsはsample runのみ、submission-downloadは403。
+- baseline構成は未変更。specに従い、推定時間・不足情報・失敗を報告してから次の構成変更を判断する。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md) · [公式確認](experiments/2026-11-12-official-competition-status.md)
 - [Notebook readiness](experiments/2026-11-10-private-baseline-notebook-readiness.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md) · [Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md)
 
 ## マイルストーン
@@ -35,6 +37,12 @@ last_updated: 2026-11-11
 ## 関連記録
 
 - [2026-11-11公式コンペ状況確認](experiments/2026-11-11-official-competition-status.md)
+- [2026-11-12公式コンペ状況確認](experiments/2026-11-12-official-competition-status.md)
+- [2026-11-12 Host141候補OOF追加screen](experiments/2026-11-12-host141-candidate-addition-screen.md)
+- [2026-11-12 Host142継続poll](experiments/2026-11-12-host-continuation-poll.md)
+- [2026-11-12 baseline benchmark push](experiments/2026-11-12-baseline-benchmark-push.md)
+- (c) 保留 — [Areeb Ali 0.684 public Notebook mirror](experiments/2026-11-12-public-0684-notebook-audit.md)
+- (b) 試さない — [The Prompt Is Not the Author v32](experiments/2026-11-12-prompt-is-not-author-audit.md)
 
 - [共同作業と自動化の設計メモ](../../../secretary/notes/brainstorm/2026-11-02-kaggle-collaboration-setup.md)
 
@@ -112,13 +120,34 @@ last_updated: 2026-11-11
 - Host141/142は実際に空いている場合に利用可。停止指示は指定hostだけに適用する。
 - 停止対象の途中結果と正確な再開位置を保存し、そのhostのKaggle jobと自動投入watcherを停止してGPU解放を確認する。もう一方は継続し、停止hostは明示的な再利用指示まで予約する。
 - 実行中jobは30分ごとに軽い1コマンドで監視し、変化時だけ記録する。公式情報は1日1回とNotebook push・提出直前に確認する。
-- 今回は停止指示ではない。最新の実行状況は[11/11継続ログ](experiments/2026-11-11-host-continuation-poll.md)、過去の引き継ぎ記録は[archive](experiments/2026-11-10-readme-handoff-history.md)。
+- 今回は停止指示ではない。実行中benchmarkの再開位置は[11/12 benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)、Host141/142の直近診断は[継続ログ](experiments/2026-11-12-host-continuation-poll.md)、過去の引き継ぎ記録は[archive](experiments/2026-11-10-readme-handoff-history.md)。
 
 ## 更新履歴
 
+- 2026-11-12: 改訂specに沿って「現在の状況」を現best・benchmark v7の未解決点・次のpoll・host再開条件に整理。資材検証、旧Notebook失敗、候補数値、公式確認の詳細は日付付きexperimentsログにまとめる。
+- 2026-11-12: v7はTesla T4に割り当てられQwen8B SDPA probeでOOM。現行Kaggle CLI docsに`NvidiaL4X1`はなく`NvidiaTeslaT4`はT4×2と記載。v7診断、v6との違い、Host141の空き状況を[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)へ保存。
+- 2026-11-12: specの運用改訂に合わせ、「現在の状況」を現best・基準blend提出gate・認証blocker・host再開先に整理。詳細な候補結果、checksum、時刻・資源情報は既存の日付付きexperimentsログに保持。
+- 2026-11-12: 公式Leaderboard首位`.765`・チーム数5,496、提出上限・Code Requirementsを確認。metadataとTimelineでFinal Submission Deadlineが1日ずれている点、CLI未認証で提出残数を取得できない点を[日付ログ](experiments/2026-11-12-official-competition-status.md)に記録。private assetのremote upload・Notebook push・Submissionは未実施。
+- 2026-11-12: Host141のcandidate11/12/13 primary OOFをCPU bestと比較し、固定equal-weight additionも2,000回prompt-paired bootstrapでscreen。現行blendを改善せず、追加候補にはしない。結果とHost141 idle状態を[日付ログ](experiments/2026-11-12-host141-candidate-addition-screen.md)へ保存。基準BAの旧記載`.586431`を現行artifact summaryの`.586408`へ訂正。
+- 2026-11-12: Host142の静的alias `142`でQwen8B watcher終了とGPU1 idleを確認。Candidate09の停止中watcherが残るため、候補14はspecのterminal条件に従い未投入。[poll記録](experiments/2026-11-12-host-continuation-poll.md)。
+- 2026-11-12: Kaggle CLIの`.env`認証が通り、private asset Dataset version 1の`Ready`・privacyを確認。benchmark push前に公式rules/timeline/code requirements/leaderboard、5,508チーム、提出枠5・提出履歴0を再確認。[公式状況ログ](experiments/2026-11-12-official-competition-status.md)。
+- 2026-11-12: benchmark-only Notebook v1はL4指定に対し実環境がT4を割り当てたため、GPU名assertで約62秒後に失敗。blend構成と4,000行runtime projectionは維持し、GPU名を記録する修正後のprivate v2をpush。[実験ログ](experiments/2026-11-12-baseline-benchmark-push.md)。
+- 2026-11-12: Host142の01:51 JST pollはSSH host key verificationで失敗。alias解決先とknown_hostsを読み取り確認したが一致する登録なし。安全な鍵確認までHost142の現況は未確認として扱う。[継続ログ](experiments/2026-11-12-host-continuation-poll.md)。
+- 2026-11-12: benchmark v2は実GPU/T4でCUDA確認後、競技データpathのassertで約43秒後に停止。公式Code Requirementsの`/kaggle/input/competitions/name-that-llm`へ修正しprivate v3をpush。次回pollは02:42 JST。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
+- 2026-11-12: v3は公式競技pathを通過後、private Dataset mount rootの想定違いで約67秒後に停止。remote sourceとhead fileの存在を確認し、標準path variantsからrootを解決するprivate v4をpush。公開首位は`.768`に更新。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
+- 2026-11-12: v4はasset mount解決後、artifact要求scikit-learn 1.9.1に対しKaggle runtime 1.6.1のため約48秒後に停止。local 1.9.1で作った64×18 SVC decision referenceと比較するgateを追加したprivate v5をpush。公開首位`.768`、5,532チーム。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
+- 2026-11-12: v5でSVC cross-version gateはmax abs差0.0で通過。非量子化QwenへのPEFT LoRA loadがKaggleのtorchao 0.10.0で失敗する既知issueを確認し、optional TorchAO dispatchのみ無効化するprivate v6をpush。remote privacy・GPU・offline・inputsを確認。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
+- 2026-11-12: v6でSVC互換性とPEFT LoRA loadは通過したが、実割当てT4の14.56 GiB GPUでQwen8 SDPA inference probeがOOM。9時間runtime gateは未測定。baseline変更前に報告し、構成は維持。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
+- 2026-11-12: Kaggle official CLI docsの`NvidiaL4X1` acceleratorでv7をpush（blend/inference code不変）。remote pullはprivate/L4X1を示した一方`enable_gpu=false`で、CLI metadataと実行設定が不一致の可能性。次回scheduled statusで確認。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
+- 2026-11-12: Kaggle検索でAreeb Aliの0.684 public Notebook mirrorを発見。version/sourceとscore帰属に不一致があり、現leader`.765`も下回るため(c)保留。baseline CV-LB確認後にsource/version・OOF complementarityを照合する。[audit](experiments/2026-11-12-public-0684-notebook-audit.md)。
+- 2026-11-12: “The Prompt Is Not the Author” v32は直近weight変更が未採点で、同著者のModernBERT追加もpublic scoreを低下させたとの報告。自前の同系候補screenとも一致するため(b)試さない。[audit](experiments/2026-11-12-prompt-is-not-author-audit.md)。
+- 2026-11-12: benchmark Notebookのruntime projectionがinteractiveの3行をhidden全件として扱う問題を修正。公式Data Descriptionの約4,000行を下限にし、v1のprobe値は正しい4,000行へ再計算して使う。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
 - 2026-11-11: README整理時に抜けた完了済みマイルストーン5件を復元し、履歴アーカイブの相対リンクと監査・継続ログの重複を修正。
 - 2026-11-11: 当日公式情報を再確認し、leaderboard/top/team count、締切差異、提出条件を[日付ログ](experiments/2026-11-11-official-competition-status.md)に保存。
-- 2026-11-11: Qwen3-1.7B final fitのexit 0、採用ゲート通過、GPU0解放とbundle checksum一致、およびMistral03 fold3/4 checkpoint・fold4完了・confirmation error・Qwen8B pilot通過とfinal-fit開始を[継続ログ](experiments/2026-11-11-host-continuation-poll.md)に記録。「現在の状況」を20行以内に整理し、過去の詳細は日付履歴に保持。
+- 2026-11-11: Qwen3-1.7B final fitのexit 0、採用ゲート通過、GPU0解放とbundle checksum一致、およびMistral03 fold3/4 checkpoint・fold4完了・confirmation error・Qwen8B pilot通過とfinal-fit進捗を[継続ログ](experiments/2026-11-11-host-continuation-poll.md)に記録。「現在の状況」を20行以内に整理し、過去の詳細は日付履歴に保持。
+- 2026-11-11: Qwen3-8B final fit完了後、source bundle checksumを確認し、Qwen8/Qwen17/SVCとaggregate asset manifestを`sha256sum -c`で検証してprivate Notebook assetsへstaging。Qwen17 manifestの`./` prefixを相対パスへ正規化。Kaggle upload/submitは未実施。次は同一構成Notebookのruntime gate。
+- 2026-11-11: Kaggle CLIにcredentialがなく、Kaggle MCPの`datasets.get`も拒否され、private asset Datasetを作成できないことを確認。認証情報自体は調べず、環境変数・標準credential fileの有無だけを確認。remote upload/push/submissionは未実施。詳細・再開先は[継続ログ](experiments/2026-11-11-host-continuation-poll.md)。
 - 2026-11-10: 承認済み運用改訂に合わせ、現在の状況を現best・基準blend提出方針・host状態・blockerに整理。過去の時刻・PID・資源状況は[継続ログ](experiments/2026-11-10-host-continuation-poll.md)と[状況履歴](experiments/2026-11-10-readme-current-situation-history.md)に保持。
 - 詳細な更新履歴は[2026-11-10アーカイブ](experiments/2026-11-10-readme-update-history.md)に保存。
 - 現在の状況の旧記録は[状況履歴](experiments/2026-11-10-readme-current-situation-history.md)、共同作業の旧引き継ぎは[引き継ぎ履歴](experiments/2026-11-10-readme-handoff-history.md)を参照。
+- 2026-11-12: specの改訂節を優先し、「現在の状況」を20行以内の現best・実行中benchmark・次の確認に更新。v8 push前公式確認、remote設定、初回状態を日付付きexperimentsログへ追記し、詳細なhost診断は継続ログへ保持。

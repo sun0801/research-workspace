@@ -98,3 +98,7 @@ Further static audit found the final Notebook runs the timing probe first, unloa
 The upload README now shows the explicit `kaggle kernels push ... --timeout 32400` command for both the benchmark-only and final versions, with the required daily allowance and official status checks immediately before each push.
 
 It also requires read-only Kaggle MCP verification of the remote dataset's privacy after creation and the remote Notebook's privacy/version after each push. Local metadata and CLI defaults are not treated as proof of remote visibility.
+
+## 2026-11-12 correction — interactive test row count
+
+The earlier claim that reading `test.csv` IDs in an interactive Notebook gives the exact hidden row count was incorrect. Kaggle's official Data Description says interactive sessions contain three sample rows while the hidden scoring rerun has about 4,000. The local runtime projection now uses `max(4,000, visible test-ID rows)`; remote benchmark version 1 was already pushed with the older projection and its boolean gate must not be trusted without recalculating the probe timings at 4,000 rows. See the [2026-11-12 benchmark log](2026-11-12-baseline-benchmark-push.md).
