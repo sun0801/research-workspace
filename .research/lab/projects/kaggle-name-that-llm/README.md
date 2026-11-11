@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: OOF confirmation bestは固定Spectral補正BA 0.65383（未LB検証）。Host142ではMistral03 primaryがGPU1で継続し、最新ログは32層中24層のLoRA選択を記録。Qwen3-1.7B bundleは検証一致、Qwen8B watcherは待機中。次は両bundle後に基準blend Notebook runtime gate。
+summary: OOF confirmation bestは固定Spectral補正BA 0.65383（未LB検証）。Host142ではpilot合格後のQwen3-8B baseline final fitがGPU1で進行中。Mistral03 primaryはadopt、confirmationはpilot evidence errorで保留。次は両Qwen bundle検証後にNotebook runtime gate。
 created: 2026-11-02
 last_updated: 2026-11-11
 ---
@@ -20,8 +20,8 @@ last_updated: 2026-11-11
 
 - 現bestは固定Spectral補正の独立confirmation BA`.653828`（public LB未検証）。提出対象の基準blendはprimary BA`.586431`、confirmation BA`.567870`。
 - 採用済み基準blendと同一構成のNotebookで9時間以内の実行見積もりを通し、1回提出してOOF BAとpublic LBの対応を確認する。見積もり超過なら構成を変えず、不足を報告する。
-- Host141はGPU0/1が他runで稼働中のため新規投入不可。Host142ではMistral03 primaryがGPU1で継続中。fold3 Stage 2 epoch 1の後、08:27 JSTに32層中24層のLoRA選択イベントを記録（fold番号はログにない）。Qwen3-1.7B final fitは00:30 JSTにexit 0で完了し、primary/confirmation採用ゲートを通過。Qwen8B baseline watcherはMistral終了待ち。
-- 実行中jobは30分間隔の軽量pollで監視する。Qwen3-1.7B bundleは`sha256sum -c SHA256SUMS`で一致を確認済み。Qwen8B final fit・bundle検証後、両方をstagingして基準blend Notebookのruntime gateへ進む。再開先は[11/11継続ログ](experiments/2026-11-11-host-continuation-poll.md)。
+- Host141はGPU0/1が他runで稼働中のため新規投入不可。Host142ではpilot gate合格後のQwen3-8B baseline final fitがGPU1で進行中。Mistral03 primaryはfold4完了・採用ゲートadoptで終了し、confirmationはpilot evidence validation errorで保留。
+- 実行中jobは30分間隔の軽量pollで監視する。Qwen3-1.7B bundleは`sha256sum -c SHA256SUMS`で一致を確認済み。Qwen8B final fit完了後に両bundleを検証・stagingし、基準blend Notebookのruntime gateへ進む。再開先は[11/11継続ログ](experiments/2026-11-11-host-continuation-poll.md)。
 - [Notebook readiness](experiments/2026-11-10-private-baseline-notebook-readiness.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md) · [Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md)
 
 ## マイルストーン
@@ -118,7 +118,7 @@ last_updated: 2026-11-11
 
 - 2026-11-11: README整理時に抜けた完了済みマイルストーン5件を復元し、履歴アーカイブの相対リンクと監査・継続ログの重複を修正。
 - 2026-11-11: 当日公式情報を再確認し、leaderboard/top/team count、締切差異、提出条件を[日付ログ](experiments/2026-11-11-official-competition-status.md)に保存。
-- 2026-11-11: Qwen3-1.7B final fitのexit 0、採用ゲート通過、GPU0解放とbundle checksum一致、およびMistral03 fold3 checkpoint・LoRA選択の進捗を[継続ログ](experiments/2026-11-11-host-continuation-poll.md)に記録。「現在の状況」を20行以内に整理し、過去の詳細は日付履歴に保持。
+- 2026-11-11: Qwen3-1.7B final fitのexit 0、採用ゲート通過、GPU0解放とbundle checksum一致、およびMistral03 fold3/4 checkpoint・fold4完了・confirmation error・Qwen8B pilot通過とfinal-fit開始を[継続ログ](experiments/2026-11-11-host-continuation-poll.md)に記録。「現在の状況」を20行以内に整理し、過去の詳細は日付履歴に保持。
 - 2026-11-10: 承認済み運用改訂に合わせ、現在の状況を現best・基準blend提出方針・host状態・blockerに整理。過去の時刻・PID・資源状況は[継続ログ](experiments/2026-11-10-host-continuation-poll.md)と[状況履歴](experiments/2026-11-10-readme-current-situation-history.md)に保持。
 - 詳細な更新履歴は[2026-11-10アーカイブ](experiments/2026-11-10-readme-update-history.md)に保存。
 - 現在の状況の旧記録は[状況履歴](experiments/2026-11-10-readme-current-situation-history.md)、共同作業の旧引き継ぎは[引き継ぎ履歴](experiments/2026-11-10-readme-handoff-history.md)を参照。

@@ -6,7 +6,7 @@ Host142 was checked through the saved host key with strict SSH host-key verifica
 
 Mistral03 primary remains active on GPU1 (PID 603688). Its registered watcher remains active; the Qwen3-8B baseline watcher (PID 905369) is waiting for the Mistral watcher (PID 3743539). The stopped Candidate09 watcher (PID 3748103) remains stopped. GPU0 was released (15 MiB used, 15,960 MiB free); GPU1 had 15,006 MiB used and 17,094 MiB free. Host `MemAvailable` was 216,739,292 kB, above the 16 GiB floor. No job was stopped, restarted, or moved, and no Kaggle object was pushed or submitted.
 
-### Resume point
+### Resume point at 00:50 JST
 
 Keep the registered Host142 queue intact. At the next scheduled 30-minute check, use one lightweight strict-SSH command to inspect the relevant processes, latest log lines, GPU use, and available RAM. Once the Qwen3-8B final model is available, create/verify complete per-bundle checksum manifests with `sha256sum -c SHA256SUMS`, stage the adopted three-part baseline blend assets, and continue the <=9-hour runtime gate without changing composition. The package helper refuses to stage unless both bundles have manifests covering their exact file sets. If the exact blend cannot fit, record the estimate and report before changing it. No Kaggle push or submission has occurred.
 
@@ -21,3 +21,31 @@ The scheduled Host142 poll found a new Mistral03 primary log event at 08:09 JST:
 ## 08:50 JST — Mistral03 LoRA layer selection event
 
 The scheduled poll found a new `lora_layer_selection` event timestamped 08:27 JST in Mistral03's primary log: 32 model layers, 24 trainable/adapted layers. The event has no fold field, so no fold number is inferred. Worker PID `603688` remains active on GPU1, and Qwen8B watcher PID `905369` remains queued behind it. GPU1 had 15,008 MiB used / 17,092 MiB free; `MemAvailable=216,563,000 kB`. Continue the registered queue; no Kaggle push or submission.
+
+## 14:50 JST — Mistral03 fold4 Stage 1 checkpoint
+
+The scheduled poll found a new Mistral03 primary event timestamped 14:46 JST: fold4 Stage 1 epoch 1 completed (45,000 examples, mean loss `1.591847`, peak allocated VRAM 14,368 MiB, `stop_requested=false`). Worker PID `603688` remains active on GPU1, Qwen8B watcher PID `905369` remains queued, and GPU0 remains idle. GPU1 had 15,008 MiB used / 17,092 MiB free; `MemAvailable=210,263,940 kB`. Continue the existing queue through the remaining fold stages; no Kaggle push or submission.
+
+## 15:20 JST — Mistral03 fold4 Stage 2 checkpoint
+
+The scheduled poll found a new Mistral03 primary event timestamped 15:04 JST: fold4 Stage 2 epoch 1 completed (2,160 examples, mean loss `1.286953`, peak allocated VRAM 14,368 MiB, `stop_requested=false`). Worker PID `603688` remains active on GPU1; Qwen8B watcher PID `905369` remains queued behind it. GPU1 had 15,008 MiB used / 17,092 MiB free; `MemAvailable=210,185,956 kB`. Continue through the remaining OOF/final status before Qwen8B; no Kaggle push or submission.
+
+## 15:50 JST — Mistral03 primary fold4 complete; confirmation error
+
+The scheduled Host142 poll found Mistral03 primary `fold_complete` for fold4 (timestamp 15:23 JST, balanced accuracy `0.598787`). Worker PID `603688` and Mistral watcher PID `3743539` are no longer present. GPU1 is released (172 MiB used, 31,929 MiB free); GPU0 is idle. Host `MemAvailable` is 215,845,024 kB. The latest `confirmation-run.log` line is `RuntimeError: Pilot evidence is missing, failing, or belongs to another config/GPU`; confirmation did not pass. Qwen8B baseline watcher PID `905369` remains alive, but no Qwen8B worker was visible in this poll. Next, verify the watcher has advanced automatically and inspect the Mistral primary analysis summary before deciding any retry. Do not restart Mistral or duplicate Qwen8B. No Kaggle push or submission.
+
+## 15:53 JST — Qwen8B baseline pilot started automatically
+
+An immediate read-only follow-up after the Mistral watcher exit confirmed that the registered Qwen8B watcher automatically advanced to its pilot. The Qwen8B pilot worker (PID `1413111`, under `flock` PID `1413110`) is running with the existing config on GPU1; GPU1 had 5,422 MiB used / 26,678 MiB free and `MemAvailable=214,198,420 kB`. GPU0 remained idle. Mistral primary analysis summary reports `adopt`; its confirmation attempt remains blocked on the pilot-evidence/config/GPU validation error above. Preserve the Qwen8B pilot/final-fit chain as the baseline priority and defer any Mistral confirmation retry until the baseline final fit is complete. Do not launch a duplicate job. The pilot must pass its runtime/resource gate before final fit; no Kaggle push or submission.
+
+### Current resume point
+
+Keep the Qwen8B watcher PID `905369` and its existing pilot/final-fit chain intact. Next scheduled poll: 16:20 JST, one lightweight strict-SSH command for worker/watcher status, recent logs, GPU, and RAM (redact hashes in output). If the pilot passes, allow the watcher to start the all-train final fit; after its bundle is complete, verify the manifest with `sha256sum -c SHA256SUMS`, stage both adopted Qwen assets, then continue the same-composition baseline Notebook runtime gate. Do not retry Mistral confirmation or change the baseline blend before that priority chain completes. No Kaggle push or submission has occurred.
+
+## 16:20 JST — Qwen8B pilot passed; final fit started
+
+The scheduled Host142 poll found the existing Qwen8B watcher had passed its pilot and automatically launched all-train final fit. Pilot completed at 15:53:49 JST with optimizer step time 1.643 seconds, measured peak VRAM 15,332 MiB, and `pass_reserve=true`; host memory availability at pilot completion was 203.56 GiB. Final-fit worker PID `1414477` (under `flock` PID `1414475`) is active on GPU1. At 16:21 JST GPU1 had 15,828 MiB used / 16,272 MiB free; GPU0 remained idle; `MemAvailable=210,287,400 kB`. Keep the watcher/worker intact and wait for its final bundle and checksum manifest; no duplicate launch. Mistral primary remains adopted; defer its failed confirmation attempt until after baseline final fit. No Kaggle push or submission.
+
+### Current resume point
+
+At the next 30-minute poll, inspect the Qwen8B final-fit process and latest relevant log/status lines, GPU/RAM. If it exits successfully, verify the bundle's manifest with `sha256sum -c SHA256SUMS` and exact file-set coverage, then run the existing private-asset helper. After both Qwen bundles are staged and verified, continue the same-composition Notebook runtime gate. Keep Mistral confirmation retry deferred; no composition changes or Kaggle push/submission.
