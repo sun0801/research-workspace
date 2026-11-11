@@ -9,10 +9,11 @@
 | 2026-11-07 | 研究室テンプレートの枠と文字サイズをそのまま使う版（[2026-11-07-journal-club-sample-lab-template.pptx](2026-11-07-journal-club-sample-lab-template.pptx)、47枚）を別名で作った。末尾の「テンプレート準拠版」を参照 |
 | 2026-11-11 | テンプレート準拠版の4本すべてに「実験設定」スライドを足した（同じファイル名で更新、50枚）。末尾の「実験設定スライドの追加」を参照 |
 | 2026-11-11 | 出典の書き方を研究室の形に直し、配置を見直した（同じファイル名で更新、50枚）。末尾の「出典の書き方の変更」を参照 |
+| 2026-11-12 | 旧版（`2026-11-06-journal-club-sample.pptx` / `.pdf`）を削除した。最新版はテンプレート準拠版だけになった |
 
 ## 対象
 
-- スライド: [2026-11-06-journal-club-sample.pptx](2026-11-06-journal-club-sample.pptx)（PDF: [2026-11-06-journal-club-sample.pdf](2026-11-06-journal-club-sample.pdf)）
+- スライド: `2026-11-06-journal-club-sample.pptx`（PDF も同名）。2026-11-12 に削除した（最新版はテンプレート準拠版 [2026-11-07-journal-club-sample-lab-template.pptx](2026-11-07-journal-club-sample-lab-template.pptx)。旧版の PDF は Git の履歴に残っている）
   - 研究室テンプレート（`references/journal-club/mine/20260709_Mambaを用いた物体追跡.pptx` のマスター）を流用して作成した。
   - 全45枚。内訳は本編36枚（1〜36枚目）と補足9枚（37〜45枚目）。30分発表で本編30〜40枚という条件を満たす。
   - 本編と、補足のうち説明のあるスライドのノートに、読み上げ原稿の下書きを入れてある。

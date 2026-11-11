@@ -1,6 +1,7 @@
 # 英論文紹介スライド レビュー（2026-11-07）
 
-- 対象: [2026-11-06-journal-club-sample.pdf](2026-11-06-journal-club-sample.pdf)（本編39枚＋補足6枚）
+- 対象: 旧版 `2026-11-06-journal-club-sample.pdf`（本編39枚＋補足6枚）。2026-11-12に削除済みで、PDFはGitの履歴に残っている。
+- 最新版: [2026-11-07-journal-club-sample-lab-template.pptx](2026-11-07-journal-club-sample-lab-template.pptx)。このレビューは旧版に対する記録。
 - 照合: `references/journal-club/papers/` の原典4本。該当箇所を pdftotext で抽出し、本文・表と突き合わせた。
 - 位置づけ: AI（Claude）によるレビュー。直すかどうかは発表者が判断する。
 
