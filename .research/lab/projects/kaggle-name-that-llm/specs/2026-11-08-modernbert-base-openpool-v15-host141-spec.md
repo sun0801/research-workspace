@@ -1,9 +1,9 @@
 ---
 project: kaggle-name-that-llm
 status: approved-under-active-goal
-execution_status: pilot-passed-primary-running
+execution_status: primary-adopt-vs-cpu; equal-weight-blend-addition-rejected
 created: 2026-11-08
-last_updated: 2026-11-08
+last_updated: 2026-11-12
 tags: [spec, experiment, gpu, modernbert, kaggle]
 ---
 
