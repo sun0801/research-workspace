@@ -8,6 +8,8 @@ tags: [external-data, license, public-notebook, candidate-screen]
 
 # 公開response corpusとNotebookの候補監査
 
+開始結論: (b) 試さない
+
 ## 調査範囲と取得情報
 
 2026-11-09 04:34 JSTに公式Kaggle MCPから、`olegzholobov/name-that-llm-response-corpus` version 1と関連Discussion/Notebookを確認した。Datasetは2026-10-15公開、397,046,759 bytes、Kaggle上のlicense表示は`Other (specified in description)`。Dataset descriptionによると全体135,171 canonical responses、短文viewは40–250 wordsの24,015 responses / 13,642 wide rows、18モデルすべてのresponseを持つ完全なuser-prompt groupが1,902ある。Dataset作者はtrain 2,699回答とのexact/正規化重複を検出しなかったと記載するが、paraphraseの全数否定ではない。
@@ -25,3 +27,5 @@ raw response/parquetは取得せず、READMEと`source_catalog.csv`だけを一�
 このresponse corpusは現時点でGPU候補に登録しない。理由は、(1) Dataset全体に一律適用できる利用許諾を確認できない、(2) source単位でもoutput/provider termsが未確認の記録が多い、(3) known-license subsetを使ったという投稿者から性能悪化の報告があり、(4) CVの実測値と転移条件を独立確認できていないため。外部コーパスを試す場合は、後日、出力利用許諾まで確認したsourceだけでsubset件数・各クラス分布・重複/近似prompt除外・本文書式を監査し、実際のbest ensembleに対するnested prompt-grouped評価specを作ってから判断する。
 
 cosmorinの`.636`再現手法は、Qwen/DeBERTa系とSVCを含む現行候補列と重複が多く、公開top`.752`にも届かない。新たな複製実験は追加せず、Host141の候補11/12/13とHost142の登録済みqueueを継続する。今回、実験コード・既存job・watcher・Kaggle objectは変更せず、GPUも使っていない。Kaggle `search_notebooks`はgeneric errorを3回返し、ローカル公式CLIのNotebook一覧はAuthentication requiredで取得できなかった。既知slugのsource確認は成功したが、Notebook一覧を網羅したとは扱わない。CLIの資格情報は参照・変更していない。
+
+最終結論: (b) 試さない — response corpus全体の利用許諾が不明で、source provenance・性能転移も確認できず、公開手法も現行best/leaderを超える再現可能な根拠がない。

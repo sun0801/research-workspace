@@ -8,6 +8,8 @@ tags: [public-notebook, qwen3-embedding, ensemble, provenance]
 
 # Qwen3-Embedding公開blend Notebookの確認
 
+開始結論: (b) 試さない
+
 ## 出典と取得範囲
 
 - URL: https://www.kaggle.com/code/lightningv08/0-681-qwen3-embedding-lora-qwen3-8-27b
@@ -62,3 +64,5 @@ The visible source describes five prompt-fold Qwen3-Embedding-8B classifiers acr
 ## 2026-11-10 01:11 JST — related parameterization discussion
 
 Kaggle Discussion [757125](https://www.kaggle.com/competitions/name-that-llm/discussion/757125), posted Nov 9 at 11:09 JST by James Bedichek, says the author's best accuracy was `.64–.65` using a frozen Qwen3.8-27B with mean pooling from four probe layers and a linear head. The author reports that top-k logits and token-level expert routes did not beat that setup and mentions calibration difficulty. This is self-reported only: no OOF rows, split protocol, code, selected checkpoint, or score artifact is supplied. The broad frozen multi-depth representation idea is related to candidate08, but this post does not validate its score or provide an independently reproducible candidate; no queue/config/run change follows.
+
+最終結論: (b) 試さない — `.681`/`.595` claims are unverified, the large composite overlaps registered candidate08, and neither provides evidence to exceed the current public leader.

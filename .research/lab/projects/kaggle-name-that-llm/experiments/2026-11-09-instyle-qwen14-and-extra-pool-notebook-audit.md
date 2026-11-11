@@ -8,6 +8,8 @@ tags: [public-notebook, instyle, qwen3, data-provenance, prompt-grouped]
 
 # InStyle Qwen3-14B と追加データ量の公開Notebook監査
 
+開始結論: (b) 試さない
+
 ## 取得範囲
 
 - 取得: 2026-11-09 09:23–09:25 JST、公式Kaggle MCPのName That LLM Notebook一覧とNotebook詳細。
@@ -45,3 +47,5 @@ InStyle prompt-panel学習は候補仮説として保留する。試す場合は
 - [How Much Does Extra Data Buy?](https://www.kaggle.com/code/sameershaikh27/name-that-llm-how-much-does-extra-data-buy)
 - [NTL v673 A25](https://www.kaggle.com/code/bgunshui/ntl-v673-a25)
 - [Name That LLM Public Leaderboard](https://www.kaggle.com/competitions/name-that-llm/leaderboard)
+
+最終結論: (b) 試さない — 各sourceはscore/version/OOFが検証できず、InStyle smokeはprompt-overlap・provenance・nested confirmationに未解決点があり、現行bestを超える根拠がない。

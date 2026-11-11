@@ -1,5 +1,7 @@
 # xiangqizhang/ntl-0681-frontier source audit
 
+開始結論: (c) 保留 — `.681`は版に紐づくscoreとして未検証。基準blendのCV-LB対応を確認後、preview経路を使わないprompt-grouped OOFでembedding branchの補完性を測る証拠が必要。
+
 - 確認日時: 2026-11-10 00:12 JST
 - URL: https://www.kaggle.com/code/xiangqizhang/ntl-0681-frontier
 - version: 1 / public / GPU enabled / Internet disabled
@@ -14,4 +16,6 @@
 
 ## 判断
 
-`.681`は未検証の公開主張として扱う。3件previewの仕組みは通常hidden入力の評価に使えず、scoreやOOFの根拠にもならない。手法の1パラメータ変更は調査候補として残すが、現行のGPU割当や登録済み実験キューは変更しない。Kaggle上の作成・更新・提出は行っていない。
+`.681`は未検証の公開主張として扱う。3件previewの仕組みは通常hidden入力の評価に使えず、scoreやOOFの根拠にもならない。現行のGPU割当や登録済み実験キューは変更しない。Kaggle上の作成・更新・提出は行っていない。
+
+最終結論: (c) 保留 — 必要な証拠は、previewを使わないprompt-grouped OOF、同一splitの採用blend比較、該当版のscore source確認。

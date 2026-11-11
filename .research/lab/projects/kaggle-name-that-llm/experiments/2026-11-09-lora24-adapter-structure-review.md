@@ -1,5 +1,6 @@
 ---
 date: 2026-11-09
+last_updated: 2026-11-10
 project: kaggle-name-that-llm
 type: source-review
 status: reviewed
@@ -7,6 +8,8 @@ tags: [public-notebook, lora, adapter-analysis, ensemble-diversity]
 ---
 
 # LoRA-24公開adapterの構造分析Notebook確認
+
+開始結論: (b) 試さない — Notebookはweight geometry分析で、prompt-grouped OOFや性能改善の根拠がなく、公開adapter datasetのlicenseも未確認。
 
 ## 出典と取得範囲
 
@@ -33,3 +36,5 @@ tags: [public-notebook, lora, adapter-analysis, ensemble-diversity]
 - [元Notebook](https://www.kaggle.com/code/romakulichkin/how-lora-24-style-classifiers-work)
 - [adapter dataset](https://www.kaggle.com/datasets/dhruvtibarewal/nlm-l24-adapters-v5)
 - [プロジェクトREADME](../README.md)
+
+最終結論: (b) 試さない — OOF/LB改善の根拠がなく、license未確認のadapter weightsを再利用できないため、このNotebookを候補として試さない。

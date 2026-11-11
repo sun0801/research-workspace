@@ -8,6 +8,8 @@ tags: [public-notebook, ensemble, ablation, version-provenance]
 
 # 公開ensembleのアブレーション主張とversion provenance
 
+開始結論: (b) 試さない
+
 ## 出典と取得範囲
 
 - URL: https://www.kaggle.com/competitions/name-that-llm/discussion/756088
@@ -38,3 +40,5 @@ version上の注意として、投稿者は元の`.664` Notebookの採点version
 ## 関連ファイル
 
 - [プロジェクトREADME](../README.md)
+
+最終結論: (b) 試さない — 投稿者報告の最高値`.663`は確認済み公開首位`.755`を下回り、prompt-grouped OOF/独立再現と採点versionの整合も未確認。

@@ -1,5 +1,6 @@
 ---
 date: 2026-11-09
+last_updated: 2026-11-10
 project: kaggle-name-that-llm
 type: source-review
 status: reviewed
@@ -7,6 +8,8 @@ tags: [public-notebook, stylometry, validation, submission-format]
 ---
 
 # Yule's K stylometry Notebookの実装・評価手順確認
+
+開始結論: (b) 試さない — prompt-grouped OOFがなく、fold外での前処理fitと公式submission schema不一致があり、Notebookの性能根拠もない。
 
 ## 出典と取得範囲
 
@@ -34,3 +37,5 @@ Public score/OOFとも証拠がなく、prompt-grouped評価も実装されず�
 - [元Notebook](https://www.kaggle.com/code/duongynhi/name-that-llm-v6-hierarchical-prompt-cluster-apex)
 - [公式Code Requirements](https://www.kaggle.com/competitions/name-that-llm/overview/code-requirements)
 - [プロジェクトREADME](../README.md)
+
+最終結論: (b) 試さない — fold-localなprompt-grouped評価、検証可能なscore、公式submission schemaのいずれも満たさないため、このNotebookを候補として試さない。

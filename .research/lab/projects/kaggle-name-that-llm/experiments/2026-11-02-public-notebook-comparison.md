@@ -1,11 +1,14 @@
 ---
 date: 2026-11-02
+last_updated: 2026-11-10
 project: kaggle-name-that-llm
 type: source-review
 status: reviewed-not-executed
 ---
 
 # 公開Notebook 3本の精読比較
+
+開始結論: (c) 保留 — これはStarter・Two-stage LoRA・nlm-v27を並べた初期surveyで、個別候補の現在の試行判断には使わない。判断に必要な証拠は、特定version/sourceに紐づくprompt-grouped OOF、採用SVCとの同一split比較、依存物のlicense/provenance、提出runtime適合。
 
 2026-11-02 JSTに取得したコードを実行せずに精読。自分たちの学習・推論・スコア再現は未実施。以下のセル番号は0始まり。
 
@@ -135,3 +138,5 @@ StarterのCPU基準はこの環境で検討しやすい。32GB GPUを使う8Bの
 4. centered twin・Gaussian・Sinkhorn・ATLASは、それぞれ単独の寄与とテスト集合の仮定を調べる候補。
 
 以上は調査からの提案で、承認済み実験specではない。実装開始前に、既存のImplementation Gateでspec・範囲・検証方法・承認を確認する。コンペ参加/ルール同意、GPU利用条件、予算・目標も未確認。
+
+最終結論: (c) 保留 — 各Notebookの手法は独立したsource/versionと上記のOOF・provenance・runtime証拠で個別判断する。後続のsource audit/specを優先し、このsurvey単独ではGPU queueへ追加しない。

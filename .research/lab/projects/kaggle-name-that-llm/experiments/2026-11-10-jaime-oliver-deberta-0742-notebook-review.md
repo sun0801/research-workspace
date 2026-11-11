@@ -7,6 +7,8 @@ tags: [deberta-v3-large, ensemble, public-score, prompt-grouped-validation]
 
 # Jaime Oliver 0.742+ DeBERTa ensemble notebook review
 
+開始結論: (c) 保留 — 基準blendのCV-LB対応を確認し、同一version/sourceでprompt-grouped foldごとのOOFと、依存DeBERTa checkpointの学習分割・provenanceを照合するまで再現には進まない。
+
 ## Source and retrieval
 
 - Notebook: [NTL v1 baseline](https://www.kaggle.com/code/muhammadasjad2008/ntl-v1-baseline), author metadata `Jaime Oliver`, current version 32.
@@ -28,4 +30,6 @@ The notebook also cites [Discussion 753177](https://www.kaggle.com/competitions/
 
 ## Decision
 
-Do not adopt the public checkpoint or copied ensemble OOF as validation evidence. The method is too composite to attribute gains, the provided DeBERTa asset has seen the competition training set, and the OOF score claim is unresolved. Record DeBERTa-v3-Large as a later replication lead: if selected after the registered Spectral confirmation, train/re-evaluate it fold-by-fold under the approved prompt-grouped protocol and compare against the current Qwen+SVC blend. Do not begin it while the registered Host141 experiments are active and Host142 remains unauthenticated. No Kaggle object or submission was created.
+Do not adopt the public checkpoint or copied ensemble OOF as validation evidence. The method is too composite to attribute gains, the provided DeBERTa asset has seen the competition training set, and the OOF score claim is unresolved. Record DeBERTa-v3-Large as a later replication lead only after baseline CV-LB correspondence: rerun fold-by-fold under the approved prompt-grouped protocol, establish the dependency checkpoint's training split/provenance, then compare against the adopted blend. No Kaggle object or submission was created.
+
+最終結論: (c) 保留 — 必要な証拠は、Leakageを除いたprompt-grouped OOFの再現、依存checkpointの学習分割/provenance照合、採用blendとの比較。

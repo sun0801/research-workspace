@@ -1,11 +1,14 @@
 ---
 date: 2026-11-09
+last_updated: 2026-11-10
 project: kaggle-name-that-llm
 status: public-lead-investigated-not-reproduced
 tags: [public-source, model, qwen, candidate-screen]
 ---
 
 # Qwen3.5-9B single-model public lead
+
+開始結論: (a) specにして試す — 主張自体は未検証だが、独立OOF候補としてprompt-grouped評価と資源gateを定めた専用specを登録済み。基準blend Notebookの提出gateを先行し、その後に承認済みHost142 GPU1 queue順で試す。
 
 ## Lead
 
@@ -65,3 +68,9 @@ The lead is worth a later independent local OOF trial because the reported singl
 - With `/tmp/qwen35-preflight-env` (which has no FLA/Triton dispatch), the new `load_text_backbone` loaded 7,936,684,544 parameters from the pinned official text-only checkpoint mapping and produced finite `[1,4,4096]` hidden states on CPU. MemAvailable remained 201.58 to 201.35 GiB. The inherited preflight environment emitted its already known NumPy ABI warnings, but the load/forward completed with exit 0.
 - A separate CPU forward in `/tmp/qwen35-clean-env`, which includes FLA, attempted the FLA/Triton CUDA dispatch with CPU tensors and failed with `Pointer argument ... cannot be accessed from Triton (cpu tensor?)`. This was a CPU-forward incompatibility of the optional kernel path; no GPU training or optimizer step started. The actual queued pilot must validate forward/backward/AdamW8bit on the target GPU.
 - Froze the classifier head as final-token `LayerNorm + Dropout(0.1) + Linear`, and config validation now checks this choice and weight decay. Static compile, isolated-runtime import, and config validation passed after the change. Candidate15 remains behind candidate14.
+
+## 2026-11-10 operating disposition
+
+The public lead remains an (a) candidate because its independent prompt-grouped trial is already specified. The newly prioritized baseline blend Notebook submission gate comes first; candidate15 remains queued behind it and candidate14. This priority update does not promote the anonymous `.649` claim to verified evidence.
+
+最終結論: (a) specにして試す — [Qwen3.5-9B candidate spec](../specs/2026-11-09-qwen35-9b-openpool-v15-spec.md)を登録済み。公開`.649` claimの再現ではなく固定prompt-grouped OOFとGPU pilotで独立検証する。基準blendのNotebook提出gateを先行し、model/provenanceとHost142 GPU1のqueue/resource gateが通ってから実行する。

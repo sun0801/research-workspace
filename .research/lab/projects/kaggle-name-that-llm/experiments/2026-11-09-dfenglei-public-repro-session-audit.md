@@ -1,5 +1,6 @@
 ---
 date: 2026-11-09
+last_updated: 2026-11-10
 project: kaggle-name-that-llm
 type: source-review
 status: reviewed
@@ -7,6 +8,8 @@ tags: [public-notebook, session-status, reproduction]
 ---
 
 # dfenglei public reproduction Notebook session check
+
+開始結論: (b) 試さない — 完了sessionとsubmission-shaped outputは確認できたが、版に紐づくscore・OOF評価・表示スコアとの対応が確認できない。
 
 ## Scope
 
@@ -19,3 +22,5 @@ The queried sessions have completed and have submission-shaped output files. The
 ## Decision
 
 Do not change the registered GPU queue or treat these sessions as validation evidence. Keep the titles' scores as author claims pending a version-linked Kaggle result and a documented prompt-grouped OOF protocol. No Kaggle Notebook was created or edited, and no submission was made by us.
+
+最終結論: (b) 試さない — version-linked scoreとprompt-grouped OOFがなく、公開首位を超える根拠を確認できない。

@@ -1,5 +1,6 @@
 ---
 date: 2026-11-09
+last_updated: 2026-11-10
 project: kaggle-name-that-llm
 type: source-review
 status: reviewed
@@ -7,6 +8,8 @@ tags: [public-notebook, svm, ensemble, provenance]
 ---
 
 # Duong Dual-SVC Apex Notebook audit
+
+開始結論: (b) 試さない — reported scoreは公開首位未満で、提出版と結び付くprompt-grouped OOF・score・外部source provenanceを確認できない。
 
 ## Source and verification
 
@@ -22,3 +25,5 @@ Metadata lists 19 dataset sources, 8 Notebook sources, and 8 model sources. The 
 ## Decision
 
 Treat this as a static method lead only. Do not reuse its external weights/outputs or add it to the GPU queue. It has no verified result above the public leader and insufficient provenance for a reproducible candidate. Keep the registered candidate order unchanged. No Kaggle object was created or edited and no submission was made by us.
+
+最終結論: (b) 試さない — 公開首位を超える検証可能な結果がなく、外部入力のprovenanceも不足している。

@@ -6,6 +6,8 @@ type: source-review
 
 # Areeb Aliの0.673表記Notebook v2監査
 
+開始結論: (b) 試さない
+
 ## 出典と取得範囲
 
 - URL: https://www.kaggle.com/code/areebbb/0-673-i-m-better
@@ -51,3 +53,5 @@ NotebookのKaggle表示タイトルは「0.673 | I'M BETTER !」だが、version
 - [style residual primary spec](../specs/2026-11-09-qwen-blend-sibling-style-residual-spec.md)
 - [過去のfamily-local residual試験](../specs/2026-11-07-prompt-family-style-residual-spec.md)
 - [Spectral mean-field primary](2026-11-09-spectral-cluster-meanfield-primary.md)
+
+最終結論: (b) 試さない — `.673`は版に紐づくscoreとして未検証で、大規模compositeの外部data/provenanceとcluster補正が未確認。唯一screen済みのfamily residualも現行blendで採用gateを通らなかった。

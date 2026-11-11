@@ -1,10 +1,13 @@
 ---
 date: 2026-11-10
+last_updated: 2026-11-11
 project: kaggle-name-that-llm
 type: source-review
 ---
 
 # Hande Akin: Qwen3 embeddings + LR + Sinkhorn audit
+
+開始結論: (b) 試さない
 
 ## 出典と取得範囲
 
@@ -37,6 +40,8 @@ Kaggle公式Evaluationは、testのモデル別件数が不均等で、public/pr
 ## 今回への候補と未決事項
 
 Qwen3 embedding層の特徴量とprompt中心化は将来の候補として調査可能。ただし、現行test不均等性を模したsimulationとfold内nested選択を用意しない限り、Sinkhornを採用判断・提出へ使わない。このNotebookは現在のGPUキューを変更せず、作成・提出もしない。
+
+最終結論: (b) 試さない — equal-18仮定が不均等test分布と不整合で、OOF選択もnested/independentでなく、採用bestを超える検証可能なscoreがない。
 
 ## 関連ファイル
 
