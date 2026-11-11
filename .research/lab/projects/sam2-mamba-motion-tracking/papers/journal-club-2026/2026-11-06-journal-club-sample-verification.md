@@ -424,3 +424,116 @@
 - 4・10・19・30枚目を、上から「論文名 → 著者 → 会議名 → 軽い説明（青字）」の順にした。説明の前に少し間を空けた。
 - 説明がロードマップに近づかないよう、サブタイトルの枠を 0.3in 上げ、ロードマップを少し下げた。
 - 全50枚が縮小なしで収まることと、validate.py の PASSED を確認した。
+
+### ハイパーリンク（2026-11-11）
+
+参考スライドと同じく、引用「[著者+, 会議名年]」の部分に論文ページへのリンクを付けた。論文の扉スライドでは、著者行と会議名にリンクを付けた。表紙の論文一覧も「名前 [著者+, 会議名年]」の形にして、リンクを付けた。
+
+- リンクは53か所。PDF にも出力される。
+- URL を集めたのは作成者とは別のサブエージェント。各ページを開いて、論文タイトルが一致することを確かめた。開けなかったものは次の方法で確かめた。
+  - 出版社のページ：doi.org の転送先と Crossref の書誌
+  - OpenReview：公式 API
+- 確認の結果、次の2つの表記を直した。
+  - RRN：arXiv2020 → BMVC2020（DOI 10.5244/c.34.8 で採録先を確認）
+  - Vid4：TPAMI2013 → TPAMI2014（vol.36 no.2 は 2014 年の号）
+- 補足：
+  - LocalVMamba の論文名は「LocalMamba」で、LocalVMamba は論文中のモデル名。
+  - HiM2SAM は PRCV 2025 の論文集（LNCS、2026 年発行）。
+
+| 引用 | URL |
+|---|---|
+| MambaOut [Yu+, CVPR2025] | https://openaccess.thecvf.com/content/CVPR2025/html/Yu_MambaOut_Do_We_Really_Need_Mamba_for_Vision_CVPR_2025_paper.html |
+| TV3S [Hesham+, CVPR2025] | https://openaccess.thecvf.com/content/CVPR2025/html/Hesham_Exploiting_Temporal_State_Space_Sharing_for_Video_Semantic_Segmentation_CVPR_2025_paper.html |
+| TS-Mamba [Zhu+, ICLR2026] | https://openreview.net/forum?id=RygnSGcV49 |
+| MaD [Kim+, ICML2026] | https://proceedings.mlr.press/v306/kim26by.html |
+| Mamba [Gu+, COLM2024] | https://openreview.net/forum?id=tEYskw1VY2 |
+| Mamba2 [Dao+, ICML2024] | https://proceedings.mlr.press/v235/dao24a.html |
+| ViT [Dosovitskiy+, ICLR2021] | https://openreview.net/forum?id=YicbFdNTTy |
+| Gated CNN [Dauphin+, ICML2017] | https://proceedings.mlr.press/v70/dauphin17a.html |
+| ImageNet [Deng+, CVPR2009] | https://doi.org/10.1109/CVPR.2009.5206848 |
+| COCO [Lin+, ECCV2014] | https://doi.org/10.1007/978-3-319-10602-1_48 |
+| ADE20K [Zhou+, CVPR2017] | https://openaccess.thecvf.com/content_cvpr_2017/html/Zhou_Scene_Parsing_Through_CVPR_2017_paper.html |
+| Mask R-CNN [He+, ICCV2017] | https://openaccess.thecvf.com/content_iccv_2017/html/He_Mask_R-CNN_ICCV_2017_paper.html |
+| UperNet [Xiao+, ECCV2018] | https://openaccess.thecvf.com/content_ECCV_2018/html/Tete_Xiao_Unified_Perceptual_Parsing_ECCV_2018_paper.html |
+| DeiT [Touvron+, ICML2021] | https://proceedings.mlr.press/v139/touvron21a.html |
+| VMamba [Liu+, NeurIPS2024] | https://proceedings.neurips.cc/paper_files/paper/2024/hash/baa2da9ae4bfed26520bb61d259a3653-Abstract.html |
+| LocalVMamba [Huang+, arXiv2024] | https://arxiv.org/abs/2403.09338 |
+| VSPW [Miao+, CVPR2021] | https://openaccess.thecvf.com/content/CVPR2021/html/Miao_VSPW_A_Large-scale_Dataset_for_Video_Scene_Parsing_in_the_CVPR_2021_paper.html |
+| Cityscapes [Cordts+, CVPR2016] | https://openaccess.thecvf.com/content_cvpr_2016/html/Cordts_The_Cityscapes_Dataset_CVPR_2016_paper.html |
+| SegFormer [Xie+, NeurIPS2021] | https://proceedings.neurips.cc/paper_files/paper/2021/hash/64f1f27bf1b4ec22924fd0acb550c235-Abstract.html |
+| Swin [Liu+, ICCV2021] | https://openaccess.thecvf.com/content/ICCV2021/html/Liu_Swin_Transformer_Hierarchical_Vision_Transformer_Using_Shifted_Windows_ICCV_2021_paper.html |
+| CFFM [Sun+, CVPR2022] | https://openaccess.thecvf.com/content/CVPR2022/html/Sun_Coarse-To-Fine_Feature_Mining_for_Video_Semantic_Segmentation_CVPR_2022_paper.html |
+| MRCFA [Sun+, ECCV2022] | https://www.ecva.net/papers/eccv_2022/papers_ECCV/html/1412_ECCV_2022_paper.php |
+| FastFlowNet [Kong+, ICRA2021] | https://doi.org/10.1109/ICRA48506.2021.9560800 |
+| TTVSR [Liu+, CVPR2022] | https://openaccess.thecvf.com/content/CVPR2022/html/Liu_Learning_Trajectory-Aware_Transformer_for_Video_Super-Resolution_CVPR_2022_paper.html |
+| REDS [Nah+, CVPRW2019] | https://openaccess.thecvf.com/content_CVPRW_2019/html/NTIRE/Nah_NTIRE_2019_Challenge_on_Video_Deblurring_and_Super-Resolution_Dataset_and_CVPRW_2019_paper.html |
+| Vimeo-90K [Xue+, IJCV2019] | https://doi.org/10.1007/s11263-018-01144-2 |
+| DAP [Fuoli+, WACV2023] | https://openaccess.thecvf.com/content/WACV2023/html/Fuoli_Fast_Online_Video_Super-Resolution_With_Deformable_Attention_Pyramid_WACV_2023_paper.html |
+| FDAN [Yang+, ICIP2023] | https://doi.org/10.1109/ICIP49359.2023.10222815 |
+| KSNet [Jin+, ACMMM2023] | https://dl.acm.org/doi/10.1145/3581783.3611908 |
+| TMP [Zhang+, TIP2024] | https://doi.org/10.1109/TIP.2024.3453048 |
+| SAM 2 [Ravi+, ICLR2025] | https://openreview.net/forum?id=Ha6RTeWMd0 |
+| HiM2SAM [Chen+, PRCV2025] | https://doi.org/10.1007/978-981-95-5755-4_19 |
+| MOSE [Ding+, ICCV2023] | https://openaccess.thecvf.com/content/ICCV2023/html/Ding_MOSE_A_New_Dataset_for_Video_Object_Segmentation_in_Complex_ICCV_2023_paper.html |
+| YouTube-VOS [Xu+, ECCV2018] | https://openaccess.thecvf.com/content_ECCV_2018/html/Ning_Xu_YouTube-VOS_Sequence-to-Sequence_Video_ECCV_2018_paper.html |
+| LaSOT [Fan+, CVPR2019] | https://openaccess.thecvf.com/content_CVPR_2019/html/Fan_LaSOT_A_High-Quality_Benchmark_for_Large-Scale_Single_Object_Tracking_CVPR_2019_paper.html |
+| LaSOText [Fan+, IJCV2021] | https://doi.org/10.1007/s11263-020-01387-y |
+| GOT-10k [Huang+, TPAMI2021] | https://doi.org/10.1109/TPAMI.2019.2957464 |
+| LVOS [Hong+, ICCV2023] | https://openaccess.thecvf.com/content/ICCV2023/html/Hong_LVOS_A_Benchmark_for_Long-term_Video_Object_Segmentation_ICCV_2023_paper.html |
+| SAMURAI [Yang+, arXiv2024] | https://arxiv.org/abs/2411.11922 |
+| DAM4SAM [Videnovic+, CVPR2025] | https://openaccess.thecvf.com/content/CVPR2025/html/Videnovic_A_Distractor-Aware_Memory_for_Visual_Object_Tracking_with_SAM2_CVPR_2025_paper.html |
+| RRN [Isobe+, BMVC2020] | https://doi.org/10.5244/c.34.8 |
+| Vid4 [Liu+, TPAMI2014] | https://doi.org/10.1109/TPAMI.2013.127 |
+
+### 図の切り出しと TSMA スライドの追加（2026-11-11）
+
+方針：論文の図はそのまま全部載せず、説明に使う部分だけを切り出す。説明に使わない部分のうち、論文の中心の機構で発表の流れに合うものは、説明スライドを足す。
+
+- 21枚目（TS-Mamba 全体図）：上段の処理の流れだけを切り出した（`ts_arch_top.png`）。
+- 25枚目（新規）「Step 4：shift で切れた隣接を補う」：論文タイトルの "Shifted" にあたる TSMA の説明。
+  - 図：Fig. 2 の左下（`arch-tsma.png`）。IntraWCB・InterWCB の2つの枝を赤枠で示した。
+  - 図：Fig. 3(b)（`ts_hilbert_b.png`）
+  - 数値：δ = 18（Fig. 3(b)）、両方外すと 30.52 dB・2.4M（Table 2 v1.5）、TS-Mamba は 30.73 dB。いずれも原典で確認した。
+  - 補足にあった Hilbert scan のスライドは、本編と重なるので消した。
+- 35枚目（MaD 全体図）：上2段だけを切り出した（`mad_fig1_upper.png`）。
+- 36・37枚目（予測・信頼度）：全体図を薄くして使い回すのをやめた。下段の左（予測）と右（信頼度による判定）を、それぞれ切り出して大きく載せた（`mad_fig1_pred.png`、`mad_fig1_gate.png`）。
+- 22・23枚目（Step 1・2）：全体図のうち上段だけの図を使っており、強調する部分以外を薄くしている。図の幅がもともとスライドいっぱいなので、そのままにした。
+- 枚数：全50枚（本編43枚、補足の扉1枚、補足6枚）。ノートは45枚。
+
+### はみ出しの確認方法の変更（2026-11-11）
+
+- これまでの方法は、本文枠の自動縮小がある状態とない状態で画像を比べるものだった。
+- しかし LibreOffice は描画のときに自動縮小を行わないので、この比べ方でははみ出しを見つけられないと分かった。実際、25枚目の初版で文字が枠をはみ出していたのに、2つの画像は一致した。
+- 新しい方法：PDF の文字位置（`pdftotext -bbox`）と pptx の枠の位置を比べ、枠の下端を越えた文字（他の枠の中にあるものは除く）を数える。
+  - わざとはみ出させた版で、検出できることを確かめた。
+- この方法で、今回の版と前回保存した版（11/11 のリンク付きの版）を調べた。どちらも、はみ出しのある枠は 0。これまでの記録にある「縮小なしで収まる」という結果は、この方法でも成り立つ。
+- validate.py：**All validations PASSED**。
+
+### 句読点・図の位置・結果の見出しを参考スライドに合わせる（2026-11-11）
+
+参考スライド5本と自分の過去スライド2本を集計して確かめた。
+
+- 句読点
+  - 参考スライドでは「。」は0回、「、」は1本で2回だけだった。読点は「，」（2〜30回）を使っている。
+  - そこで、スライド上の「、」を「，」に、文中の「。」を「，」にし、文末の「。」は付けないようにした（103か所）。
+  - ノートは読み上げ原稿なので、普通の句読点のままにした。
+- 図の位置
+  - 参考スライドでは、図と文章の配置は「文章が上・図が下」か「左右に並べる」がほとんどだった。「図が上」は少ない（自分の 20251031 を除くと各本0〜5枚）。
+  - 図が上・文章が下だった8枚（12, 17, 21, 22, 23, 32, 35, 39枚目）を、文章が上・図が下に入れ替えた。
+- 結果スライドの見出し
+  - 参考スライドの見出しは「定量的評価（…）」「定量的結果：…」「定性的結果：…」の形だった。
+  - これに合わせて、次のように変えた。
+    - 結果4枚 → 「定量的評価：…」
+    - TS-Mamba の失敗例 → 「定性的評価：軌跡が崩れる場面」
+    - TV3S の過去フレーム数の実験 → 「Ablation：持ち越す過去の長さ」（他の論文の Ablation とそろえた）
+- 確認：はみ出しのある枠は0（文字位置での確認）。validate.py：**All validations PASSED**。
+
+### 見出しのない1段下げの箇条書きをなくす（2026-11-11）
+
+- 8枚（12, 17, 21, 22, 23, 32, 35, 39枚目）で、本文が1段下げの箇条書き（•、24pt）だけになっていた。■ の見出しがないため、1段下がって見えていた。
+  - 原因：本文を 24pt にするために、上の階層（■、28pt）を使わずに書いていた。意図したものではない。
+- 直し方
+  - 全体図の説明（12・21・35枚目）：「① … → ② … → ③ …」の1行の見出しにした。
+  - それ以外：■ の見出しと • の補足に組み直した。数値と内容は変えていない。
+  - 文中の「．」も「，」にそろえた。
+- 確認：見出しのない枠は0。はみ出しのある枠は0。validate.py：**All validations PASSED**。
