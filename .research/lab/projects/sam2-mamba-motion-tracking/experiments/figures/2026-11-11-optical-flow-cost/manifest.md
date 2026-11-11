@@ -16,6 +16,7 @@
   5. `$P flow_viz.py --selection data/selected_videos.json --stratum fast --out 01-flow-fast.png`、`--stratum slow --out 02-flow-slow.png`
   6. `CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=0 $P flow_raft.py --selection data/selected_videos.json --updates 12 6 --out data/timing_raft.json`（`CUDA_DEVICE_ORDER` を付けないと cuda:0 が GPU 1 になる）
   7. 同じ環境変数で `$P flow_viz.py --selection data/selected_videos.json --stratum fast --panels raft --out 03-raft-fast.png`、`--stratum slow --out 04-raft-slow.png`
+  8. 同じ環境変数で `$P flow_arrows.py --out 05-flow-moved-object.png`
 - 入力：MOSE train（`/mnt/HDD10TB-2/aburatani/dataset/MOSE-v1-data/MOSE_release/train`）と、SAM2 repo `runs/spatial_mixing/motion/20261104/`（物体ごとの動きの中央値・三分位の区切り）。
 
 ## Figures
@@ -26,3 +27,4 @@
 | 02-flow-slow.png | experiment | 遅い動画3本で同じ比較 | 同上 | 同上 |
 | 03-raft-fast.png | experiment | 速い動画3本で、DIS ultrafast（1024）と RAFT small・large（1024・256、更新12回）を並べる | selected_videos.json、MOSE train、torchvision の RAFT の重み | 組の選び方と色は 01 と同じ |
 | 04-raft-slow.png | experiment | 遅い動画3本で同じ比較 | 同上 | 同上 |
+| 05-flow-moved-object.png | explanatory | MTG説明用。フレーム t の物体を各手法（Farneback・DIS ultrafast・RAFT small、1024）の flow で動かし、次のフレームの本当の位置と重ねる。速い車（24df9789、t=3、物体が画面内に収まる組）とゆっくり動くバス（198021ad、t=11、拡大） | MOSE train、torchvision の RAFT の重み | 1組ずつの例。時間は図に入れず、実験ログと資料の表に載せる。物体の全画素を flow で動かし、9×9 の closing で穴を埋めた |
