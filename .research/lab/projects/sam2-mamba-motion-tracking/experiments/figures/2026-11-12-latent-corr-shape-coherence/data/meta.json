@@ -1,0 +1,21 @@
+{
+ "started": "2026-11-12T16:23:14",
+ "host": "142-X10DAi",
+ "gpu": "NVIDIA RTX A4000",
+ "torch": "2.10.0+cu128",
+ "argv": [
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-12-latent-corr-shape-coherence/compute.py",
+  "--out",
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-12-latent-corr-shape-coherence/data"
+ ],
+ "tau": 0.02,
+ "window": 15,
+ "videos": 125,
+ "pairs_per_video": 12,
+ "cuts": [
+  0.6201862142364104,
+  1.2327169820960704
+ ],
+ "finished": "2026-11-12T16:35:26",
+ "rows": 3185
+}
