@@ -3,7 +3,7 @@ date: 2026-11-12
 project: kaggle-name-that-llm
 status: approved-under-active-goal
 approval_basis: 2026-11-06-gpu-autonomous-first-place-spec
-execution_status: planned
+execution_status: completed-primary-shape-robustness-flag-passed
 tags: [spec, experiment, cpu, mistral, spectral, prompt-grouped]
 ---
 

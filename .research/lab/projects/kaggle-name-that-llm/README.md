@@ -22,9 +22,9 @@ last_updated: 2026-11-12
 - 基準blend v12 ref`58261829`はPublic`.541`で採点成功。CVとの差は約`-.045`で、CV-LB対応はまだ1点のみ。
 - v9 refs`58251076`・`58253257`はhidden rerunで`COMPLETE`だが、Public/Private scoreなし。Kaggleは一般エラーのみ返し、詳細traceは未取得。
 - v9失敗の第一仮説は入力path・`train.csv`/template依存。v12のtest-only入力で成功したため支持されるが、根因確定ではない。[診断ログ](experiments/2026-11-12-baseline-benchmark-push.md)
-- Mistral＋Spectral primary BA`.689791`は有望screenを通過、独立confirmation待ち。実行specはHost142 GPU1固定。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
+- Mistral＋Spectral primary BA`.689791`はshape screen（uniform m=2/3）も通過、独立confirmation待ち。Host142 GPU1の実行gateは未通過。[screen](experiments/2026-11-12-mistral-spectral-small-prompt-shape-screen.md) · [確認spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
 - 公式MITの未調整DeBERTa-v3-largeはHost141 GPU1でprimary OOFを実行中。fold3 epoch1完了。public`.747`主張やfull-train checkpointは不使用。[spec](specs/2026-11-12-deberta-v3-large-official-prompt-grouped-spec.md) · [実験ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
-- Spectral mean-fieldのm=2/3 prompt-shape screenはprimaryで差が負〜0、confirmationは正。小prompt条件への移行安定性は未確認。[screen](experiments/2026-11-12-spectral-meanfield-small-prompt-shape-screen.md)
+- Spectral mean-field単体はprimaryのm=2/3 shapeで不安定だが、固定Mistral追加後はuniform shape flagを通過。[screen](experiments/2026-11-12-spectral-meanfield-small-prompt-shape-screen.md) · [Mistral＋Spectral](experiments/2026-11-12-mistral-spectral-small-prompt-shape-screen.md)
 - 次はHost142の厳格host-key確認・queue解消・current-runner pilotを満たしてからconfirmationを再開する。host/deviceの割当ては変えない。
 - 20:24 JST: Host141 GPU1でDeBERTa primary fold3 epoch1完了・run継続（13,771 MiB使用/2,204 MiB空き、Host RAM Available 113,871 MiB）。GPU2の別プロセス（5,777 MiB/100%）は変更していない。次回pollは20:54 JST。Host142はhost-key未検証で状態不明。[host/候補ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
 - 当方のKaggle Notebook jobおよび提出採点待ちはなし。次の軽量job pollは20:54 JST。
@@ -213,6 +213,7 @@ last_updated: 2026-11-12
 - 2026-11-12: 公開Leaderboard首位の公開NotebookをKaggle CLIで検索。コンペfilter付きuser queryは`Not found`で、再現可能sourceがないため(b)試さないと索引化。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
 - 2026-11-12: private path-only control v2 ref`58259844`はhidden scoring完了、constant-class diagnostic public score`.055`。train/template・path仮説を踏まえてbaseline v12ではモデルとblendを維持し入力依存のみ修正。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
 - 2026-11-12: Mistral固定1/4追加＋凍結Spectralのprimary screenがBA`.689791`でCI・class-retention gateを通過。primary-onlyのため独立confirmationを次段階とし、候補化・提出は未実施。[screen log](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
+- 2026-11-12: Mistral＋Spectralのprimary-only small-prompt shape screenを20 seedsで実施。uniform m=2/3とも平均deltaが正で、positive replicate率は`.80`/`1.00`。shape flagを通過し、独立確認候補として優先度を上げたが、Host142 gateとconfirmation前の採用・提出はなし。[screen](experiments/2026-11-12-mistral-spectral-small-prompt-shape-screen.md)
 - 2026-11-12: primary-only Mistral+Spectral composition向けに、既存のshuffle GroupKFold confirmation split・固定transform・gateを明記した独立確認specを追加。実行はMistral confirmation OOFとHost142 GPU1 gate通過後。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
 - 2026-11-12: Kirill Tymchishin v18 close-pair ruleを固定条件でscreenし、適格pair1組・予測変更なし・BA差0で棄却。公開監査を(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
 - 2026-11-12: “From 0.684 toward top 1%” Discussionを監査し、再現可能な候補手法がないため(b)試さない。監査時点では基準v12のruntime gateと採点提出で確認中だったが、その後15:51 JSTに採点成功（Public`.541`）を確認。[audit](experiments/2026-11-12-top1-validation-discussion-audit.md)
