@@ -44,6 +44,8 @@ last_updated: 2026-11-12
 - [2026-11-12 Host141候補OOF追加screen](experiments/2026-11-12-host141-candidate-addition-screen.md)
 - [2026-11-12 Host142継続poll](experiments/2026-11-12-host-continuation-poll.md)
 - [2026-11-12 baseline benchmark push](experiments/2026-11-12-baseline-benchmark-push.md)
+- (b) 試さない — [top 1% validation Discussion](experiments/2026-11-12-top1-validation-discussion-audit.md)
+- (b) 試さない — [hidden rerun post-processing Discussion](experiments/2026-11-12-hidden-rerun-discussion-audit.md)
 - (c) 保留 — [Areeb Ali 0.684 public Notebook mirror](experiments/2026-11-12-public-0684-notebook-audit.md)
 - (b) 試さない — [The Prompt Is Not the Author v32](experiments/2026-11-12-prompt-is-not-author-audit.md)
 - (b) 試さない — 現leader NguyenThanhNhanのNotebook user/title searchと`.768`/team名のDiscussion検索で、再現可能な手法sourceは見つからず。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
@@ -166,3 +168,4 @@ last_updated: 2026-11-12
 - 2026-11-12: Mistral固定1/4追加＋凍結Spectralのprimary screenがBA`.689791`でCI・class-retention gateを通過。primary-onlyのため独立confirmationを次段階とし、候補化・提出は未実施。[screen log](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
 - 2026-11-12: primary-only Mistral+Spectral composition向けに、既存のshuffle GroupKFold confirmation split・固定transform・gateを明記した独立確認specを追加。実行はMistral confirmation OOFとHost142 GPU1 gate通過後。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
 - 2026-11-12: Kirill Tymchishin v18 close-pair ruleを固定条件でscreenし、適格pair1組・予測変更なし・BA差0で棄却。公開監査を(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
+- 2026-11-12: “From 0.684 toward top 1%” Discussionを監査し、再現可能な候補手法がないため(b)試さない。監査時点では基準v12のruntime gateと採点提出で確認中だったが、その後15:51 JSTに採点成功（Public`.541`）を確認。[audit](experiments/2026-11-12-top1-validation-discussion-audit.md)
