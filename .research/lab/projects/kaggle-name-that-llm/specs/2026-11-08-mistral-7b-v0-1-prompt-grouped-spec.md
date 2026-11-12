@@ -4,7 +4,7 @@ project: kaggle-name-that-llm
 source: autonomous-goal
 status: approved
 approval_basis: active-goal-2026-11-06-gpu-autonomous-first-place-spec
-execution_status: pilot-primary-conditional-confirmation-watcher-queued
+execution_status: primary-gates-passed; fixed-addition-screen-positive; confirmation-awaits-current-runner-pilot-and-host142-access
 tags: [spec, experiment, gpu, mistral, prompt-grouped]
 ---
 
@@ -36,9 +36,10 @@ tags: [spec, experiment, gpu, mistral, prompt-grouped]
 
 ## 現在の状態
 
-- Model取得先: `/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/model-cache/candidate03-mistral-7b-v0-1-hf-27d67f1b/`。config・revision・model hashと公開Discussionの留保は実験ログのcandidate03記録を参照。
-- GPU pilot/OOFは未開始。2026-11-08 06:43 JSTにGPU141の全A4000が空いていることを確認したが、BF16重みだけで約13.5 GiBとなり、A4000の4-GiB reserve込み許容約12.3 GiBを超えるため対象外。固定の32-GiB GPU1はQwen02が使用中。
-- 実行順: Qwen02完了後のcandidate06 pilot/full primary/analysis、登録済みcandidate08 GPU1処理が終わり、GPU1 lockとpreflightが通った後にpilotを行う。別GPUで稼働するWeMMはGPU UUIDとRAM安全条件を再確認し、GPU1処理と安全に分離できる場合に限り併走可。
+- Fixed Mistral v0.1 revision/model/config and all 5 primary prompt-grouped OOF folds are saved under `artifacts/gpu03-mistral-7b-v0-1-openpool-v15/primary/`. The primary comparison versus adopted prompt-centered SVC (2,699 rows, 150 prompts, 5,000 paired prompt-bootstrap replicates, seed 42) gives Mistral BA `.587566` vs SVC `.501934`, delta CI `[+.062961, +.107777]`; the Mistral primary adoption gate passed.
+- A fixed, untuned equal-mean addition screen reuses `scripts/analyze_probability_blend_addition.py`: current three-model baseline `.586408`, plus Mistral softmax at weight 1/4 gives `.599769` (+`.013361`); 5,000 prompt-paired bootstrap, seed 42, CI `[+.001852, +.025215]`. This is primary-only screening and does not replace independent confirmation.
+- Confirmation has no OOF result. The 2026-11-11 preflight passed resource checks but the runner stopped before training because the saved pilot evidence does not match the current runner. The pilot was recorded with runner prefix `3bd614d9`; current worktree runner prefix is `7723b086`, while the fixed config prefix remains `c04ff481`. The inspected uncommitted runner diff changes checksum manifests/pilot integrity logging and final-fit metadata; it does not alter the training loop. Preserve the existing primary folds and pilot evidence.
+- Next: once Host142's host key can be verified and the registered GPU1 queue is safely clear, preserve the legacy `pilot.json`, rerun the unchanged fixed-configuration pilot with the current runner on its specified GPU1, and only after it passes launch the independent confirmation folds under this approved spec. Do not reassign the run to Host141 or overlap another user's work.
 
 ## 関連資料
 

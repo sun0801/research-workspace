@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 基準blend v12提出ref `58261829` pending（次poll15:40）。
+summary: 基準blend v12提出ref `58261829` pending（次poll15:40）。Mistral fixed-addition primaryはBA`.599769`（current Spectral best primary`.664952`未達）。独立confirmationはHost142/pilot gate待ち。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -23,6 +23,7 @@ last_updated: 2026-11-12
 - Kaggleの失敗詳細は一般的なunhandled errorまででtraceなし。原因は未確定だが、入力path・train/template読込の前提を第一候補として検証中。
 - baseline v12はprivate Notebookで対話実行を完了（T4・internet off）。4,000行runtime推定2.55hで9h gate通過。採点提出ref `58261829` は`PENDING`、次poll15:40 JST。
 - 公開sample 3行の推論・Parquet schema/ID順を確認済み。Kaggleの提出枠は1件/5件残り。submission pollは30分間隔。
+- 保存済みMistral primaryを現baselineへ固定1/4追加するとOOF BA`.599769`（baseline`.586408`、paired CI `[+.001852,+.025215]`）だが、Spectral primary`.664952`未達。これはprimary-only screen。独立confirmationはrunner pilot hash mismatchとHost142 host-key未検証で未実行。[Mistral screen](experiments/2026-11-12-mistral-fixed-addition-screen.md)
 - Host142はSSH host-key未検証で状態不明。Host141 GPU2は別ユーザーのPython runで5,777 MiB/100%使用中。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
 - 詳細・再開手順は[baseline benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。[Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md)
 
