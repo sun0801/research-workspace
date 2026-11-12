@@ -4,7 +4,7 @@ project: kaggle-name-that-llm
 source: active-goal / public-notebook-hypothesis
 status: approved-under-active-goal
 approval_basis: 2026-11-06-gpu-autonomous-first-place-spec
-execution_status: completed-promising-followup-required
+execution_status: completed-followup-primary-and-confirmation-passed
 tags: [spec, prompt-clustering, source-reproduction, cpu-screen]
 ---
 
@@ -31,3 +31,8 @@ This is only a prompt-recovery diagnostic. Advance to a separately preregistered
 ## Execution authorization and boundaries
 
 This CPU-only diagnostic is within the active goal's approved automatic-candidate scope. It does not alter the accepted CPU baseline, any existing GPU config/runner, or any running job. Preserve its code and summary in the external Kaggle implementation/artifact directories and report the outcome in the project experiments log.
+
+
+## Follow-up outcome (2026-11-12 reconciliation)
+
+The separately registered prediction follow-up was completed as the [Spectral cluster mean-field primary screen](2026-11-09-spectral-cluster-meanfield-primary-spec.md), with independent [confirmation](../experiments/2026-11-10-spectral-meanfield-confirmation.md). Both prompt-paired CI gates passed; the resulting confirmation BA is `.653828`. This closes the earlier “follow-up required” status. The host-dependent Mistral + Spectral complementarity confirmation is a separate candidate and remains subject to its own spec and Host142 access gate.

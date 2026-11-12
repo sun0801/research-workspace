@@ -2,7 +2,7 @@
 date: 2026-11-09
 project: kaggle-name-that-llm
 spec: ../specs/2026-11-09-spectral-prompt-cluster-recovery-screen-spec.md
-status: diagnostic-positive-followup-required
+status: diagnostic-positive-followup-completed
 tags: [experiment, prompt-clustering, public-notebook, cpu]
 ---
 
@@ -42,3 +42,8 @@ The preregistered screen gate passed: mean ARI at least `0.90`, each fold at lea
 Advance only to a separately preregistered prediction screen. It must use inferred clusters without true prompt IDs, include variable group sizes and unequal class totals in test-like simulations, and compare any fixed or nested-tuned cluster correction against unmodified OOF predictions. The current diagnostic does not show a classification or Public LB gain and does not justify a submission.
 
 CPU-only, one BLAS/OpenMP thread; no GPU, Kaggle write, submission, queue change, or edit to existing runs. Result JSON is `artifacts/cpu-spectral-prompt-cluster-recovery-v1/summary.json`; runner is `scripts/evaluate_spectral_prompt_cluster_recovery.py` in the external Kaggle project.
+
+
+## Follow-up completion (recorded 2026-11-12)
+
+The fixed prompt-relative mean-field prediction screen and independent confirmation were completed under separate registered specs. Both passed their prompt-paired confidence-interval gates; the adopted confirmation BA is `.653828`. See [primary spec](../specs/2026-11-09-spectral-cluster-meanfield-primary-spec.md), [primary result](2026-11-09-spectral-cluster-meanfield-primary.md), and [confirmation result](2026-11-10-spectral-meanfield-confirmation.md). The original cluster recovery diagnostic itself remains a diagnostic only; this reconciliation closes its follow-up action.
