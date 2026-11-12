@@ -60,11 +60,13 @@ tags: [experiment, temporal-mamba, latent-correspondence, A-b, diagnosis]
 | RAFT との差（マス） | A-b | 0.683 | 1.347 | 2.606 | 1.543 |
 | | identity | 0.460 | 1.193 | 3.100 | 1.580 |
 
-図：
+図（図の中には描いたものの情報だけを入れ、読み取りはここに書く）：
 
-- [01-examples-median.png](figures/2026-11-12-latent-corr-shape-coherence/01-examples-median.png)：各層で、A-b の「隣と1マス以上ずれる辺の割合」が中央値の例。遅い（踊る女の子、21%）、中くらい（ウサギ、35%）、速い（犬、46%）。RAFT の矢印は物体の中でほぼ揃い、A-b の矢印は向き・長さがばらばら。
-- [02-examples-p90.png](figures/2026-11-12-latent-corr-shape-coherence/02-examples-p90.png)：90%点の例。遅い車（48%）では、RAFT の矢印は車全体でほぼ同じ向き・長さだが、A-b の矢印は車の中で長さ・向きが大きくばらつき、離れたマスから持ってくるものが多い。
-- [03-summary.png](figures/2026-11-12-latent-corr-shape-coherence/03-summary.png)：上の表の棒グラフ。
+- [01-arrows-median.png](figures/2026-11-12-latent-corr-shape-coherence/01-arrows-median.png)：各マスの移動（t−1の持ってくる元 → tのマス）。A-b と RAFT。各層で、A-b の「隣と1マス以上ずれる辺の割合」が中央値の例：遅い（踊る女の子、d0696759 物体1、t=136、21%）、中くらい（ウサギ、91b754c5 物体3、t=24、35%）、速い（犬、7f54c579 物体2、t=5、46%）。RAFT の矢印は物体の中でほぼ揃い、A-b の矢印は向き・長さがばらばら。マスは物体の大きさで1・2・3マスおきに間引いて表示。色は隣のマスとの差の最大が1マスを超えるか。
+- [02-arrows-p90.png](figures/2026-11-12-latent-corr-shape-coherence/02-arrows-p90.png)：同じ図で90%点の例：遅い（車、d262b7e4 物体2、t=1、48%）、中くらい（トラ、4fa342f5 物体2、t=1、54%）、速い（自転車、40c47fa3 物体1、t=10、65%）。遅い車では、RAFT の矢印は車全体でほぼ同じ向き・長さだが、A-b の矢印は車の中で長さ・向きが大きくばらつく。
+- [03-coherence.png](figures/2026-11-12-latent-corr-shape-coherence/03-coherence.png)：隣と1マス以上ずれる辺の割合と、折り返しの割合（A-b・argmax・RAFT。identity は移動が0なので両方0）。
+- [04-masks-median.png](figures/2026-11-12-latent-corr-shape-coherence/04-masks-median.png)：01と同じ組で、t−1 の物体の被覆率を A-b・RAFT で運んだ結果と正解の輪郭。A-b は正解の輪郭にほぼ収まり、RAFT は物体の縁で背景側にはみ出す。
+- [05-iou.png](figures/2026-11-12-latent-corr-shape-coherence/05-iou.png)：運んだマスクの IoU（4方式）。
 
 ## 注意
 

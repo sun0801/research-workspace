@@ -1,10 +1,11 @@
 """Figures and summary table for compute.py (2026-11-12).
 
-  python fig.py --data data [--fields .../fields.pt]   # writes 01-examples-median.png, 02-examples-p90.png, 03-summary.png,
-                                     # data/summary.md
+  python fig.py --data data [--fields .../fields.pt]
+  # writes 01-arrows-median.png, 02-arrows-p90.png, 03-coherence.png, 04-masks-median.png, 05-iou.png, data/summary.md
 
-Examples (chosen by rule, not by eye): per speed stratum, among (object, pair) with >= 40 target cells,
-the pair at the 50th (01) / 90th (02) percentile of the A-b (softmax) edge_gt1.
+Figures carry only what is plotted (titles, axes, legends); the reading of each figure is in the experiment log
+and the MTG materials. Examples (chosen by rule, not by eye): per speed stratum, among (object, pair) with
+>= 40 target cells, the pair at the 50th (01, 04) / 90th (02) percentile of the A-b (softmax) edge_gt1.
 Aggregation: per object, mean over its pairs; per stratum, mean over objects (95% bootstrap interval over
 objects, 10,000 resamples, seed 123).
 """
@@ -90,47 +91,117 @@ def arrows(ax, u, tgt, step):
     return float(bad.mean()) if len(bad) else 0.0
 
 
-def example_figure(rows, fields, pct, out):
-    fig, axes = plt.subplots(3, 6, figsize=(19, 11.4))
+def pick(rows, st, pct):
+    cand = sorted([r for r in rows if r["stratum"] == st and r["cells"] >= 40 and r["softmax"]["edge_gt1"] is not None],
+                  key=lambda r: r["softmax"]["edge_gt1"])
+    return cand[min(len(cand) - 1, int(round(pct / 100 * (len(cand) - 1))))]
+
+
+def framed(ax, ext):
+    ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
+    ax.set_xticks([]); ax.set_yticks([])
+
+
+def example_setup(rows, fields, pct, st):
+    r = pick(rows, st, pct)
+    f = fields[(r["video"], r["object"], r["t"])]
+    paths = frame_paths(r["video"])
+    y0, y1, x0, x1 = crop_box(f)
+    return r, f, image(paths[r["t"] - 1]), image(paths[r["t"]]), (x0 * CELL, x1 * CELL, y1 * CELL, y0 * CELL), y1 - y0
+
+
+def arrows_figure(rows, fields, pct, out):
+    """Per stratum: the displacement of every target cell (A-b, RAFT) on frame t."""
+    fig, axes = plt.subplots(3, 2, figsize=(8.4, 12.6))
     for i, st in enumerate(STRATA):
-        cand = sorted([r for r in rows if r["stratum"] == st and r["cells"] >= 40 and r["softmax"]["edge_gt1"] is not None],
-                      key=lambda r: r["softmax"]["edge_gt1"])
-        r = cand[min(len(cand) - 1, int(round(pct / 100 * (len(cand) - 1))))]
-        f = fields[(r["video"], r["object"], r["t"])]
-        paths = frame_paths(r["video"])
-        prev_img, cur_img = image(paths[r["t"] - 1]), image(paths[r["t"]])
-        y0, y1, x0, x1 = crop_box(f)
-        ext = (x0 * CELL, x1 * CELL, y1 * CELL, y0 * CELL)
-        side = y1 - y0
+        r, f, _, cur, ext, side = example_setup(rows, fields, pct, st)
         step = 1 if side <= 24 else 2 if side <= 44 else 3
-        panels = []
-        ax = axes[i, 0]; ax.imshow(prev_img); outline(ax, f["prev_lab"], "#ffffff"); panels.append((ax, "t−1（白線：正解）"))
-        ax = axes[i, 1]; ax.imshow(cur_img); outline(ax, f["tgt"], "#ffffff"); panels.append((ax, "t（白線：正解）"))
         for j, m in enumerate(("softmax", "raft")):
-            ax = axes[i, 2 + j]
-            ax.imshow(cur_img, alpha=0.45)
-            heat = np.kron(f["moved"][m].float().clamp(0, 1).numpy(), np.ones((CELL, CELL)))
-            ax.imshow(np.ma.masked_less(heat, 0.05), cmap="Blues", vmin=0, vmax=1, alpha=0.75)
-            outline(ax, f["tgt"], "#000000", 1.4)
-            panels.append((ax, f"{'A-b' if m == 'softmax' else 'RAFT'}で運んだマスク\nIoU {r[m]['iou']:.2f}（黒線：正解）"))
-        for j, m in enumerate(("softmax", "raft")):
-            ax = axes[i, 4 + j]
-            ax.imshow(cur_img, alpha=0.45)
+            ax = axes[i, j]
+            ax.imshow(cur, alpha=0.45)
             arrows(ax, f["u"][m], f["tgt"], step)
-            panels.append((ax, f"{'A-b' if m == 'softmax' else 'RAFT'}の移動\n隣と1マス以上ずれる辺 {r[m]['edge_gt1']:.0%}・折り返し {r[m]['fold']:.0%}"))
-        for ax, ttl in panels:
-            ax.set_xlim(ext[0], ext[1]); ax.set_ylim(ext[2], ext[3])
-            ax.set_xticks([]); ax.set_yticks([])
-            ax.set_title(ttl, fontsize=10.5)
-        axes[i, 0].set_ylabel(f"{SNAME[st]}\n{r['video']} 物体{r['object']} t={r['frame']}\n動き {r['motion']:.2f}マス/フレーム",
-                              fontsize=11)
-    handles = [Line2D([], [], color=OK, lw=2.5, label="隣との差 ≤ 1マス"),
-               Line2D([], [], color=BAD, lw=2.5, label="隣との差 > 1マス")]
-    fig.legend(handles=handles, loc="lower right", ncol=2, fontsize=11, frameon=False)
-    fig.suptitle(f"A-bの対応で物体のマスを運んだ結果（各速さの層で、A-bの「隣と1マス以上ずれる辺」の{pct}%点の例）\n"
-                 "矢印：前のフレームのどこから state を持ってくるか（t−1の位置 → tのマス）。表示はマスの間引きあり",
-                 fontsize=12.5)
-    fig.subplots_adjust(left=0.045, right=0.995, top=0.875, bottom=0.04, hspace=0.3, wspace=0.05)
+            framed(ax, ext)
+            if i == 0:
+                ax.set_title("A-b" if m == "softmax" else "RAFT", fontsize=14)
+        axes[i, 0].set_ylabel(SNAME[st], fontsize=14)
+    handles = [Line2D([], [], color=OK, lw=2.5, label="隣のマスとの差 ≤ 1マス"),
+               Line2D([], [], color=BAD, lw=2.5, label="隣のマスとの差 > 1マス")]
+    fig.legend(handles=handles, loc="lower center", ncol=2, fontsize=12, frameon=False)
+    fig.subplots_adjust(left=0.07, right=0.99, top=0.96, bottom=0.05, hspace=0.06, wspace=0.04)
+    fig.savefig(out, dpi=110)
+    plt.close(fig)
+
+
+def masks_figure(rows, fields, pct, out):
+    """Per stratum: frames t-1 and t with the GT outline, and the t-1 mask moved by A-b / RAFT."""
+    gt = "#c71f7a"
+    fig, axes = plt.subplots(3, 4, figsize=(15, 11.6))
+    for i, st in enumerate(STRATA):
+        r, f, prev, cur, ext, _ = example_setup(rows, fields, pct, st)
+        panels = [("t−1", prev, f["prev_lab"], None), ("t", cur, f["tgt"], None),
+                  ("A-bで運んだマスク", cur, f["tgt"], "softmax"), ("RAFTで運んだマスク", cur, f["tgt"], "raft")]
+        for j, (ttl, img, lab, m) in enumerate(panels):
+            ax = axes[i, j]
+            if m is None:
+                ax.imshow(img)
+            else:
+                ax.imshow(img, alpha=0.45)
+                heat = np.kron(f["moved"][m].float().clamp(0, 1).numpy(), np.ones((CELL, CELL)))
+                im = ax.imshow(np.ma.masked_less(heat, 0.05), cmap="Blues", vmin=0, vmax=1, alpha=0.8)
+            outline(ax, lab, gt, 1.8)
+            framed(ax, ext)
+            if i == 0:
+                ax.set_title(ttl, fontsize=14)
+        axes[i, 0].set_ylabel(SNAME[st], fontsize=14)
+    fig.legend(handles=[Line2D([], [], color=gt, lw=2.5, label="正解のマスク（輪郭）")], loc="lower left",
+               bbox_to_anchor=(0.05, 0.03), fontsize=12, frameon=False)
+    cax = fig.add_axes([0.55, 0.06, 0.3, 0.012])
+    cb = fig.colorbar(im, cax=cax, orientation="horizontal")
+    cb.set_label("運んだマスクの値（マスの被覆率、0〜1）", fontsize=11)
+    fig.subplots_adjust(left=0.04, right=0.99, top=0.96, bottom=0.11, hspace=0.06, wspace=0.04)
+    fig.savefig(out, dpi=110)
+    plt.close(fig)
+
+
+def bars(ax, table, key, methods, title, ylabel):
+    groups = STRATA + ("all",)
+    width = 0.8 / len(methods)
+    for j, m in enumerate(methods):
+        xs = np.arange(len(groups)) + (j - (len(methods) - 1) / 2) * width
+        mean = [table[(g, m, key)][0] for g in groups]
+        lo = [table[(g, m, key)][0] - table[(g, m, key)][1] for g in groups]
+        hi = [table[(g, m, key)][2] - table[(g, m, key)][0] for g in groups]
+        ax.bar(xs, mean, width - 0.02, color=COLOR[m], label=LABEL[m], edgecolor="white", linewidth=1)
+        ax.errorbar(xs, mean, yerr=[lo, hi], fmt="none", ecolor="#555555", elinewidth=1, capsize=2)
+    ax.set_xticks(np.arange(len(groups)), [SNAME[g] for g in groups], fontsize=12)
+    ax.set_xlabel("物体の速さ", fontsize=11)
+    ax.set_title(title, fontsize=13)
+    ax.set_ylabel(ylabel, fontsize=11)
+    ax.grid(axis="y", color="#dddddd", lw=0.6)
+    ax.set_axisbelow(True)
+    for s in ("top", "right"):
+        ax.spines[s].set_visible(False)
+
+
+def coherence_figure(table, out):
+    fig, axes = plt.subplots(1, 2, figsize=(13, 4.8))
+    methods = ("softmax", "argmax", "raft")
+    bars(axes[0], table, "edge_gt1", methods, "隣のマスと移動が1マス以上違う辺の割合", "割合")
+    bars(axes[1], table, "fold", methods, "移動先が折り返す（交差する）マスの割合", "割合")
+    axes[1].legend(fontsize=11, frameon=False, loc="upper left")
+    fig.tight_layout()
+    fig.savefig(out, dpi=110)
+    plt.close(fig)
+
+
+def iou_figure(table, out):
+    fig, ax = plt.subplots(figsize=(8, 4.8))
+    bars(ax, table, "iou", ("softmax", "argmax", "raft", "identity"), "運んだマスクと正解のマスクのIoU", "IoU")
+    ax.set_ylim(0, 1)
+    ax.legend(fontsize=10.5, frameon=False, loc="upper center", ncol=2, bbox_to_anchor=(0.5, 1.0))
+    ax.set_ylim(0, 1.12)
+    ax.set_yticks(np.arange(0, 1.01, 0.2))
+    fig.tight_layout()
     fig.savefig(out, dpi=110)
     plt.close(fig)
 
@@ -160,35 +231,6 @@ def aggregate(rows):
                 vals.append(np.mean(xs))
         table[(st, "softmax", "dup15")] = (np.mean(vals), np.nan, np.nan, len(vals))
     return table
-
-
-def summary_figure(table, out):
-    fig, axes = plt.subplots(1, 3, figsize=(16, 4.6))
-    groups = STRATA + ("all",)
-    width = 0.2
-    for ax, (key, title, ylabel) in zip(axes, METRICS):
-        for j, m in enumerate(METHODS):
-            xs = np.arange(len(groups)) + (j - 1.5) * width
-            mean = [table[(g, m, key)][0] for g in groups]
-            lo = [table[(g, m, key)][0] - table[(g, m, key)][1] for g in groups]
-            hi = [table[(g, m, key)][2] - table[(g, m, key)][0] for g in groups]
-            ax.bar(xs, mean, width - 0.02, color=COLOR[m], label=LABEL[m], edgecolor="white", linewidth=1)
-            ax.errorbar(xs, mean, yerr=[lo, hi], fmt="none", ecolor="#555555", elinewidth=1, capsize=2)
-        ax.set_xticks(np.arange(len(groups)), [SNAME[g] for g in groups])
-        ax.set_title(title, fontsize=12)
-        ax.set_ylabel(ylabel)
-        ax.grid(axis="y", color="#dddddd", lw=0.6)
-        ax.set_axisbelow(True)
-        for s in ("top", "right"):
-            ax.spines[s].set_visible(False)
-    axes[0].legend(fontsize=9.5, frameon=False, loc="upper left", bbox_to_anchor=(0, -0.12), ncol=2)
-    n = {g: table[(g, "softmax", "iou")][3] for g in groups}
-    fig.suptitle("対応の取り方ごとの形の崩れ（MOSE tuning 125動画、物体ごとの平均を層で平均、ひげは物体のbootstrap 95%区間）"
-                 f"\n物体数：遅い {n['slow']}・中くらい {n['mid']}・速い {n['fast']}・全体 {n['all']}", fontsize=12)
-    fig.text(0.5, 0.01, "同じ位置（identity）は移動が0なので、左・中央の2つは0になる", ha="center", fontsize=10, color="#555555")
-    fig.tight_layout(rect=(0, 0.04, 1, 0.9))
-    fig.savefig(out, dpi=110)
-    plt.close(fig)
 
 
 def summary_md(rows, table, out):
@@ -223,10 +265,11 @@ def main():
     here = Path(__file__).resolve().parent
     table = aggregate(rows)
     summary_md(rows, table, args.data / "summary.md")
-    summary_figure(table, here / "03-summary.png")
-    example_figure(rows, fields, 50, here / "01-examples-median.png")
-    example_figure(rows, fields, 90, here / "02-examples-p90.png")
-
+    coherence_figure(table, here / "03-coherence.png")
+    iou_figure(table, here / "05-iou.png")
+    arrows_figure(rows, fields, 50, here / "01-arrows-median.png")
+    arrows_figure(rows, fields, 90, here / "02-arrows-p90.png")
+    masks_figure(rows, fields, 50, here / "04-masks-median.png")
 
 if __name__ == "__main__":
     main()
