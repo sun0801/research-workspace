@@ -1,0 +1,8 @@
+## 16:48–16:52 JST — fixed 4-view SVC + Spectral complementarity screen
+
+- Registered fixed CPU-only screen in [spec](../specs/2026-11-12-4view-svc-spectral-complementarity-spec.md). Used saved 4-view SVC decision scores, adopted baseline probability ensemble, and frozen fold-local Spectral mean-field. Fixed formula: `(3 * baseline_probability + softmax(4view_decision_scores, T=1.0)) / 4`; no weight search or refit.
+- Source files matched with `sha256sum -c artifacts/cpu-4view-svc-spectral-complementarity-screen-v1-retry1/input-files.sha256`. Log records 8-character prefixes only: train `40a22ce8`; primary/confirmation baseline OOF `3635ad7b` / `c1ff251e`; primary/confirmation 4-view SVC OOF `bd3f9e57` / `45efe0dc`.
+- Reproduction command: `uv run --project /mnt/HDD10TB-2/aburatani/kaggle python scripts/evaluate_4view_svc_spectral_complementarity.py`. CPU-only, one thread, 2,699 rows, 150 prompts, 18 classes, five folds per split; runtime 115.483 seconds. The first attempt stopped before scoring because a copied runner path pointed to a nonexistent baseline directory. Retry1 used the corrected baseline path; source predictions and scores were unchanged.
+- Primary: frozen Spectral BA `.664952`, 4-view SVC + Spectral BA `.667910`, delta `+.002958`, 5,000 prompt-paired bootstrap 95% CI `[-.004079, +.010370]` (seed 42).
+- Independent confirmation: frozen Spectral BA `.653828`, 4-view SVC + Spectral BA `.659384`, delta `+.005556`, CI `[-.001484, +.012593]` (seed 42).
+- Both deltas are positive, but both CI lower bounds include zero. Reject for Notebook use; no Kaggle asset, Notebook, or submission was created.
