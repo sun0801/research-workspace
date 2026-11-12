@@ -7,7 +7,7 @@ tags: [deberta-v3-large, ensemble, public-score, prompt-grouped-validation]
 
 # Jaime Oliver 0.742+ DeBERTa ensemble notebook review
 
-開始結論: (c) 保留 — 基準blendのCV-LB対応を確認し、同一version/sourceでprompt-grouped foldごとのOOFと、依存DeBERTa checkpointの学習分割・provenanceを照合するまで再現には進まない。
+開始結論: (b) 試さない — 公開sourceの複合ensembleはscore/OOFの対応が未検証で、供給DeBERTa checkpointはcompetition trainで学習済み。leak-freeに再現できる構成・fold artifactがなく、現top`.768`を超える根拠がない。
 
 ## Source and retrieval
 
@@ -32,4 +32,8 @@ The notebook also cites [Discussion 753177](https://www.kaggle.com/competitions/
 
 Do not adopt the public checkpoint or copied ensemble OOF as validation evidence. The method is too composite to attribute gains, the provided DeBERTa asset has seen the competition training set, and the OOF score claim is unresolved. Record DeBERTa-v3-Large as a later replication lead only after baseline CV-LB correspondence: rerun fold-by-fold under the approved prompt-grouped protocol, establish the dependency checkpoint's training split/provenance, then compare against the adopted blend. No Kaggle object or submission was created.
 
-最終結論: (c) 保留 — 必要な証拠は、Leakageを除いたprompt-grouped OOFの再現、依存checkpointの学習分割/provenance照合、採用blendとの比較。
+最終結論: (b) 試さない — 公開checkpoint/OOFのprovenanceが不明で、現存sourceからfoldwise再現できず、主張score`.742+`も現top`.768`未満。
+
+## 2026-11-12 follow-up after baseline CV-LB check
+
+基準blend v12のprimary OOF BA`.586408` / Public`.541`を確認したため、当初の「CV-LB対応待ち」は解消した。ただしCV-LBの対応点は1件だけで校正は未完了。Notebook source・datasetの既存監査では、`.742+`は該当versionで確認されず、DeBERTa依存checkpointはcompetition trainで学習済み、OOF`.747`とのsplit/recipe差も説明されていない。よってこの公開stackのscore/OOFは独立根拠にならず、同じassetを使う追試はleakage-freeにならない。再現可能な独立DeBERTa候補のspecも存在せず、このNotebook監査は(b)で終了する。既存small DeBERTaはprimary gateで大幅不採用（BA`.290050` vs SVC`.501934`）であり、本監査からLarge architectureへの転移根拠も得られなかった。

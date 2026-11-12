@@ -1,6 +1,6 @@
 # xiangqizhang/ntl-0681-frontier source audit
 
-開始結論: (c) 保留 — `.681`は版に紐づくscoreとして未検証。基準blendのCV-LB対応を確認後、preview経路を使わないprompt-grouped OOFでembedding branchの補完性を測る証拠が必要。
+開始結論: (b) 試さない — `.681`は版に紐づくLB scoreも独立OOFも確認されず、leader`.768`より低い。preview経路を除く再現に必要なlarge stackのsource/依存物が特定できない。
 
 - 確認日時: 2026-11-10 00:12 JST
 - URL: https://www.kaggle.com/code/xiangqizhang/ntl-0681-frontier
@@ -18,4 +18,8 @@
 
 `.681`は未検証の公開主張として扱う。3件previewの仕組みは通常hidden入力の評価に使えず、scoreやOOFの根拠にもならない。現行のGPU割当や登録済み実験キューは変更しない。Kaggle上の作成・更新・提出は行っていない。
 
-最終結論: (c) 保留 — 必要な証拠は、previewを使わないprompt-grouped OOF、同一splitの採用blend比較、該当版のscore source確認。
+最終結論: (b) 試さない — 現top`.768`・confirmation待ち候補を明確に超える根拠がなく、score/OOFは未検証、previewを除く再現sourceも揃わない。
+
+## 2026-11-12 follow-up after baseline CV-LB check
+
+基準blend v12がPublic`.541`、primary OOF BA`.586408`で採点成功したため、当初の「CV-LB対応待ち」は解消した。一方、CV-LB対応点は1件のみ。sourceの`.681`はKaggleの該当version scoreとして確認できず、3件previewはweights未読込・hidden runtime未検証とsource sidecarが示す。previewを使わないOOF/score provenanceと再現可能なdependency setが依然ない。Qwen embedding branch単体では既存complementarity screensも独立候補を通していない。よって(b)試さないで終了する。
