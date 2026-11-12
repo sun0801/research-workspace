@@ -42,6 +42,8 @@ last_updated: 2026-11-12
 - [2026-11-12 baseline benchmark push](experiments/2026-11-12-baseline-benchmark-push.md)
 - (c) 保留 — [Areeb Ali 0.684 public Notebook mirror](experiments/2026-11-12-public-0684-notebook-audit.md)
 - (b) 試さない — [The Prompt Is Not the Author v32](experiments/2026-11-12-prompt-is-not-author-audit.md)
+- (b) 試さない — 現leader NguyenThanhNhanのNotebook user/title searchと`.768`/team名のDiscussion検索で、再現可能な手法sourceは見つからず。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
+- (b) 試さない — [Alex Chilton “0.684: All Public + What Failed”](experiments/2026-11-12-alexchilton-0684-all-public-audit.md)は本人報告`.684`で、現leader`.768`を超える根拠なし。
 
 - [共同作業と自動化の設計メモ](../../../secretary/notes/brainstorm/2026-11-02-kaggle-collaboration-setup.md)
 
@@ -153,3 +155,4 @@ last_updated: 2026-11-12
 - 2026-11-12: 改訂specに従い「現在の状況」を現best・基準blend再提出の採点待ち・次のpollへ整理。旧提出失敗とv10診断の詳細はbenchmark logに保持。
 - 2026-11-12: 基準blend v9の2提出がhidden rerunで同じunhandled errorとなり、どちらもscoreなし。Kaggle公開kernel logとartifact取得可否を確認し、stack trace未取得・hidden入力整合を第一仮説として記録。構成は未変更。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
 - 2026-11-12: official data descriptionに沿って、hidden testのID/行数を出力の正本にするprivate Notebook v11を作成・synthetic 4,000行で検証してpush。kernelは`RUNNING`、次回statusは30分後。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
+- 2026-11-12: 公開Leaderboard首位の公開NotebookをKaggle CLIで検索。コンペfilter付きuser queryは`Not found`で、再現可能sourceがないため(b)試さないと索引化。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
