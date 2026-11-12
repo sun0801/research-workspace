@@ -37,3 +37,8 @@ Candidate14 OLMo2 was not started: its approved spec requires the preceding Host
 - Scheduled lightweight poll: strict SSH to Host142 again failed `Host key verification failed`; no Host142 state was inferred and no key check was bypassed.
 - Host141 GPU2 changed from PID 3138642 to 3148080 and 6,093 MiB/100%. A single-PID read-only query identifies user `ogata` running `token_aux/sample_text_only.py` under the same `token_aux_large` research outputs. This is another user's active work; left untouched. GPU0/1 remain at 171/15 MiB and 0%; host `MemAvailable` is about 113.5 GiB.
 - Mistral remains pinned to Host142 GPU1; no job was started, stopped, or moved.
+
+## 17:47 JST — Host141 GPU2 workload advanced; Host142 remains unverified
+
+- Scheduled strict poll: Host141 GPU2 changed from PID `3148080` / 6,093 MiB to PID `3160364` / 5,777 MiB, still at 100%. A single-PID read-only query identifies `ogata` running `token_aux/eval_denoise.py` under the same `token_aux_large` outputs. This is another user's process; left untouched. Host141 GPU0/1 remain 171/15 MiB and 0%.
+- Strict SSH to Host142 again failed host-key verification; no Host142 state was inferred and no bypass was attempted. No goal job was started, stopped, or moved.

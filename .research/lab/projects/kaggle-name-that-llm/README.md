@@ -30,7 +30,7 @@ last_updated: 2026-11-12
 - Prompt-centered Twin SVC固定1/4追加＋Spectralも両splitでdeltaは正だがCI下限が0以下で棄却。deltaは`+.006304`／`+.005178`。[screen](experiments/2026-11-12-prompt-centered-twin-spectral-complementarity-screen.md)
 - 次は固定Mistral+Spectral compositionの独立confirmation。Mistral confirmation OOFがなく、Host142は厳格host-key確認、queue解消、current-runner pilotの安全ゲート待ち。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
 - close-pair補正は固定screenで棄却：2699行中適格pairは1組、予測変更なし、BA差0。公開監査は(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
-- Host142は16:08 JSTもSSH host-key未検証で状態不明。Host141 GPU2は別ユーザー`ogata`の`sample_text_only.py`で6,093 MiB/100%使用中（PID 3148080）。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
+- Host142は17:47 JSTもSSH host-key未検証で状態不明。Host141 GPU2は別ユーザー`ogata`の`eval_denoise.py`で5,777 MiB/100%使用中（PID 3160364）。GPU0/1は空き。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
 - 詳細・再開手順は[baseline benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。[Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md)
 
 ## マイルストーン
