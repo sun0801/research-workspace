@@ -26,7 +26,7 @@ last_updated: 2026-11-12
 - Mistral固定1/4追加＋変更なしSpectral補正のprimary BAは`.689791`（既存`.664952`比`+.024840`、5,000 prompt bootstrap CI `[+.013063,+.036412]`）。保持率simulationもmild/moderate各20 seedすべて改善。ただしprimary-only screenで独立confirmation未通過。[screen](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
 - 次は固定Mistral+Spectral compositionの独立confirmation。Mistral confirmation OOFがなく、Host142は厳格host-key確認、queue解消、current-runner pilotの安全ゲート待ち。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
 - close-pair補正は固定screenで棄却：2699行中適格pairは1組、予測変更なし、BA差0。公開監査は(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
-- Host142はSSH host-key未検証で状態不明。Host141 GPU2は別ユーザーのPython runで5,777 MiB/100%使用中。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
+- Host142は16:08 JSTもSSH host-key未検証で状態不明。Host141 GPU2は別ユーザー`ogata`の`sample_text_only.py`で6,093 MiB/100%使用中（PID 3148080）。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
 - 詳細・再開手順は[baseline benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。[Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md)
 
 ## マイルストーン
@@ -169,3 +169,4 @@ last_updated: 2026-11-12
 - 2026-11-12: primary-only Mistral+Spectral composition向けに、既存のshuffle GroupKFold confirmation split・固定transform・gateを明記した独立確認specを追加。実行はMistral confirmation OOFとHost142 GPU1 gate通過後。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
 - 2026-11-12: Kirill Tymchishin v18 close-pair ruleを固定条件でscreenし、適格pair1組・予測変更なし・BA差0で棄却。公開監査を(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
 - 2026-11-12: “From 0.684 toward top 1%” Discussionを監査し、再現可能な候補手法がないため(b)試さない。監査時点では基準v12のruntime gateと採点提出で確認中だったが、その後15:51 JSTに採点成功（Public`.541`）を確認。[audit](experiments/2026-11-12-top1-validation-discussion-audit.md)
+- 2026-11-12: Host141 GPU2 owner process advanced to PID 3148080 (`ogata`, `token_aux/sample_text_only.py`), 6,093 MiB/100%; left untouched. Host142 strict host-key verification still fails.[host log](experiments/2026-11-12-host-continuation-poll.md)

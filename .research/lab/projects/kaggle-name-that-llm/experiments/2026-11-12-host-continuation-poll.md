@@ -31,3 +31,9 @@ Candidate14 OLMo2 was not started: its approved spec requires the preceding Host
 
 - Strict `ssh ... 141 nvidia-smi` showed GPU0 171 MiB/0%, GPU1 15 MiB/0%, GPU2 5,777 MiB/100%; compute PID changed from 3126079 to 3138642. The follow-up single-PID query shows `ogata` running `token_aux/eval_denoise.py` under the same research output tree. This is another user's active work; left untouched. Host141 GPU0/1 remain apparently idle, but no spec-target GPU was reassigned.
 - Host142 poll at 14:38 JST again failed strict host-key verification; no state inferred and no bypass attempted.
+
+## 16:08 JST — Host141 GPU2 workload advanced; Host142 remains unverified
+
+- Scheduled lightweight poll: strict SSH to Host142 again failed `Host key verification failed`; no Host142 state was inferred and no key check was bypassed.
+- Host141 GPU2 changed from PID 3138642 to 3148080 and 6,093 MiB/100%. A single-PID read-only query identifies user `ogata` running `token_aux/sample_text_only.py` under the same `token_aux_large` research outputs. This is another user's active work; left untouched. GPU0/1 remain at 171/15 MiB and 0%; host `MemAvailable` is about 113.5 GiB.
+- Mistral remains pinned to Host142 GPU1; no job was started, stopped, or moved.
