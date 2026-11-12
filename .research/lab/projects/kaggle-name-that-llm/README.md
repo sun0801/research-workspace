@@ -51,6 +51,9 @@ last_updated: 2026-11-12
 - (b) 試さない — [`.668 fork + response corpus` Notebook audit](experiments/2026-11-12-whitegg-ntl-fuse33-notebook-audit.md)（全体OOF/score provenance未確認、既存候補と重複）
 - (b) 試さない — [RanJeet Nov12 WEMM ensemble Notebook](experiments/2026-11-12-ranjeet-nov12-wemm-notebook-audit.md)（3行FAST_COMMITのみ、full inference/OOF/score未確認）
 - (b) 試さない — [Lin Junren Week4 AV Notebook](experiments/2026-11-12-linjunren-week4-av-audit.md)（new 60k/style-score Public未採点、既存Open Pool SVCと重複）
+- (b) 試さない — [Toyns Freg ModernBERT v2 validation Notebook](experiments/2026-11-12-toynsfreg-modernbert-v2-audit.md)（単一grouped holdout、v2実行出力なし、主張`.68`は現leader`.768`未満）
+- (b) 試さない — [Zhihao Huan NTL 0663 V31 ATLAS20](experiments/2026-11-12-zhihaohuan-0663-v31-atlas20-audit.md)（title`.663`、現leader`.768`とMistral+Spectral primary未満、大規模外部依存）
+- (b) 試さない — [OsakanaTeishoku Qwen3-14B-Base score](experiments/2026-11-12-osakanateishoku-qwen14b-base-audit.md)（`.620`/`.622`は本人報告のみ、該当モデルsourceなし）
 - (b) 試さない — [Evgen Dvorkin forensic EDA / inference v28](experiments/2026-11-12-evgendvorkin-v28-notebook-audit.md)（既知`.684` ensemble系譜、現leader`.768`未満、multi-source）
 - (b) 試さない — [Heliosli Qwen3 embedding ensemble v14](experiments/2026-11-12-heliosli-v14-delta-audit.md)（target mix変更のみ、title`.683`、OOFなし）
 - (b) 試さない — [Alex Chilton all-public `.684` Notebook](experiments/2026-11-12-alexchilton-0684-all-public-notebook-audit.md)（複合stackは移植せず、Discussionの小prompt仮説は別screenで評価）
@@ -176,7 +179,7 @@ last_updated: 2026-11-12
 
 - 2026-11-12: Discussion 749447の「paid generationなしでtop 10」自己申告を確認。再現手法や順位根拠がなく(b)試さない。[audit](experiments/2026-11-12-no-paid-data-top10-discussion-audit.md)
 
-- 2026-11-12: Discussion 754860のQwen3-14B単独`.657`投稿を確認。CV/LB・再現根拠がなく(b)試さないで索引化。[audit](experiments/2026-11-12-qwen14b-0657-single-model-discussion-audit.md)
+- 2026-11-12: Discussion 754860のQwen3-14B単独`.657`投稿を確認。CV/LB・再現根拠不明、著者Notebookなしを追加確認し(b)試さない。[audit](experiments/2026-11-12-qwen14b-0657-single-model-discussion-audit.md)
 
 - 2026-11-12: `ntl-v30-apex-0700`のタイトルscore`.700`はsource冒頭の`.684`再現説明で裏づけられず、巨大stackの独立OOFもないため(b)試さない。[audit](experiments/2026-11-12-apex-0700-notebook-audit.md)
 - 2026-11-12: baseline v12 ref`58261829`の採点完了、Public`.541`。初のCV-LB対応点として[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)に記録。
@@ -216,6 +219,9 @@ last_updated: 2026-11-12
 - 2026-11-12: Mistral＋Spectralのprimary-only small-prompt shape screenを20 seedsで実施。uniform m=2/3とも平均deltaが正で、positive replicate率は`.80`/`1.00`。shape flagを通過し、独立確認候補として優先度を上げたが、Host142 gateとconfirmation前の採用・提出はなし。[screen](experiments/2026-11-12-mistral-spectral-small-prompt-shape-screen.md)
 - 2026-11-12: DeBERTa primary OOFの定刻pollでfold4 epoch2完了を確認。GPU2の別compute processはそのまま、次pollは21:24 JST。[run log](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
 - 2026-11-12: DeBERTa独立確認用の登録fold、baseline OOF、Spectral OOFが2,699 IDs/150 promptsで整列し、prompt漏洩なしと読み取り確認。DeBERTa primary通過後の入力待ちを解消。[run log](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
+- 2026-11-12: Toyns Freg ModernBERT v2 validation Notebookを静的監査。単一grouped holdoutと実行出力のないsourceのため(b)試さない。[audit](experiments/2026-11-12-toynsfreg-modernbert-v2-audit.md)
+- 2026-11-12: Zhihao HuanのNTL 0663 V31 ATLAS20をmetadata確認。title`.663`と大規模外部依存のため(b)試さない。[audit](experiments/2026-11-12-zhihaohuan-0663-v31-atlas20-audit.md)
+- 2026-11-12: Discussion 754860のQwen3-14B-Base `.620` Public / `.622` CV報告を追跡。評価・学習provenance不明でNotebook検索も該当sourceなしのため(b)試さない。[audit](experiments/2026-11-12-osakanateishoku-qwen14b-base-audit.md)
 - 2026-11-12: primary-only Mistral+Spectral composition向けに、既存のshuffle GroupKFold confirmation split・固定transform・gateを明記した独立確認specを追加。実行はMistral confirmation OOFとHost142 GPU1 gate通過後。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
 - 2026-11-12: Kirill Tymchishin v18 close-pair ruleを固定条件でscreenし、適格pair1組・予測変更なし・BA差0で棄却。公開監査を(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
 - 2026-11-12: “From 0.684 toward top 1%” Discussionを監査し、再現可能な候補手法がないため(b)試さない。監査時点では基準v12のruntime gateと採点提出で確認中だったが、その後15:51 JSTに採点成功（Public`.541`）を確認。[audit](experiments/2026-11-12-top1-validation-discussion-audit.md)

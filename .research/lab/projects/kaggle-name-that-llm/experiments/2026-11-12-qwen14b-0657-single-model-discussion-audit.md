@@ -26,3 +26,8 @@ conclusion: b-no-test
 ## Scope
 
 これは公開Discussionの主張監査のみ。公式Rules/Timeline/Leaderboardは再取得していない（本日の確認頻度制限内）。Kaggle asset、Notebook、submission、local implementationは変更していない。
+
+## 2026-11-12 21:14 JST — author-source lookup
+
+- The author's reply says the model used external-data pretraining and full fine-tuning on host data; it still does not identify whether `.657` is CV or LB, or provide a split/OOF artifact or reproducible configuration.
+- Kaggle's competition-filtered Notebook search for author `kirito1sasa` returned no kernels. Decision remains **(b) 試さない**; there is no source to reproduce or add to the active candidate.
