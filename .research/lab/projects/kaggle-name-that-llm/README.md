@@ -24,6 +24,7 @@ last_updated: 2026-11-12
 - baseline v12（test.csvのみ読込、モデル/blend不変）の提出ref `58261829` が15:51確認で採点成功、Public`.541`（primary OOF BA`.586408`との差 約`-.045`）。初のCV-LB対応点。v9/v11の失敗は入力ファイル前提が最有力（traceなしで未確定）。
 - 公開sample 3行の推論・Parquet schema/ID順を確認済み。Kaggleの提出枠は1件/5件残り。submission pollは30分間隔。
 - Mistral固定1/4追加＋変更なしSpectral補正のprimary BAは`.689791`（既存`.664952`比`+.024840`、5,000 prompt bootstrap CI `[+.013063,+.036412]`）。保持率simulationもmild/moderate各20 seedすべて改善。ただしprimary-only screenで独立confirmation未通過。[screen](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
+- close-pair補正は固定screenで棄却：2699行中適格pairは1組、予測変更なし、BA差0。公開監査は(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
 - Host142はSSH host-key未検証で状態不明。Host141 GPU2は別ユーザーのPython runで5,777 MiB/100%使用中。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
 - 詳細・再開手順は[baseline benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。[Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md)
 
@@ -162,3 +163,4 @@ last_updated: 2026-11-12
 - 2026-11-12: 公開Leaderboard首位の公開NotebookをKaggle CLIで検索。コンペfilter付きuser queryは`Not found`で、再現可能sourceがないため(b)試さないと索引化。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
 - 2026-11-12: private path-only control v2 ref`58259844`はhidden scoring完了、constant-class diagnostic public score`.055`。train/template・path仮説を踏まえてbaseline v12ではモデルとblendを維持し入力依存のみ修正。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
 - 2026-11-12: Mistral固定1/4追加＋凍結Spectralのprimary screenがBA`.689791`でCI・class-retention gateを通過。primary-onlyのため独立confirmationを次段階とし、候補化・提出は未実施。[screen log](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
+- 2026-11-12: Kirill Tymchishin v18 close-pair ruleを固定条件でscreenし、適格pair1組・予測変更なし・BA差0で棄却。公開監査を(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
