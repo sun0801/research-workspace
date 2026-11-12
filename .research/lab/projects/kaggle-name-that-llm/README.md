@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestは固定Spectral補正のconfirmation BA`.653828`（LB未検証）。基準blendとCPU-only control提出4件はhidden errorでscoreなし。path-only control ref `58259844`がPENDING、次は13:19 JST poll。
+summary: 基準blend v12提出ref `58261829` pending（次poll15:40）。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -18,15 +18,13 @@ last_updated: 2026-11-12
 
 ## 現在の状況
 
-- 現bestは固定Spectral補正の独立confirmation BA`.653828`（LB未検証）。提出基準blendはprimary BA`.586408`。
-- 基準blend v9の提出ref `58251076`・`58253257`とv11の`58256577`はいずれも`COMPLETE`だが、hidden rerunのunhandled errorでPublic/Private scoreなし。
-- v11の対話sampleは3行のParquet出力まで成功し、SVC互換probeは差0、4,000行runtime推定2.69h。採点時Hidden runのtraceは非公開で、submission artifact取得は403。
-- test IDを正本にする修正でも失敗は残ったため、ID-set/template仮説は弱まった。hidden-only入力・full-size資源/時間・採点環境差は未分離。構成変更やscoreless結果に基づくblend調整はしていない。
-- v11 hidden errorに続き、private CPU-only control ref `58258273`も`COMPLETE`/hidden error。モデル・GPU推論だけが原因ではないが、v1はtrain/templateと固定competition pathを使っており、共通入力経路の不具合は未分離。
-- path-only control v2は対話実行・Parquet検査を通過し、ref `58259844`で採点提出、初期status`PENDING`。test IDだけを読むprivate CPU-only/offline diagnosticで、model scoreではない。
-- 次の30分pollは13:19 JST以降。v2のHidden結果でmount/input共通原因を切り分ける。既存blendは変更しない。詳細は[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。
-- Host142はSSH host-key未検証で状態不明。Host141はGPU2が5.8 GiB・100%使用中で、現在の未完了candidate specsは指定hostを変えずに待つ。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
-- [Notebook readiness](experiments/2026-11-10-private-baseline-notebook-readiness.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md) · [Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md)
+- 現bestは固定Spectral補正のindependent confirmation BA`.653828`（LB未検証）。提出基準blendはprimary BA`.586408`。
+- 基準blend v9の提出`58251076`・`58253257`、v11の`58256577`、CPU control v1`58258273`はhidden rerunの一般エラーでscoreなし。path-only control v2`58259844`はPublic`.055`で成功（診断のみ）。
+- Kaggleの失敗詳細は一般的なunhandled errorまででtraceなし。原因は未確定だが、入力path・train/template読込の前提を第一候補として検証中。
+- baseline v12はprivate Notebookで対話実行を完了（T4・internet off）。4,000行runtime推定2.55hで9h gate通過。採点提出ref `58261829` は`PENDING`、次poll15:40 JST。
+- 公開sample 3行の推論・Parquet schema/ID順を確認済み。Kaggleの提出枠は1件/5件残り。submission pollは30分間隔。
+- Host142はSSH host-key未検証で状態不明。Host141 GPU2は別ユーザーのPython runで5,777 MiB/100%使用中。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
+- 詳細・再開手順は[baseline benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。[Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md)
 
 ## マイルストーン
 
@@ -160,4 +158,4 @@ last_updated: 2026-11-12
 - 2026-11-12: 基準blend v9の2提出がhidden rerunで同じunhandled errorとなり、どちらもscoreなし。Kaggle公開kernel logとartifact取得可否を確認し、stack trace未取得・hidden入力整合を第一仮説として記録。構成は未変更。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
 - 2026-11-12: official data descriptionに沿って、hidden testのID/行数を出力の正本にするprivate Notebook v11を作成・synthetic 4,000行で検証してpush。kernelは`RUNNING`、次回statusは30分後。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
 - 2026-11-12: 公開Leaderboard首位の公開NotebookをKaggle CLIで検索。コンペfilter付きuser queryは`Not found`で、再現可能sourceがないため(b)試さないと索引化。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
-- 2026-11-12: 基準blend v11とprivate CPU-only constant controlもhidden errorでscoreなし。train/template依存を除いたprivate path-control v2をref`58259844`として採点中。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
+- 2026-11-12: private path-only control v2 ref`58259844`はhidden scoring完了、constant-class diagnostic public score`.055`。train/template・path仮説を踏まえてbaseline v12ではモデルとblendを維持し入力依存のみ修正。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
