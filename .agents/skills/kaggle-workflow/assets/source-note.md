@@ -6,6 +6,8 @@ type: source-review
 
 # 資料名 / 調査トピック
 
+> 実験に進める資料の詳細項目。既存のspec・実験ログに統合して使う。見送り・保留は `experiments/YYYY-MM-DD-source-audit-log.md` に1行で記録し、このテンプレートで個別文書を作らない（2026-11-12改訂）。
+
 ## 出典と取得範囲
 
 - URL:

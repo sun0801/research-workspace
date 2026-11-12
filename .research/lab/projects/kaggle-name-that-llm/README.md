@@ -29,6 +29,11 @@ last_updated: 2026-11-12
 - 20:24 JST: Host141 GPU1でDeBERTa primary fold3 epoch1完了・run継続（13,771 MiB使用/2,204 MiB空き、Host RAM Available 113,871 MiB）。GPU2の別プロセス（5,777 MiB/100%）は変更していない。次回pollは20:54 JST。Host142はhost-key未検証で状態不明。[host/候補ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
 - 当方のKaggle Notebook jobおよび提出採点待ちはなし。次の軽量job pollは20:54 JST。
 - 現在の候補screen結果・公開監査の結論は各日付ログを参照。詳細な履歴は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)。
+
+## 記録方針
+
+2026-11-12改訂：見送り・保留の公開調査は `experiments/YYYY-MM-DD-source-audit-log.md` に1行ずつ集約する。新しい個別文書は実際に試す候補のspec・結果ログを基本とし、監視・提出診断の変化なしは追記しない。既存記録は保持する。開始・再開時は[承認済みspecの記録運用改訂](specs/2026-11-06-gpu-autonomous-first-place-spec.md#記録運用の改訂2026-11-12ユーザー方針)を読む。
+
 ## マイルストーン
 
 - [x] Kaggle共通ディレクトリとName That LLMプロジェクトを作成
@@ -150,6 +155,8 @@ last_updated: 2026-11-12
 - 今回は停止指示ではない。実行中benchmarkの再開位置は[11/12 benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)、Host141/142の直近診断は[継続ログ](experiments/2026-11-12-host-continuation-poll.md)、過去の引き継ぎ記録は[archive](experiments/2026-11-10-readme-handoff-history.md)。
 
 ## 更新履歴
+
+- 2026-11-12: 記録運用を改訂。見送り・保留は日次一覧、実験はspec・結果ログへ集約し、変化なしの監視追記を省く。詳細は承認済みspecの記録運用改訂を参照。
 
 - 2026-11-12: Discussion 753177由来のm=2/3 prompt-shape meanfield screen完了。primaryはuniform条件で差が負、confirmationは正。primary robustness flagとし、公開複合stackは(b)試さない。[screen](experiments/2026-11-12-spectral-meanfield-small-prompt-shape-screen.md) · [audit](experiments/2026-11-12-alexchilton-0684-all-public-notebook-audit.md)
 
