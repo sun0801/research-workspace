@@ -99,3 +99,11 @@ Kaggle公式MCPのmetadata、Rules、Timeline、Code Requirements、public leade
 - Official MCP: public leader`.768`（NguyenThanhNhan）、team count 5,549。Rulesは5 submissions/day・Final最大2件。Timeline締切2027-01-13 23:59 UTC、metadataはJan 14表記。Code RequirementsはNotebook-only・offline・GPU <=9h・`submission.parquet`。
 - CLI提出枠: 当日1・累積1・残り4。v9 hidden rerunは既にfailedで、v10は非scored診断Notebookとしてpushするため提出枠は消費しない。
 - rate guard: 5h 83%、weekly 33%。変更範囲は公開train本文を使うfull-text diagnosticのみで、baseline model/blend設定は不変。
+
+## 2026-11-12 18:56 JST — goal continuation current-state check
+
+- Official Kaggle MCP metadata / Rules / Timeline / Code Requirements / public leaderboard rechecked. Public leader remains `.768` (NguyenThanhNhan; latest displayed submission 2026-11-11 13:48 UTC); team count is 5,600.
+- Rules remain at most 5 submissions per day and 2 final selections. Code Requirements remain Notebook-only, CPU/GPU execution within 9 hours, Internet disabled, and output `submission.parquet`.
+- Metadata deadline remains 2027-01-14 23:59 UTC; official Timeline says Final Submission Deadline 2027-01-13 23:59 UTC. Use Jan 13 as the conservative cutoff; the discrepancy remains unresolved.
+- Official Data Description says the interactive test contains 3 sample rows and hidden scoring uses about 4,000 unseen-prompt rows. No push or submission is planned in this check.
+- The adopted CPU blend primary artifacts and Open Pool v15 primary summary remain present at their original Nov 7–8 timestamps; no CPU result was altered. Active Host141 GPU1 status is recorded in the [DeBERTa pilot/primary log](2026-11-12-deberta-v3-large-pilot-primary.md).

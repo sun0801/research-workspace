@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。v12 ref`58261829`が初の採点成功でPublic`.541`（OOF`.586408`）。Mistral＋Spectral primary screen`.689791`はgate通過、独立confirmationはHost142/pilot待ち。
+summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。DeBERTa-v3-large primary OOFはHost141 GPU1でfold3 epoch1完了。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -18,21 +18,17 @@ last_updated: 2026-11-12
 
 ## 現在の状況
 
-- 現bestは固定Spectral補正のindependent confirmation BA`.653828`（LB未検証）。提出基準blendはprimary BA`.586408`。
-- 基準blend v9の提出`58251076`・`58253257`、v11の`58256577`、CPU control v1`58258273`はhidden rerunの一般エラーでscoreなし。path-only control v2`58259844`はPublic`.055`で成功（診断のみ）。
-- Kaggleの失敗詳細は一般的なunhandled errorまででtraceなし。原因は未確定だが、入力path・train/template読込の前提を第一候補として検証中。
-- baseline v12（test.csvのみ読込、モデル/blend不変）の提出ref `58261829` が15:51確認で採点成功、Public`.541`（primary OOF BA`.586408`との差 約`-.045`）。初のCV-LB対応点。v9/v11の失敗は入力ファイル前提が最有力（traceなしで未確定）。
-- 公開sample 3行の推論・Parquet schema/ID順を確認済み。Kaggleの提出枠は1件/5件残り。submission pollは30分間隔。
-- Mistral固定1/4追加＋変更なしSpectral補正のprimary BAは`.689791`（既存`.664952`比`+.024840`、5,000 prompt bootstrap CI `[+.013063,+.036412]`）。保持率simulationもmild/moderate各20 seedすべて改善。ただしprimary-only screenで独立confirmation未通過。[screen](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
-- Qwen3-8B固定1/4追加＋Spectralはprimary/confirmationともdeltaが小さくCI下限が0以下のため棄却。primary `+.000746`、confirmation `+.001489`。[screen](experiments/2026-11-12-qwen8b-spectral-complementarity-screen.md)
-- Qwen3-1.7B固定1/4追加＋Spectralはprimary・confirmationともBAが低下し、CIも0未満で棄却。deltaは`-.007780`／`-.015183`。[screen](experiments/2026-11-12-qwen17b-spectral-complementarity-screen.md)
-- 4-view SVC固定1/4追加＋Spectralは両splitでdeltaが正だがCI下限が0以下のため棄却。deltaは`+.002958`／`+.005556`。[screen](experiments/2026-11-12-4view-svc-spectral-complementarity-screen.md)
-- Prompt-centered Twin SVC固定1/4追加＋Spectralも両splitでdeltaは正だがCI下限が0以下で棄却。deltaは`+.006304`／`+.005178`。[screen](experiments/2026-11-12-prompt-centered-twin-spectral-complementarity-screen.md)
-- 次は固定Mistral+Spectral compositionの独立confirmation。Mistral confirmation OOFがなく、Host142は厳格host-key確認、queue解消、current-runner pilotの安全ゲート待ち。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
-- close-pair補正は固定screenで棄却：2699行中適格pairは1組、予測変更なし、BA差0。公開監査は(b)試さないで完了。[audit](experiments/2026-11-12-kirill-close-pair-audit.md)
-- Host142は17:47 JSTもSSH host-key未検証で状態不明。Host141 GPU2は別ユーザー`ogata`の`eval_denoise.py`で5,777 MiB/100%使用中（PID 3160364）。GPU0/1は空き。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
-- 詳細・再開手順は[baseline benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。[Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md)
-
+- 現bestはSpectral補正のindependent confirmation BA`.653828`（LB未検証）。公開首位は`.768`（11/12公式確認）。採用中の基準blendはprimary BA`.586408`。
+- 基準blend v12 ref`58261829`はPublic`.541`で採点成功。CVとの差は約`-.045`で、CV-LB対応はまだ1点のみ。
+- v9 refs`58251076`・`58253257`はhidden rerunで`COMPLETE`だが、Public/Private scoreなし。Kaggleは一般エラーのみ返し、詳細traceは未取得。
+- v9失敗の第一仮説は入力path・`train.csv`/template依存。v12のtest-only入力で成功したため支持されるが、根因確定ではない。[診断ログ](experiments/2026-11-12-baseline-benchmark-push.md)
+- Mistral＋Spectral primary BA`.689791`は有望screenを通過、独立confirmation待ち。実行specはHost142 GPU1固定。[spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
+- 公式MITの未調整DeBERTa-v3-largeはHost141 GPU1でprimary OOFを実行中。fold3 epoch1完了。public`.747`主張やfull-train checkpointは不使用。[spec](specs/2026-11-12-deberta-v3-large-official-prompt-grouped-spec.md) · [実験ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
+- Spectral mean-fieldのm=2/3 prompt-shape screenはprimaryで差が負〜0、confirmationは正。小prompt条件への移行安定性は未確認。[screen](experiments/2026-11-12-spectral-meanfield-small-prompt-shape-screen.md)
+- 次はHost142の厳格host-key確認・queue解消・current-runner pilotを満たしてからconfirmationを再開する。host/deviceの割当ては変えない。
+- 20:24 JST: Host141 GPU1でDeBERTa primary fold3 epoch1完了・run継続（13,771 MiB使用/2,204 MiB空き、Host RAM Available 113,871 MiB）。GPU2の別プロセス（5,777 MiB/100%）は変更していない。次回pollは20:54 JST。Host142はhost-key未検証で状態不明。[host/候補ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
+- 当方のKaggle Notebook jobおよび提出採点待ちはなし。次の軽量job pollは20:54 JST。
+- 現在の候補screen結果・公開監査の結論は各日付ログを参照。詳細な履歴は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)。
 ## マイルストーン
 
 - [x] Kaggle共通ディレクトリとName That LLMプロジェクトを作成
@@ -43,9 +39,24 @@ last_updated: 2026-11-12
 
 ## 関連記録
 
+- [2026-11-12 README状況整理・提出失敗診断更新](experiments/2026-11-12-readme-status-archive.md)
+- (a) specにして試す — [DeBERTa-v3-large clean-base candidate](experiments/2026-11-12-deberta-v3-large-candidate-selection.md) · [fixed prompt-grouped spec](specs/2026-11-12-deberta-v3-large-official-prompt-grouped-spec.md)
+- (b) 試さない — [Qwen3-14B single-model `.657` Discussion audit](experiments/2026-11-12-qwen14b-0657-single-model-discussion-audit.md)（CV/LBの区別と再現根拠なし）
+- (b) 試さない — [No-paid-data / top-10 Discussion audit](experiments/2026-11-12-no-paid-data-top10-discussion-audit.md)（手法・OOF・順位の根拠なし）
+- (b) 試さない — [`.668 fork + response corpus` Notebook audit](experiments/2026-11-12-whitegg-ntl-fuse33-notebook-audit.md)（全体OOF/score provenance未確認、既存候補と重複）
+- (b) 試さない — [RanJeet Nov12 WEMM ensemble Notebook](experiments/2026-11-12-ranjeet-nov12-wemm-notebook-audit.md)（3行FAST_COMMITのみ、full inference/OOF/score未確認）
+- (b) 試さない — [Lin Junren Week4 AV Notebook](experiments/2026-11-12-linjunren-week4-av-audit.md)（new 60k/style-score Public未採点、既存Open Pool SVCと重複）
+- (b) 試さない — [Evgen Dvorkin forensic EDA / inference v28](experiments/2026-11-12-evgendvorkin-v28-notebook-audit.md)（既知`.684` ensemble系譜、現leader`.768`未満、multi-source）
+- (b) 試さない — [Heliosli Qwen3 embedding ensemble v14](experiments/2026-11-12-heliosli-v14-delta-audit.md)（target mix変更のみ、title`.683`、OOFなし）
+- (b) 試さない — [Alex Chilton all-public `.684` Notebook](experiments/2026-11-12-alexchilton-0684-all-public-notebook-audit.md)（複合stackは移植せず、Discussionの小prompt仮説は別screenで評価）
+- (b) 試さない — [Kirill fixed punctuation prior](experiments/2026-11-12-kirill-punctuation-prior-audit.md) · [screen result](experiments/2026-11-12-spectral-punctuation-prior-screen.md)（primaryでBA差0・予測変更0、confirmationなし）
+- (b) 試さない — [Hidden-rerun late post-processing Discussion](experiments/2026-11-12-hidden-rerun-postprocess-discussion-audit.md)（こちらのbaselineに同じCUDA subprocess方式なし）
+- (c) 保留 — [WeMM4 expanded LoRA component](experiments/2026-11-12-wemm4-expanded-lora-component-audit.md)（source dataset/license未確認、公開OOF splitが登録splitと不一致）
+
 - [2026-11-11公式コンペ状況確認](experiments/2026-11-11-official-competition-status.md)
 - [2026-11-12公式コンペ状況確認](experiments/2026-11-12-official-competition-status.md)
 - [2026-11-12 Host141候補OOF追加screen](experiments/2026-11-12-host141-candidate-addition-screen.md)
+- [2026-11-12 DeBERTa-v3-large pilot/primary OOF](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
 - [2026-11-12 Host142継続poll](experiments/2026-11-12-host-continuation-poll.md)
 - [2026-11-12 baseline benchmark push](experiments/2026-11-12-baseline-benchmark-push.md)
 - [2026-11-12 Qwen3-8B + Spectral complementarity screen](experiments/2026-11-12-qwen8b-spectral-complementarity-screen.md)
@@ -108,11 +119,11 @@ last_updated: 2026-11-12
 
 - [Areeb 0.673 Notebook v2 source audit](experiments/2026-11-09-areeb-0-673-notebook-audit.md) — (b) 試さない。score未検証、外部data/provenanceとcluster補正が未確認。
 
-- [xiangqizhang .681 Notebook source audit](experiments/2026-11-10-xiangqizhang-0681-notebook-audit.md) — (c) 保留。基準CV-LB対応後にpreviewなしprompt-grouped OOFと採用blend比較、score source確認が必要。
+- (b) 試さない — [xiangqizhang .681 Notebook source audit](experiments/2026-11-10-xiangqizhang-0681-notebook-audit.md)。score/OOF未確認、previewなし再現sourceがない。
 
 - [Hande Akin Qwen3 embedding + LR + Sinkhorn Notebook audit](experiments/2026-11-10-handeakn-embedding-sinkhorn-audit.md) — (b) 試さない。equal-18仮定が不均等test分布と不整合で、独立OOF/score根拠なし。
 
-- [Jaime Oliver 0.742+ DeBERTa ensemble Notebook review](experiments/2026-11-10-jaime-oliver-deberta-0742-notebook-review.md) — (c) 保留。基準blendのCV-LB対応、Leakage-free prompt-grouped OOF、依存checkpointの学習分割/provenance照合が必要。
+- (b) 試さない — [Jaime Oliver 0.742+ DeBERTa ensemble Notebook review](experiments/2026-11-10-jaime-oliver-deberta-0742-notebook-review.md)。dependency checkpointはcompetition trainで学習済み、score/OOF差異とprovenance未解消。
 
 - [Qwen3-Embedding公開blend Notebook review](experiments/2026-11-09-qwen3-embedding-public-notebook-review.md) — (b) 試さない。`.681`/`.595`未検証、candidate08と重複し、首位超えの根拠なし。
 
@@ -139,6 +150,26 @@ last_updated: 2026-11-12
 - 今回は停止指示ではない。実行中benchmarkの再開位置は[11/12 benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)、Host141/142の直近診断は[継続ログ](experiments/2026-11-12-host-continuation-poll.md)、過去の引き継ぎ記録は[archive](experiments/2026-11-10-readme-handoff-history.md)。
 
 ## 更新履歴
+
+- 2026-11-12: Discussion 753177由来のm=2/3 prompt-shape meanfield screen完了。primaryはuniform条件で差が負、confirmationは正。primary robustness flagとし、公開複合stackは(b)試さない。[screen](experiments/2026-11-12-spectral-meanfield-small-prompt-shape-screen.md) · [audit](experiments/2026-11-12-alexchilton-0684-all-public-notebook-audit.md)
+
+- 2026-11-12: 公開Mistral OOFと完了したlocal Mistral primary OOFを同一registered foldsで照合。BAは`.586048`/`.587566`、argmax一致68.58%。source provenance・OLMo再現は未解決のため公開OOFは不採用。[result](experiments/2026-11-08-public-mistral-olmo-oof-primary-screen.md)
+
+- 2026-11-12: Heliosli v14をv13とのparameter deltaで監査。title`.683`、target mixのみ変更、session出力にOOF/LB根拠なしのため(b)試さない。[audit](experiments/2026-11-12-heliosli-v14-delta-audit.md)
+
+- 2026-11-12: Evgen Dvorkin Notebook v28のsourceとsessionを確認。既知`.684` Clean LoRA + Qwen Embedding系譜の再構成で新しいOOF/LB根拠がないため(b)試さない。[audit](experiments/2026-11-12-evgendvorkin-v28-notebook-audit.md)
+
+- 2026-11-12: Lin JunrenのWeek4 AV Notebook v1をsource・完了session logまで監査。AV結果は確認できたが、新60k/style-score構成のLBはpendingで、既存Open Pool SVCと重複するため(b)試さない。[audit](experiments/2026-11-12-linjunren-week4-av-audit.md)
+
+- 2026-11-12: 固定fold-local punctuation priorのprimary screenはSpectral BA差0・予測変更0で棄却。specゲートに従いconfirmation・tuningなし、監査を(b)試さないで終了。[result](experiments/2026-11-12-spectral-punctuation-prior-screen.md)
+
+- 2026-11-12: public full-train DeBERTa checkpointは除外し、MITの未調整Microsoft DeBERTa-v3-largeを全foldで再学習する独立候補specを作成。Host141 GPU1 pilot/resource gate通過前は開始しない。[candidate](experiments/2026-11-12-deberta-v3-large-candidate-selection.md) · [spec](specs/2026-11-12-deberta-v3-large-official-prompt-grouped-spec.md)
+
+- 2026-11-12: v12の初CV-LB対応後、保留していたXiangqi Zhang`.681`とJaime Oliver`.742+`を再判定。preview/leakage・score provenance/OOFの問題が残り、両監査とも(b)試さないで終了。[Xiangqi](experiments/2026-11-10-xiangqizhang-0681-notebook-audit.md) · [Jaime](experiments/2026-11-10-jaime-oliver-deberta-0742-notebook-review.md)
+
+- 2026-11-12: Discussion 749447の「paid generationなしでtop 10」自己申告を確認。再現手法や順位根拠がなく(b)試さない。[audit](experiments/2026-11-12-no-paid-data-top10-discussion-audit.md)
+
+- 2026-11-12: Discussion 754860のQwen3-14B単独`.657`投稿を確認。CV/LB・再現根拠がなく(b)試さないで索引化。[audit](experiments/2026-11-12-qwen14b-0657-single-model-discussion-audit.md)
 
 - 2026-11-12: `ntl-v30-apex-0700`のタイトルscore`.700`はsource冒頭の`.684`再現説明で裏づけられず、巨大stackの独立OOFもないため(b)試さない。[audit](experiments/2026-11-12-apex-0700-notebook-audit.md)
 - 2026-11-12: baseline v12 ref`58261829`の採点完了、Public`.541`。初のCV-LB対応点として[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)に記録。
@@ -183,3 +214,7 @@ last_updated: 2026-11-12
 - 2026-11-12: 固定Qwen3-1.7B 1/4追加＋Spectralをprimary/independent confirmationでscreen。両splitでdeltaが負、CIも0未満のため棄却。source checksum一致、CPU出力のみ。[screen](experiments/2026-11-12-qwen17b-spectral-complementarity-screen.md)
 - 2026-11-12: 固定4-view SVC 1/4追加＋Spectralをprimary/independent confirmationでscreen。両splitで正のdeltaだがpaired CI下限が0以下のため棄却。source checksum一致、CPU出力のみ。[screen](experiments/2026-11-12-4view-svc-spectral-complementarity-screen.md)
 - 2026-11-12: 固定Prompt-centered Twin SVC 1/4追加＋Spectralをprimary/independent confirmationでscreen。両splitで正のdeltaだがpaired CI下限が0以下で棄却。source checksum一致、CPU出力のみ。[screen](experiments/2026-11-12-prompt-centered-twin-spectral-complementarity-screen.md)
+- 2026-11-12: CHEN HanのWeMM4 fivefold LoRA componentを監査。公開OOF参照はBA`.621`だが現在の登録splitと一致せず、元dataset/licenseと外部pool provenanceも取得できないため(c)保留。再学習・利用は開始しない。[audit](experiments/2026-11-12-wemm4-expanded-lora-component-audit.md)
+- 2026-11-12: RanJeetのWEMM ensemble Notebookを静的監査。Kaggle session COMPLETEは3行FAST_COMMITでconstant出力とsmokeのみ。OOF/scoreの根拠がなく、full stackは(b)試さない。[audit](experiments/2026-11-12-ranjeet-nov12-wemm-notebook-audit.md)
+- 2026-11-12: DeBERTa primary OOFのHost141定刻pollでfold1への進行を確認。GPU2の別ユーザーjobには触れず、次のpollを19:54 JSTに設定。[run log](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
+- 2026-11-12: DeBERTa primary OOFの定刻pollでfold2 epoch1を確認。GPU2の別ユーザーjobには触れず、次のpollを20:24 JSTに設定。[run log](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
