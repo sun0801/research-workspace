@@ -4,7 +4,7 @@ project: kaggle-name-that-llm
 source: active-goal / official DeBERTa-v3-large weights
 status: approved-under-active-goal
 approval_basis: 2026-11-06-gpu-autonomous-first-place-spec
-execution_status: primary-running-host141-gpu1
+execution_status: primary-rejected
 tags: [spec, experiment, gpu, deberta-v3-large, prompt-grouped]
 ---
 

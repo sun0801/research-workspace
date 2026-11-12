@@ -3,7 +3,7 @@ date: 2026-11-12
 project: kaggle-name-that-llm
 type: experiment
 candidate: gpu16-deberta-v3-large-official-prompt-grouped
-status: primary-running
+status: primary-rejected
 ---
 
 # DeBERTa-v3-large pilot and primary OOF
@@ -53,3 +53,11 @@ status: primary-running
 - Read-only CPU check confirmed that the registered confirmation fold manifest, adopted baseline confirmation OOF, and frozen Spectral confirmation OOF are present. All 2,699 training IDs align; the manifest has 150 prompt groups, 18 classes, five folds with row counts `540, 540, 540, 539, 540`, and no prompt leakage. Baseline and Spectral OOF fold assignments match the registered manifest.
 - No source OOF/artifact was modified and no GPU was used. If the current primary candidate passes its registered gate, the fixed confirmation evaluator has all non-DeBERTa inputs available; only DeBERTa confirmation training/OOF remains.
 - Read-only runner review confirms `--split confirmation` selects the registered confirmation folds, validates ordered train IDs and prompt grouping, and writes under `<run_dir>/confirmation/`; the existing top-level pilot must still match the current runner/config/GPU and the preflight must satisfy pilot-peak plus VRAM reserve. The same config/runner/run directory can therefore be reused after primary passes, with no code change. Do not start confirmation before the registered primary evaluation gate passes.
+
+## 21:30 JST — primary complete and fixed Spectral addition rejected
+
+- The Host141 wrapper exited `0`. All five fold OOF parquet/logit artifacts, the registered fold manifest, pilot record, exit code, and primary log were collected into the local candidate artifact directory. The large checkpoint tree remains on Host141. No other process or GPU was touched.
+- At the 21:24 JST light poll, the DeBERTa wrapper was absent and the completion exit file was present. Host141 GPU1 had another user's active `token_aux/sample_text_only.py` process (PID `3191957`, 6,642 MiB / 100%); GPU2 also had another active compute process. Both were left untouched.
+- The registered CPU evaluator completed for all 2,699 IDs and 150 prompt groups. Baseline raw BA `.586408`; DeBERTa standalone raw BA `.363415`; fixed 1/4 DeBERTa addition raw BA `.581593`. After the unchanged fold-local Spectral transform, baseline BA was `.664952` and the fixed addition `.654571` (delta `−.010380`). Exact baseline/Spectral reproduction and all ID, label, prompt, class, and fold alignment checks passed.
+- The 5,000-replicate prompt-paired bootstrap (seed 42) gave 95% CI `[−.019645, −.001096]`; the preregistered candidate gate is rejected. Mild retention mean delta `−.006859` (5% positive); moderate retention mean delta `−.003221` (20% positive). Do not run DeBERTa independent confirmation or prepare it for submission.
+- Result summary and OOF comparison are in `artifacts/cpu-deberta-v3-large-spectral-complementarity-v1/primary/`. No Kaggle push/submission was made. Next: continue the already registered independent-confirmation candidate only after its pinned Host142 host-key and resource gates pass; its last strict SSH attempt is still blocked by host-key verification, and no Host142 state is inferred.

@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。DeBERTa-v3-large primary OOFはHost141 GPU1でfold4 epoch2まで完了。
+summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。DeBERTa固定additionはprimary gate不通過、次はHost142復旧後にMistral独立確認。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -23,11 +23,11 @@ last_updated: 2026-11-12
 - v9 refs`58251076`・`58253257`はhidden rerunで`COMPLETE`だが、Public/Private scoreなし。Kaggleは一般エラーのみ返し、詳細traceは未取得。
 - v9失敗の第一仮説は入力path・`train.csv`/template依存。v12のtest-only入力で成功したため支持されるが、根因確定ではない。[診断ログ](experiments/2026-11-12-baseline-benchmark-push.md)
 - Mistral＋Spectral primary BA`.689791`はshape screen（uniform m=2/3）も通過、独立confirmation待ち。Host142 GPU1の実行gateは未通過。[screen](experiments/2026-11-12-mistral-spectral-small-prompt-shape-screen.md) · [確認spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)
-- 公式MITの未調整DeBERTa-v3-largeはHost141 GPU1でprimary OOFを実行中。fold4 epoch2完了。public`.747`主張やfull-train checkpointは不使用。[spec](specs/2026-11-12-deberta-v3-large-official-prompt-grouped-spec.md) · [実験ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
+- 公式MITの未調整DeBERTa-v3-large primary OOFは全5 fold完了。固定addition＋Spectral BA`.654571`でbaseline`.664952`を下回り、prompt bootstrap CIも負のため候補棄却。独立確認・提出には進めない。[spec](specs/2026-11-12-deberta-v3-large-official-prompt-grouped-spec.md) · [実験ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
 - Spectral mean-field単体はprimaryのm=2/3 shapeで不安定だが、固定Mistral追加後はuniform shape flagを通過。[screen](experiments/2026-11-12-spectral-meanfield-small-prompt-shape-screen.md) · [Mistral＋Spectral](experiments/2026-11-12-mistral-spectral-small-prompt-shape-screen.md)
 - 次はHost142の厳格host-key確認・queue解消・current-runner pilotを満たしてからconfirmationを再開する。host/deviceの割当ては変えない。
-- 20:54 JST: Host141 GPU1でDeBERTa primary fold4 epoch2完了・run継続（13,757 MiB使用/2,218 MiB空き、Host RAM Available 116,591,868 kB）。GPU2の別compute PID（5,777 MiB/100%）は未変更。次回pollは21:24 JST。Host142はhost-key未検証で状態不明。[host/候補ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
-- 当方のKaggle Notebook jobおよび提出採点待ちはなし。次のDeBERTa軽量pollは21:24 JST。
+- 21:30 JST: DeBERTa primaryはexit 0。登録済みCPU evaluatorで全2,699行を検証し、固定addition＋Spectralのprimary gate不通過を確認。Host141 GPU1/2は別ユーザーjobが稼働中で未変更。[候補ログ](experiments/2026-11-12-deberta-v3-large-pilot-primary.md)
+- 次はHost142固定のMistral＋Spectral独立確認。host-key確認に失敗中のため接続復旧までは状態を推測せず、再試行は次の予定pollのみ。Kaggle提出待ちはなし。
 - 現在の候補screen結果・公開監査の結論は各日付ログを参照。詳細な履歴は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)。
 
 ## 記録方針
