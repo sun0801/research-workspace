@@ -54,7 +54,7 @@ last_updated: 2026-11-12
 - [2026-11-12 Prompt-centered Twin SVC + Spectral screen](experiments/2026-11-12-prompt-centered-twin-spectral-complementarity-screen.md)
 - (b) 試さない — [top 1% validation Discussion](experiments/2026-11-12-top1-validation-discussion-audit.md)
 - (b) 試さない — [hidden rerun post-processing Discussion](experiments/2026-11-12-hidden-rerun-discussion-audit.md)
-- (c) 保留 — [Areeb Ali 0.684 public Notebook mirror](experiments/2026-11-12-public-0684-notebook-audit.md)
+- (b) 試さない — [Areeb Ali 0.684 public Notebook mirror](experiments/2026-11-12-public-0684-notebook-audit.md)
 - (b) 試さない — [The Prompt Is Not the Author v32](experiments/2026-11-12-prompt-is-not-author-audit.md)
 - (b) 試さない — 現leader NguyenThanhNhanのNotebook user/title searchと`.768`/team名のDiscussion検索で、再現可能な手法sourceは見つからず。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
 - (b) 試さない — [Alex Chilton “0.684: All Public + What Failed”](experiments/2026-11-12-alexchilton-0684-all-public-audit.md)は本人報告`.684`で、現leader`.768`を超える根拠なし。
@@ -140,6 +140,7 @@ last_updated: 2026-11-12
 
 ## 更新履歴
 
+- 2026-11-12: `ntl-v30-apex-0700`のタイトルscore`.700`はsource冒頭の`.684`再現説明で裏づけられず、巨大stackの独立OOFもないため(b)試さない。[audit](experiments/2026-11-12-apex-0700-notebook-audit.md)
 - 2026-11-12: baseline v12 ref`58261829`の採点完了、Public`.541`。初のCV-LB対応点として[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)に記録。
 - 2026-11-12: 改訂specに沿って「現在の状況」を現best・benchmark v7の未解決点・次のpoll・host再開条件に整理。資材検証、旧Notebook失敗、候補数値、公式確認の詳細は日付付きexperimentsログにまとめる。
 - 2026-11-12: v7はTesla T4に割り当てられQwen8B SDPA probeでOOM。現行Kaggle CLI docsに`NvidiaL4X1`はなく`NvidiaTeslaT4`はT4×2と記載。v7診断、v6との違い、Host141の空き状況を[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)へ保存。
