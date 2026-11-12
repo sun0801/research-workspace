@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 基準blend v12提出ref `58261829` pending（次poll15:40）。Mistral fixed-addition primaryはBA`.599769`（current Spectral best primary`.664952`未達）。独立confirmationはHost142/pilot gate待ち。
+summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。v12 ref`58261829`が初の採点成功でPublic`.541`（OOF`.586408`）。Mistral fixed-addition primaryはBA`.599769`（current Spectral best primary`.664952`未達）。独立confirmationはHost142/pilot gate待ち。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -21,7 +21,7 @@ last_updated: 2026-11-12
 - 現bestは固定Spectral補正のindependent confirmation BA`.653828`（LB未検証）。提出基準blendはprimary BA`.586408`。
 - 基準blend v9の提出`58251076`・`58253257`、v11の`58256577`、CPU control v1`58258273`はhidden rerunの一般エラーでscoreなし。path-only control v2`58259844`はPublic`.055`で成功（診断のみ）。
 - Kaggleの失敗詳細は一般的なunhandled errorまででtraceなし。原因は未確定だが、入力path・train/template読込の前提を第一候補として検証中。
-- baseline v12はprivate Notebookで対話実行を完了（T4・internet off）。4,000行runtime推定2.55hで9h gate通過。採点提出ref `58261829` は`PENDING`、次poll15:40 JST。
+- baseline v12（test.csvのみ読込、モデル/blend不変）の提出ref `58261829` が15:51確認で採点成功、Public`.541`（primary OOF BA`.586408`との差 約`-.045`）。初のCV-LB対応点。v9/v11の失敗は入力ファイル前提が最有力（traceなしで未確定）。
 - 公開sample 3行の推論・Parquet schema/ID順を確認済み。Kaggleの提出枠は1件/5件残り。submission pollは30分間隔。
 - 保存済みMistral primaryを現baselineへ固定1/4追加するとOOF BA`.599769`（baseline`.586408`、paired CI `[+.001852,+.025215]`）だが、Spectral primary`.664952`未達。これはprimary-only screen。独立confirmationはrunner pilot hash mismatchとHost142 host-key未検証で未実行。[Mistral screen](experiments/2026-11-12-mistral-fixed-addition-screen.md)
 - Host142はSSH host-key未検証で状態不明。Host141 GPU2は別ユーザーのPython runで5,777 MiB/100%使用中。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
@@ -128,6 +128,7 @@ last_updated: 2026-11-12
 
 ## 更新履歴
 
+- 2026-11-12: baseline v12 ref`58261829`の採点完了、Public`.541`。初のCV-LB対応点として[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)に記録。
 - 2026-11-12: 改訂specに沿って「現在の状況」を現best・benchmark v7の未解決点・次のpoll・host再開条件に整理。資材検証、旧Notebook失敗、候補数値、公式確認の詳細は日付付きexperimentsログにまとめる。
 - 2026-11-12: v7はTesla T4に割り当てられQwen8B SDPA probeでOOM。現行Kaggle CLI docsに`NvidiaL4X1`はなく`NvidiaTeslaT4`はT4×2と記載。v7診断、v6との違い、Host141の空き状況を[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)へ保存。
 - 2026-11-12: specの運用改訂に合わせ、「現在の状況」を現best・基準blend提出gate・認証blocker・host再開先に整理。詳細な候補結果、checksum、時刻・資源情報は既存の日付付きexperimentsログに保持。
