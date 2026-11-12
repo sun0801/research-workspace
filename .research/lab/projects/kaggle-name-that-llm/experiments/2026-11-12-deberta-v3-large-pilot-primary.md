@@ -41,3 +41,15 @@ status: primary-running
 - One lightweight read-only Host141 poll found wrapper PID `3174138` alive with no `primary.exit`. The latest log event is primary fold 3, epoch 1 complete at 20:16:27 JST (`mean_loss=2.4782`, peak allocated 13,283 MiB). The five-fold run remains active; no OOM or error appeared.
 - GPU1 UUID `GPU-51b57ca0-53ca-3266-7105-efc692a6c834`: 13,771 MiB used / 2,204 MiB free, 6% utilization. Host MemAvailable is 113,871 MiB. GPU0 is idle (171 MiB used); GPU2 has a non-ours process at 5,777 MiB / 100% utilization and was left untouched.
 - Rate guard at 20:24:46 JST passed (5h 90%, weekly 21%). No config change, push, or submission. Next scheduled poll: 20:54 JST.
+
+## 20:54 JST — scheduled primary run poll
+
+- One read-only SSH status command found wrapper PID `3174138` alive and no `primary.exit`. The log advanced to primary fold 4 epoch 2 complete at 20:48:56 JST (`mean_loss=1.8039`, peak allocated 13,274 MiB); no error or OOM is present in the tail.
+- GPU1 UUID `GPU-51b57ca0-53ca-3266-7105-efc692a6c834`: 13,757 MiB used / 2,218 MiB free, 55% utilization. Host `MemAvailable` is 116,591,868 kB. GPU0 remains idle (171 MiB); GPU2 has another active compute PID (`3183989`, 5,777 MiB / 100%) and was left untouched; its owner was not re-identified in this poll.
+- No configuration change, push, or submission. Next scheduled poll: 21:24 JST.
+
+## 21:06 JST — independent confirmation input readiness
+
+- Read-only CPU check confirmed that the registered confirmation fold manifest, adopted baseline confirmation OOF, and frozen Spectral confirmation OOF are present. All 2,699 training IDs align; the manifest has 150 prompt groups, 18 classes, five folds with row counts `540, 540, 540, 539, 540`, and no prompt leakage. Baseline and Spectral OOF fold assignments match the registered manifest.
+- No source OOF/artifact was modified and no GPU was used. If the current primary candidate passes its registered gate, the fixed confirmation evaluator has all non-DeBERTa inputs available; only DeBERTa confirmation training/OOF remains.
+- Read-only runner review confirms `--split confirmation` selects the registered confirmation folds, validates ordered train IDs and prompt grouping, and writes under `<run_dir>/confirmation/`; the existing top-level pilot must still match the current runner/config/GPU and the preflight must satisfy pilot-peak plus VRAM reserve. The same config/runner/run directory can therefore be reused after primary passes, with no code change. Do not start confirmation before the registered primary evaluation gate passes.
