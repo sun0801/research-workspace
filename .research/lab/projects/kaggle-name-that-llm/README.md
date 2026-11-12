@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。v12 ref`58261829`が初の採点成功でPublic`.541`（OOF`.586408`）。Mistral fixed-addition primaryはBA`.599769`（current Spectral best primary`.664952`未達）。独立confirmationはHost142/pilot gate待ち。
+summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。v12 ref`58261829`が初の採点成功でPublic`.541`（OOF`.586408`）。Mistral＋Spectral primary screen`.689791`はgate通過、独立confirmationはHost142/pilot待ち。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -23,7 +23,7 @@ last_updated: 2026-11-12
 - Kaggleの失敗詳細は一般的なunhandled errorまででtraceなし。原因は未確定だが、入力path・train/template読込の前提を第一候補として検証中。
 - baseline v12（test.csvのみ読込、モデル/blend不変）の提出ref `58261829` が15:51確認で採点成功、Public`.541`（primary OOF BA`.586408`との差 約`-.045`）。初のCV-LB対応点。v9/v11の失敗は入力ファイル前提が最有力（traceなしで未確定）。
 - 公開sample 3行の推論・Parquet schema/ID順を確認済み。Kaggleの提出枠は1件/5件残り。submission pollは30分間隔。
-- 保存済みMistral primaryを現baselineへ固定1/4追加するとOOF BA`.599769`（baseline`.586408`、paired CI `[+.001852,+.025215]`）だが、Spectral primary`.664952`未達。これはprimary-only screen。独立confirmationはrunner pilot hash mismatchとHost142 host-key未検証で未実行。[Mistral screen](experiments/2026-11-12-mistral-fixed-addition-screen.md)
+- Mistral固定1/4追加＋変更なしSpectral補正のprimary BAは`.689791`（既存`.664952`比`+.024840`、5,000 prompt bootstrap CI `[+.013063,+.036412]`）。保持率simulationもmild/moderate各20 seedすべて改善。ただしprimary-only screenで独立confirmation未通過。[screen](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
 - Host142はSSH host-key未検証で状態不明。Host141 GPU2は別ユーザーのPython runで5,777 MiB/100%使用中。候補は指定hostを変えず待機。[host poll log](experiments/2026-11-12-host-continuation-poll.md)
 - 詳細・再開手順は[baseline benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)。[Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md)
 
@@ -161,3 +161,4 @@ last_updated: 2026-11-12
 - 2026-11-12: official data descriptionに沿って、hidden testのID/行数を出力の正本にするprivate Notebook v11を作成・synthetic 4,000行で検証してpush。kernelは`RUNNING`、次回statusは30分後。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
 - 2026-11-12: 公開Leaderboard首位の公開NotebookをKaggle CLIで検索。コンペfilter付きuser queryは`Not found`で、再現可能sourceがないため(b)試さないと索引化。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
 - 2026-11-12: private path-only control v2 ref`58259844`はhidden scoring完了、constant-class diagnostic public score`.055`。train/template・path仮説を踏まえてbaseline v12ではモデルとblendを維持し入力依存のみ修正。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
+- 2026-11-12: Mistral固定1/4追加＋凍結Spectralのprimary screenがBA`.689791`でCI・class-retention gateを通過。primary-onlyのため独立confirmationを次段階とし、候補化・提出は未実施。[screen log](experiments/2026-11-12-mistral-spectral-complementarity-screen.md)
