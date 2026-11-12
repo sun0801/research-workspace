@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestは固定Spectral補正のconfirmation BA`.653828`（LB未検証）。private v10で全train本文の推論診断中、次の状態確認は08:22 JST。
+summary: 現bestは固定Spectral補正のconfirmation BA`.653828`（LB未検証）。基準blend v9の提出2件はscoreなし。hidden test IDから出力行を作るprivate v11 kernelがRUNNINGで、次は30分後にstatus確認。
 created: 2026-11-02
 last_updated: 2026-11-12
 ---
@@ -18,13 +18,11 @@ last_updated: 2026-11-12
 
 ## 現在の状況
 
-- 現bestは固定Spectral補正の独立confirmation BA`.653828`（LB未検証）。採用中の提出基準blendはprimary BA`.586408`（confirmation BA`.567870`）。
-- private benchmark v8はT4×2で完了し、Qwen8を両GPUへ分配。v9実測ベースの4,000行推定は2.53時間（25% margin・固定30分込み）で9時間gateを通過。
-- SVCのKaggle/local sklearn差は64×18出力のmax abs差0.0で通過。モデル/adapter/blend・重み・bfloat16・384-token上限は維持。v9はsample `submission.parquet`の3行・schema/ID検査を通過。
-- 基準Notebook version 9を06:39 JSTに1回提出。ref `58251076`はhidden rerun時に`COMPLETE`/unhandled error、Public/Private scoreなし。提出時残り4件。
-- v9のinteractive sample runと2.5303時間runtime gateは通ったが、hidden rerunの詳細原因は不明。kernel logsはsample runのみ、submission-downloadは403。
-- baseline構成は未変更。private kernel v10で公式train本文2,699件をtext-onlyで同じ推論・blend経路に通し、hidden rerunの失敗条件を切り分け中。v10は非scored・提出ファイルなし。
-- v10の最新statusは`RUNNING`。次の軽量pollは08:22 JSTごろ。結果後、構成変更が必要なら測定と不足を共有してから進める。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md) · [公式確認](experiments/2026-11-12-official-competition-status.md)
+- 現bestは固定Spectral補正の独立confirmation BA`.653828`（LB未検証）。提出基準blendはprimary BA`.586408`。
+- 基準blend Notebook v9の提出ref `58251076`・`58253257`はいずれも`COMPLETE`だが、hidden rerunのunhandled errorでPublic/Private scoreなし。
+- version 9の公開kernel logは3行sampleの推論・parquet作成まで正常終了。submission artifact取得は403で、hidden rerunのstack traceは得られず。
+- 原因は未確定。test.csvのID/行数を正本として提出を生成する修正版v11をprivate pushし、初回statusは`RUNNING`。モデル/adapter/blend/weight/precision/token limitは不変。
+- 次は30分間隔の軽量status確認（目安10:22 JST）。公開Leaderboard首位`.768`、Code Requirements・提出枠・GPU quotaの直前確認とv11検証は[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)に記録。
 - [Notebook readiness](experiments/2026-11-10-private-baseline-notebook-readiness.md) · [OOF comparison](experiments/2026-11-10-oof-comparator-readiness.md) · [Spectral confirmation](experiments/2026-11-10-spectral-meanfield-confirmation.md)
 
 ## マイルストーン
@@ -152,3 +150,6 @@ last_updated: 2026-11-12
 - 詳細な更新履歴は[2026-11-10アーカイブ](experiments/2026-11-10-readme-update-history.md)に保存。
 - 現在の状況の旧記録は[状況履歴](experiments/2026-11-10-readme-current-situation-history.md)、共同作業の旧引き継ぎは[引き継ぎ履歴](experiments/2026-11-10-readme-handoff-history.md)を参照。
 - 2026-11-12: specの改訂節を優先し、「現在の状況」を20行以内の現best・実行中benchmark・次の確認に更新。v8 push前公式確認、remote設定、初回状態を日付付きexperimentsログへ追記し、詳細なhost診断は継続ログへ保持。
+- 2026-11-12: 改訂specに従い「現在の状況」を現best・基準blend再提出の採点待ち・次のpollへ整理。旧提出失敗とv10診断の詳細はbenchmark logに保持。
+- 2026-11-12: 基準blend v9の2提出がhidden rerunで同じunhandled errorとなり、どちらもscoreなし。Kaggle公開kernel logとartifact取得可否を確認し、stack trace未取得・hidden入力整合を第一仮説として記録。構成は未変更。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
+- 2026-11-12: official data descriptionに沿って、hidden testのID/行数を出力の正本にするprivate Notebook v11を作成・synthetic 4,000行で検証してpush。kernelは`RUNNING`、次回statusは30分後。[benchmark log](experiments/2026-11-12-baseline-benchmark-push.md)
