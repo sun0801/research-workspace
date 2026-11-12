@@ -3,7 +3,7 @@ date: 2026-11-08
 project: kaggle-name-that-llm
 source: active-goal / Kaggle Discussion 756294
 status: approved-under-active-goal
-execution_status: primary-screen-complete-positive-provenance-unverified
+execution_status: public-mistral-compared-to-local; olmo-local-reproduction-pending
 tags: [spec, experiment, oof, ensemble, prompt-grouped]
 ---
 
@@ -38,3 +38,8 @@ Kaggle Discussion [756294](https://www.kaggle.com/competitions/name-that-llm/dis
 ## Screen result
 
 The fixed equal mean scored BA `0.6023489933` versus `0.5864081531` for the current primary Qwen8B + Qwen1.7B + prompt-centered SVC blend (delta `+0.0159408402`). The 2,000-replicate prompt-paired bootstrap CI (seed 42) was `[+0.0011260368, +0.0307409893]`. The screen is positive, but adoption remains blocked on source training-pool/model provenance and independent local reproduction. See the experiment log for per-fold results and exact input hashes.
+
+
+## Local Mistral comparison (2026-11-12)
+
+After the approved local Mistral primary OOF completed, its prediction alignment and BA were compared with the public OOF reference; see [dated result addendum](../experiments/2026-11-08-public-mistral-olmo-oof-primary-screen.md#2026-11-12--public-mistral-oof-compared-with-completed-local-mistral-oof). Aggregate BA was similar, but only 68.58% of predictions agreed. This does not establish source provenance or permit use of the public OOF. The OLMo reproduction and any candidate adoption remain pending.
