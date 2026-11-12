@@ -47,6 +47,7 @@ last_updated: 2026-11-12
 - (b) 試さない — [The Prompt Is Not the Author v32](experiments/2026-11-12-prompt-is-not-author-audit.md)
 - (b) 試さない — 現leader NguyenThanhNhanのNotebook user/title searchと`.768`/team名のDiscussion検索で、再現可能な手法sourceは見つからず。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
 - (b) 試さない — [Alex Chilton “0.684: All Public + What Failed”](experiments/2026-11-12-alexchilton-0684-all-public-audit.md)は本人報告`.684`で、現leader`.768`を超える根拠なし。
+- (b) 試さない — [whitegg “ntl fuse33 (0.668 fork + response corpus)”](https://www.kaggle.com/code/whitegg/ntl-fuse33-0-668-fork-response-corpus)はtitle上の`.668`が現leader`.768`未満で、21 dataset・8 kernel由来の大規模ensembleに独立CV/ablationの比較根拠がない。
 
 - [共同作業と自動化の設計メモ](../../../secretary/notes/brainstorm/2026-11-02-kaggle-collaboration-setup.md)
 
