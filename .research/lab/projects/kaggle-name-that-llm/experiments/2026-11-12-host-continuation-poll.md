@@ -13,3 +13,8 @@ Candidate14 OLMo2 was not started: its approved spec requires the preceding Host
 - The scheduled one-command read-only poll to alias `142` failed before connecting with `Host key verification failed`.
 - Read-only SSH config resolves alias `142` to `10.10.40.142`, user `aburatani`, port 22. `ssh-keygen -F` found no entry for either alias or IP in `/home/aburatani/.ssh/known_hosts`.
 - No host-key check was bypassed, no process was touched, and no host state was inferred from this failed connection. Last confirmed state remains the 00:50 JST entry above. Do not start or stop jobs on Host142 until its host key is safely confirmed. Retry only at a later scheduled poll if the trust entry is restored.
+
+## 12:19 JST — host availability recheck
+
+- A fresh `ssh -o BatchMode=yes 142 ...` read-only poll again failed with `Host key verification failed`; no Host142 GPU/RAM/process state was inferred and no trust check was bypassed. `ssh-keygen -F` also found no alias/IP record in `known_hosts.old`, so there is no local backup trust entry to use.
+- Host141 snapshot: GPU0 had 171 MiB used / 0% utilization; GPU1 had 15 MiB / 0%; GPU2 had 5,777 MiB used and 100% utilization. `MemAvailable` was 116,713,696 kB. The filtered process-name check did not identify GPU2's owner, so do not use that GPU or infer its process is ours. No process was started or stopped. Existing queued specs remain tied to their recorded Host142 resource gates; no candidate was moved to Host141.
