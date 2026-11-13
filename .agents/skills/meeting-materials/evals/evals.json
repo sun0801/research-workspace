@@ -22,6 +22,10 @@
         {
           "name": "record_reported",
           "description": "報告に次回MTG用のエントリを作ったことを1行で書く"
+        },
+        {
+          "name": "conditions_on_same_line",
+          "description": "既定の設定や1例だけなど条件付きの結果は、条件を結論と同じ行に書き、一般論にしない。図には線・色・矢印の意味を先に書く"
         }
       ]
     },
@@ -50,6 +54,10 @@
         {
           "name": "entries_marked_used_and_oral_prep",
           "description": "まとめたエントリを status: used にして used_in を書き、消さない。完了報告で口頭準備を渡す"
+        },
+        {
+          "name": "figure_check_listed",
+          "description": "完了報告で、図ごとに線・色・矢印・塗りの意味と、意図どおりかをどう確かめたか（未確認ならそう書く）を一覧にする"
         }
       ]
     },
