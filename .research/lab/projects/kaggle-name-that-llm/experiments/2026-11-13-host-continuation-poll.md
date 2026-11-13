@@ -27,3 +27,7 @@ type: host-continuation-poll
 
 - `mistral-confirm`（Host142 GPU1、PID `2872240`）のconfirmation fold 0が22:48 JSTに完了（BA `.561111`、VRAM peak 14,368 MiB、MemAvailable 209 GiB）。開始15:55から約6.9時間。残り4 foldは約28時間の見込みで、全5 fold完了は11/15 03時ごろ。完了後に[確認spec](../specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)のCPU評価へ進む。
 - 同日の他の状況: v13 Spectral付きNotebookはPublic `.560`（[ログ](2026-11-13-baseline-spectral-notebook-lb-check.md)）。Qwen3-14B QLoRAのA4000 pilotは資源gate不通過で棄却（[ログ](2026-11-13-qwen3-14b-qlora-a4000-pilot.md)）。
+
+## 11/14 05:44 JST — Mistral confirmation fold 1完了
+
+- fold 1が05:38 JSTに完了（BA `.583333`、VRAM peak 14,368 MiB、MemAvailable 209 GiB）。fold 0は`.561111`。所要は約6.8時間。残り3 foldは約20時間で、全5 fold完了は11/15 02〜03時ごろの見込み。
