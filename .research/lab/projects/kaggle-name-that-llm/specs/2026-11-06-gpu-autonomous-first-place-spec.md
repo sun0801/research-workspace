@@ -125,6 +125,43 @@ Kaggle Name That LLMで、結果に基づいてモデル・特徴量・アンサ
 - 新しいversion・手法差分・判断を変える証拠がある場合に再調査する。実行中の結果回収、有望候補の独立確認、提出検証につながる作業を優先し、待ち時間を埋めるために同じ調査を繰り返さない。
 - 既存文書は保持・参照し、整理目的の一括移動・削除はしない。本改訂は文書作成・追記の運用のみで、実験設計、評価基準、実行中job、実装開始の承認範囲は変更しない。
 
+## 担当エージェントの切り替え（2026-11-13、ユーザー承認）
+
+Codexの週次利用枠が不足したときに、Claude Code CLIで同じgoalを続けられるようにする。この節は担当とモデル・利用枠の確認方法だけを定め、上の実験・提出・安全・記録の規則はそのまま両方に適用する。
+
+- 担当
+  - 通常の担当はCodex CLIとする。Claude Code CLIへの切り替えは、ユーザーが許可したときだけ行う。Codexへ戻すときもユーザーの指示による。
+  - 同時に担当するのは1つだけとする。切り替えるときは、前の担当のgoalを止め（Codexは`/goal resume`しない、Claude Codeは`/loop`・`/goal`を解除する）、実行中jobの状態と再開位置を当日の継続ログに残してから引き継ぐ。
+  - 引き継いだ側は、作業の前にこのspec、READMEの「現在の状況」、当日の継続ログを読み、実行中jobの有無を確認してから進める。二重起動しない。
+- Claude Code CLIのモデル
+  - 主のモデルはSonnet、advisorはFableとする（`claude --model sonnet --advisor fable`で起動する）。監視・記録・手順どおりのjob操作はSonnetで行い、候補選定・エラー原因の判断・提出判断などの節目でFableに相談する。advisorの設定はユーザー設定に保存せず、起動時の指定だけで使う。
+  - 30分おきの監視は`/loop`で間隔を空けて行い、待ち時間にturnを回し続けない。
+- 利用枠の確認（Claude Code CLI）
+  - 確認は`.agents/skills/kaggle-workflow/scripts/claude_rate_limit.py --guard 15`で行う。判定の基準と、残量15%以下・取得不能のときの扱いは「利用枠・継続・停止条件」のCodexの規則と同じとする。
+  - このスクリプトは、statusline（`~/.claude/statusline-rate-limits.py`）が保存する`~/.claude/rate-limits.json`を読む。Claudeの利用枠は研究など他の作業と共通のため、残量はKaggle以外の使用でも減る。
+- 実行環境
+  - CodexもClaude Codeも Host142の上で動いている。Host142の状態は、SSHを使わずローカルのコマンドで確認する。Host141への接続は従来どおり`ssh 141`を使う。
+
+## 自動コミット（2026-11-13、ユーザー承認）
+
+担当エージェント（Codex CLI・Claude Code CLIのどちらでも）は、Kaggleの変更に限り、ユーザーの依頼を待たずに節目ごとにコミットする。AGENTS.mdの「Gitコミット」の例外として、この節に従う。
+
+- 対象
+  - research-workspace：`.research/lab/projects/kaggle-name-that-llm/` と `.agents/skills/kaggle-workflow/`
+  - 実装リポジトリ `/mnt/HDD10TB-2/aburatani/kaggle`：`name-that-llm/` と `.gitignore`
+  - ほかのプロジェクト・ほかの作業のファイルは含めない。
+- タイミング
+  - 次の記録を書き終えたとき：jobの起動・完了、候補の採用・不採用の判定、Notebookのpush・提出、specの作成・変更。
+  - 1日の終わりに対象の変更が残っていれば、まとめてコミットする。
+  - 30分おきの監視ごとにはコミットしない。
+- 手順
+  - research-workspaceでは他の作業（SAM2など）も同時に進むため、対象のパスだけを `git add -- <path>` で追加し、`git commit -m "<message>" -- <対象のパス>` のようにパスを指定してコミットする。他のセッションがstageした変更を混ぜない。`git add -A`・`git add .` は使わない。
+  - コミットの前に、stageした内容（`git diff --cached --stat`）を確認する。認証情報（`.env`、`kaggle.json`、token）、`artifacts/`・`data/`・`submissions/`・Datasetの資材、5MBを超えるファイルは含めない。
+  - メッセージは既存の形式に合わせ、`研究:`・`調査:`・`運用:`・`実装:`・`研究管理:` などで始まる日本語にする。中身ごとにコミットを分ける。
+  - pushはしない（ユーザーの指示があるときだけ）。
+- 最初のコミット
+  - この節を入れた時点でたまっている変更（実装リポジトリの未コミット73件、research-workspaceのKaggleの変更）を、中身ごとに分けてコミットする。
+
 ## 完了成果物・検証
 
 - 再現可能なコード、依存lock、設定、Notebook、モデル/データの出典とversion。
