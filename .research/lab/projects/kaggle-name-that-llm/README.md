@@ -3,7 +3,7 @@ project: kaggle-name-that-llm
 status: active
 summary: 現bestはSpectral confirmation BA`.653828`（LB未検証）。DeBERTa固定additionはprimary gate不通過、次はHost142復旧後にMistral独立確認。
 created: 2026-11-02
-last_updated: 2026-11-12
+last_updated: 2026-11-13
 ---
 
 # Kaggle — Name That LLM
@@ -19,7 +19,7 @@ last_updated: 2026-11-12
 ## 現在の状況
 
 - 現bestはSpectral補正のindependent confirmation BA`.653828`（LB未検証）。公開首位は`.768`（11/12公式確認）。採用中の基準blendはprimary BA`.586408`。
-- 基準blend v12 ref`58261829`はPublic`.541`で採点成功。CVとの差は約`-.045`で、CV-LB対応はまだ1点のみ。
+- 基準blend v12 ref`58261829`はPublic`.541`、Spectral付きv13 ref`58300703`はPublic`.560`（11/13）。CVの改善`+.078`がLBでは`+.019`で、CV-LB対応は2点。[ログ](experiments/2026-11-13-baseline-spectral-notebook-lb-check.md)
 - v9 refs`58251076`・`58253257`はhidden rerunで`COMPLETE`だが、Public/Private scoreなし。Kaggleは一般エラーのみ返し、詳細traceは未取得。
 - v9失敗の第一仮説は入力path・`train.csv`/template依存。v12のtest-only入力で成功したため支持されるが、根因確定ではない。[診断ログ](experiments/2026-11-12-baseline-benchmark-push.md)
 - Mistral＋Spectral primary BA`.689791`はshape screen（uniform m=2/3）も通過、独立confirmation待ち。Host142 GPU1の実行gateは未通過。[screen](experiments/2026-11-12-mistral-spectral-small-prompt-shape-screen.md) · [確認spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)

@@ -26,3 +26,10 @@ spec: ../specs/2026-11-13-baseline-spectral-notebook-lb-check-spec.md
 - kernel v13 version 1は`COMPLETE`。`runtime_gate_pass=true`（projected 2.59h、9h内）。公開3行でSpectralのクラスタ数3・予測変更率0.0、`submission.parquet`は3行（列`id`,`model`）でエラーなし。
 - 直前確認: `submission-limits` `numAllowedNow=5`、公開LB首位`.769`（16:08から変化なし）。
 - 提出: ref `58300703`（2026-11-13 07:34 UTC = 16:34 JST）、`--kernel suntree0801/name-that-llm-private-baseline-blend-v13-spectral --version 1`。残り提出枠4（当日）。状態PENDING。結果の読み方は[spec](../specs/2026-11-13-baseline-spectral-notebook-lb-check-spec.md)の事前登録のとおり（v12 `.541`との比較）。
+
+## 18:24 JST — v13のPublic LB結果
+
+- ref `58300703`: `COMPLETE`、Public `.560`、Private未公開。v12（Spectralなし）は`.541`なので、Spectral追加の差は`+.019`。
+- CVとの対応: 手元の基準blendは primary `.586`（CVと v12 LBの差 約`-.045`）、Spectral付きは primary `.665`／confirmation `.654`（LBとの差 約`-.09〜-.105`）。CVで`+.078`あった改善が、公開LBでは約1/4（`+.019`）しか出ていない。
+- 事前登録の読み方に当てはめる: `.541`より高い（改善方向）ので「転移の第一の証拠」に当たるが、改善幅はCVに比べて小さい。公開testは一部で、1提出のため確実とは言えない。考えられる要因（未検証）: 隠しtest（約4,000行）でのクラスタ構造がfold（約540行）と異なること、CVと公開LB分布の差。pooled CV（全2,699行を1母集団）は`.662`で崩れておらず、行数だけでは説明しにくい。
+- 次: Spectral付きの方向は維持するが、Mistral追加（confirmation待ち）の効果も同程度に割り引いて見る。LBに合わせたSpectralの再調整はしない。
