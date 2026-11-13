@@ -22,3 +22,8 @@ type: host-continuation-poll
 - 旧pilotは `pilot-legacy-runner-3bd614d9.json`（原本）と `pilot-superseded.json` に保存。現行runner（prefix `7723b086`）で同一config・GPU1（UUID `GPU-8a059266-...`）のpilotを実行し、`pilot_complete`（loss 2.453、step 1.30秒、peak 14,502 MiB、free 17,104 MiB、`pass_reserve` true）。
 - 起動：tmux `mistral-confirm`（PID `2872240`、Host142 GPU1、flock `artifacts/.gpu1-run.lock`）、`--split confirmation --resume`、ログ `artifacts/gpu03-mistral-7b-v0-1-openpool-v15/confirmation-run.log`。落ちた場合は同じコマンドで `--resume` 再開。
 - 次：全5 foldのconfirmation OOF完了後、[確認spec](../specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)のCPU評価（`artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/`）。
+
+## 23:01 JST — Mistral confirmation fold 0完了
+
+- `mistral-confirm`（Host142 GPU1、PID `2872240`）のconfirmation fold 0が22:48 JSTに完了（BA `.561111`、VRAM peak 14,368 MiB、MemAvailable 209 GiB）。開始15:55から約6.9時間。残り4 foldは約28時間の見込みで、全5 fold完了は11/15 03時ごろ。完了後に[確認spec](../specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)のCPU評価へ進む。
+- 同日の他の状況: v13 Spectral付きNotebookはPublic `.560`（[ログ](2026-11-13-baseline-spectral-notebook-lb-check.md)）。Qwen3-14B QLoRAのA4000 pilotは資源gate不通過で棄却（[ログ](2026-11-13-qwen3-14b-qlora-a4000-pilot.md)）。
