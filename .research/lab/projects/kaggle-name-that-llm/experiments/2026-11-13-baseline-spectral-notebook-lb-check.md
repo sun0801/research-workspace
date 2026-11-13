@@ -20,3 +20,9 @@ spec: ../specs/2026-11-13-baseline-spectral-notebook-lb-check-spec.md
 - advisor（Fable）相談後の確認: (1) Kaggleから`kernels pull`したv12-test-only sourceと、ローカルv12 sourceの全5セルが一致（差分なし）。v13とv12の差はSpectralセルと予測行の差し替えのみ。(2) fold単位ではなく全2,699行を1母集団として`spectral_postprocess`を適用したCV（実確率・実text）: primary raw `.586408` → pooled Spectral `.661616`（fold-wise `.664952`）、confirmation raw `.567870` → pooled `.650502`。母集団が大きくなっても効果は大きく崩れない（`scripts/check_spectral_pooled.py`、CVでありLB調整ではない）。
 - 提出方法はv9と同じ形（`kaggle competitions submit name-that-llm --file submission.parquet --kernel <slug> --version <N> --message ...`）。
 - private kernel `suntree0801/name-that-llm-private-baseline-blend-v13-spectral` をpush。次はinteractive runのCOMPLETE待ち→`runtime_estimate.json`・Spectral print・`submission.parquet`を確認してから提出。
+
+## 16:34 JST — v13 interactive run完了・提出
+
+- kernel v13 version 1は`COMPLETE`。`runtime_gate_pass=true`（projected 2.59h、9h内）。公開3行でSpectralのクラスタ数3・予測変更率0.0、`submission.parquet`は3行（列`id`,`model`）でエラーなし。
+- 直前確認: `submission-limits` `numAllowedNow=5`、公開LB首位`.769`（16:08から変化なし）。
+- 提出: ref `58300703`（2026-11-13 07:34 UTC = 16:34 JST）、`--kernel suntree0801/name-that-llm-private-baseline-blend-v13-spectral --version 1`。残り提出枠4（当日）。状態PENDING。結果の読み方は[spec](../specs/2026-11-13-baseline-spectral-notebook-lb-check-spec.md)の事前登録のとおり（v12 `.541`との比較）。
