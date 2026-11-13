@@ -90,3 +90,21 @@ tags: [experiment, temporal-mamba, latent-correspondence, A-b, diagnosis]
   - 言えないこと：A-b の方が RAFT より外形を保つ。比べるなら、前向き・後ろ向きの flow の一致で disocclusion のマスを除くなどしてから比べる。
   - 再現：[check_disocclusion.py](figures/2026-11-12-latent-corr-shape-coherence/check_disocclusion.py)、出力は [data/disocclusion.txt](figures/2026-11-12-latent-corr-shape-coherence/data/disocclusion.txt)。
 - **矢印の図（01・02）の説明不足**：色は「上下左右の隣との差の最大が1マスを超えるか」で、矢印の長さではない（短い矢印がオレンジになるのは定義どおり）。矢印は1〜3マスおきに間引いているので、差の原因の隣は図に出ていないことがある。A-b の矢印は softmax の重みの期待値（重心）で、重みが散らばっているとき（最大 0.11 など）は、実際に持ってくる位置ではない。色の閾値はコードで確かめたが、手計算での照合はしていない。
+
+## 追試：disocclusion を除いた比較（2026-11-13）
+
+- 方法：同じ 3,185組で、RAFT large（1024、更新12回）の後ろ向きの flow（t → t−1）と前向きの flow（t−1 → t）を計算し、前後の一致（|b(x) + f(x + b(x))|² < 0.01(|b|² + |f|²) + 0.5 画素）を満たさない画素を disocclusion とみなした。16×16 の画素の半分以上が一致するマスだけを残し、運んだマスクの IoU をそのマスだけで計算し直した。どの方式にも同じマスを使う。残したマスは画面全体の平均 83%。後ろ向きの flow は前回保存した値と一致した（差は最大 0.008 マス）。
+- 結果（物体ごとの平均を層で平均、[95% 区間]）：
+
+| 方式 | 遅い | 中くらい | 速い | 全体 |
+|---|---|---|---|---|
+| A-b（全マス → 一致したマスだけ） | 0.803 → 0.810 | 0.735 → 0.770 | 0.744 → 0.763 | 0.761 → 0.781 [0.763, 0.798] |
+| RAFT | 0.787 → 0.817 | 0.662 → 0.757 | 0.561 → 0.679 | 0.670 → 0.751 [0.731, 0.771] |
+| 同じ位置 | 0.746 → 0.759 | 0.563 → 0.594 | 0.426 → 0.452 | 0.579 → 0.602 |
+| A-b − RAFT（一致したマスだけ、物体ごとの対の差） | −0.007 [−0.018, +0.005] | +0.012 [−0.006, +0.028] | +0.084 [+0.060, +0.111] | +0.030 [+0.019, +0.042] |
+
+- 読み取り：
+  - disocclusion を除くと、A-b と RAFT の差は全体で 0.09 → 0.03 に縮む。遅い・中くらいの物体では差がない（区間が0を含む）。
+  - 速い物体では、除いた後も A-b が高い（+0.08）。RAFT のマス平均で物体の縁の背景の flow が混ざることや、速い動きでの RAFT の誤りが残っている可能性がある（未確認）。除くマスは RAFT 自身の前後の一致で決めているので、RAFT に有利な側の除き方で、それでも残る差。
+  - 前の「訂正」のとおり、「A-b は外形を保つ」の比較相手としては、同じ位置（0.60）との差の方が確か。
+- 再現：[fair_iou.py](figures/2026-11-12-latent-corr-shape-coherence/fair_iou.py)（SAM2 repo のルートで、`CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=0 PYTHONPATH=$PWD .venv-sam2/bin/python <このフォルダ>/fair_iou.py --data <このフォルダ>/data`、RTX A4000 で約11分、別の計算と同時）。出力は [data/fair_iou_summary.md](figures/2026-11-12-latent-corr-shape-coherence/data/fair_iou_summary.md) と `data/fair_iou.jsonl`。
