@@ -93,7 +93,7 @@ tags: [experiment, temporal-mamba, latent-correspondence, A-b, diagnosis]
 
 ## 追試：disocclusion を除いた比較（2026-11-13）
 
-- 方法：同じ 3,185組で、RAFT large（1024、更新12回）の後ろ向きの flow（t → t−1）と前向きの flow（t−1 → t）を計算し、前後の一致（|b(x) + f(x + b(x))|² < 0.01(|b|² + |f|²) + 0.5 画素）を満たさない画素を disocclusion とみなした。16×16 の画素の半分以上が一致するマスだけを残し、運んだマスクの IoU をそのマスだけで計算し直した。どの方式にも同じマスを使う。残したマスは画面全体の平均 83%。後ろ向きの flow は前回保存した値と一致した（差は最大 0.008 マス）。
+- 方法：同じ 3,185組で、RAFT large（1024、更新12回）の後ろ向きの flow（t → t−1）と前向きの flow（t−1 → t）を計算し、前後の一致（|b(x) + f(x + b(x))|² < 0.01(|b|² + |f|²) + 0.5 画素）を満たさない画素を除く対象にした（disocclusion だけでなく、RAFT の flow の誤りも含む）。16×16 の画素の半分以上が一致するマスだけを残し、運んだマスクの IoU をそのマスだけで計算し直した。どの方式にも同じマスを使う。残したマスは画面全体の平均 83%。後ろ向きの flow は前回保存した値と一致した（差は最大 0.008 マス）。
 - 結果（物体ごとの平均を層で平均、[95% 区間]）：
 
 | 方式 | 遅い | 中くらい | 速い | 全体 |
@@ -106,5 +106,14 @@ tags: [experiment, temporal-mamba, latent-correspondence, A-b, diagnosis]
 - 読み取り：
   - disocclusion を除くと、A-b と RAFT の差は全体で 0.09 → 0.03 に縮む。遅い・中くらいの物体では差がない（区間が0を含む）。
   - 速い物体では、除いた後も A-b が高い（+0.08）。RAFT のマス平均で物体の縁の背景の flow が混ざることや、速い動きでの RAFT の誤りが残っている可能性がある（未確認）。除くマスは RAFT 自身の前後の一致で決めているので、RAFT に有利な側の除き方で、それでも残る差。
+  - 除いたマスは、物体のまわり（t と t−1 の物体のマス）の約1〜3割（遅い 12%・中くらい 25%・速い 33%、目安）。図07のとおり、速い犬では物体の内側にも多く、disocclusion だけを除いたわけではない。
   - 前の「訂正」のとおり、「A-b は外形を保つ」の比較相手としては、同じ位置（0.60）との差の方が確か。
 - 再現：[fair_iou.py](figures/2026-11-12-latent-corr-shape-coherence/fair_iou.py)（SAM2 repo のルートで、`CUDA_DEVICE_ORDER=PCI_BUS_ID CUDA_VISIBLE_DEVICES=0 PYTHONPATH=$PWD .venv-sam2/bin/python <このフォルダ>/fair_iou.py --data <このフォルダ>/data`、RTX A4000 で約11分、別の計算と同時）。出力は [data/fair_iou_summary.md](figures/2026-11-12-latent-corr-shape-coherence/data/fair_iou_summary.md) と `data/fair_iou.jsonl`。
+
+### 見直した図（2026-11-13）
+
+MTGで見せた図01〜05は、そのまま残す。説明を直した図を、別の番号で作った（[fig_revised.py](figures/2026-11-12-latent-corr-shape-coherence/fig_revised.py)、SAM2 repo のルートで `fair_iou.py` と同じ環境変数で実行）。
+
+- [06-arrows-median-cells.png](figures/2026-11-12-latent-corr-shape-coherence/06-arrows-median-cells.png)：01 と同じ例。物体の全マスを、上下左右の隣との移動の差（最大）が1マス以下なら青、超えるならオレンジで塗った。矢印（濃い灰色）は t−1 の取ってくる位置 → t のマスで、数マスおきに表示。A-b の矢印は重みの平均の位置。01 では色が間引いた矢印にしか付いておらず、差の原因の隣が見えなかった。
+- [07-masks-median-disocclusion.png](figures/2026-11-12-latent-corr-shape-coherence/07-masks-median-disocclusion.png)：04 と同じ例。青の濃さは「t の各マスが、対応先（t−1）の物体マスクの値を重み付きで取ってきた値」（色の帯の説明を直した）。斜線は RAFT の前後の flow が一致しないマス（IoU の再計算で除いたマス）。RAFT が物体の外に塗ったマスの多くは、t−1 に物体があった場所の斜線の上にある。
+- [08-iou-valid.png](figures/2026-11-12-latent-corr-shape-coherence/08-iou-valid.png)：05 を、前後の flow が一致するマスだけで計算し直した IoU（上の表）。

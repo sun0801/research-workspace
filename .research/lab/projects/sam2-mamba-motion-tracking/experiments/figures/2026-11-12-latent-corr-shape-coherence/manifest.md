@@ -25,3 +25,6 @@
 | 03-coherence.png | experiment | 隣と1マス以上ずれる辺の割合・折り返しの割合（A-b、argmax、RAFT） | pairs.jsonl | 物体ごとに組の平均を取り、層で物体の平均。ひげは物体の bootstrap 95% 区間（10,000回、seed 123） |
 | 04-masks-median.png | experiment | 01 と同じ組で、t−1 の物体の被覆率を A-b・RAFT で運んだ結果と正解の輪郭 | pairs.jsonl・fields.pt・MOSE train | 被覆率0.05未満は表示しない |
 | 05-iou.png | experiment | 運んだマスク（0.5以上）と正解の IoU（4方式） | pairs.jsonl | 集計は03と同じ |
+| 06-arrows-median-cells.png | experiment | 01 の見直し（11/13 MTG後）。全マスを隣との差で塗り、矢印は灰色 | pairs.jsonl・fields.pt・MOSE train | `fig_revised.py` |
+| 07-masks-median-disocclusion.png | experiment | 04 の見直し。色の帯の説明を直し、RAFT の前後の flow が一致しないマスに斜線 | 同上＋RAFT large（例の3組） | `fig_revised.py` |
+| 08-iou-valid.png | experiment | 05 を前後の flow が一致するマスだけで計算し直した IoU | data/fair_iou.jsonl | `fair_iou.py`・`fig_revised.py` |
