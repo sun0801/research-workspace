@@ -28,3 +28,4 @@
 | 03-raft-fast.png | experiment | 速い動画3本で、DIS ultrafast（1024）と RAFT small・large（1024・256、更新12回）を並べる | selected_videos.json、MOSE train、torchvision の RAFT の重み | 組の選び方と色は 01 と同じ |
 | 04-raft-slow.png | experiment | 遅い動画3本で同じ比較 | 同上 | 同上 |
 | 05-flow-moved-object.png | explanatory | MTG説明用。フレーム t の物体を各手法（Farneback・DIS ultrafast・RAFT small、1024）の flow で動かし、次のフレームの本当の位置と重ねる。速い車（24df9789、t=3、物体が画面内に収まる組）とゆっくり動くバス（198021ad、t=11、拡大） | MOSE train、torchvision の RAFT の重み | 1組ずつの例。時間は図に入れず、実験ログと資料の表に載せる。物体の全画素を flow で動かし、9×9 の closing で穴を埋めた |
+| 06-flow-moved-object-settings.png | explanatory | 05 の見直し（11/13 MTG後）。同じ2組を Farneback 3段・7段、DIS 最速・medium、RAFT large で、1024 で計算して描く | MOSE train、RAFT large の重み | `flow_settings_fig.py`。設定の比較の数値は `flow_sweep.py`・`summarize_sweep.py`（data/sweep_summary.md） |

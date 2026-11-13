@@ -195,3 +195,8 @@ GPU にすると速くなるかを見るため、`.venv-sam2` の torchvision 0.
   - 端に触れる組はどれも 0.4〜0.5 で、この指標では比べられない。
   - 速い・端に触れないのは3本・14組だけ。区間は出していない。
 - 再現：[flow_sweep.py](figures/2026-11-11-optical-flow-cost/flow_sweep.py)、[summarize_sweep.py](figures/2026-11-11-optical-flow-cost/summarize_sweep.py)、出力は [data/sweep_summary.md](figures/2026-11-11-optical-flow-cost/data/sweep_summary.md) と `data/sweep.jsonl`。
+
+### 見直した図（2026-11-13）
+
+- [06-flow-moved-object-settings.png](figures/2026-11-11-optical-flow-cost/06-flow-moved-object-settings.png)：05 と同じ2組を、設定を変えて描き直した（[flow_settings_fig.py](figures/2026-11-11-optical-flow-cost/flow_settings_fig.py)）。列は Farneback（ピラミッド3段＝前回の設定・7段）、DIS（最速・medium）、RAFT large。黄の線は t の物体、水色の破線は t+1 の物体（本当の位置）、オレンジは t の物体の各画素を flow で動かした結果。05 と違い、flow の計算と物体の移動をどちらも 1024×1024 で行い（`flow_sweep.py` の IoU と同じ）、元の縦横比に戻して描いた。05 は MTG で見せたまま残す。
+- 速い車では、Farneback 3段はほとんど動かず、7段で途中まで、DIS（最速・medium）と RAFT large は水色の位置まで動く。ゆっくり動くバスは、どれも水色に重なる。
