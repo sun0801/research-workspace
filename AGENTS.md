@@ -110,6 +110,7 @@ Codex と Claude Code の入口は、同じ正本を参照するリンクです�
 研究プロジェクトの作業（実験・実装・調査・原稿など）が一区切りしたら、頼まれなくても `meeting-materials` の記録モードで、その進捗だけを書いたエントリを `materials/entries/YYYY-MM-DD-<topic>.md` に1ファイル作ってください。作ったら、報告に1行添えてください。MTG直前に、同じスキルの仕上げモードでエントリを1つの資料にまとめます。
 
 - `kaggle-name-that-llm` は、ユーザー指定によりMTG資料の記録対象外です。MTG資料・エントリを自動作成せず、作業記録は実験ログとREADMEに残してください（2026-11-12）。
+- `lab-study-quantization`（研究室勉強会の準備）も、ユーザー指定によりMTG資料の記録対象外です。扱いは上と同じです（2026-11-13）。
 
 ### 日付チェック
 
@@ -121,7 +122,7 @@ Codex と Claude Code の入口は、同じ正本を参照するリンクです�
 - ユーザーからその作業で明示的に依頼された場合にだけコミットしてください。pushは、ユーザーから明示的に指示された場合に行ってください。
 - コミットを依頼されたら、Gitの状態と差分を確認し、その作業の関連ファイルだけを対象にしてください。他の作業やユーザーの未完了の変更を混ぜず、`git add .` や `git add -A` による一括ステージは避けてください。
 - コミットメッセージの件名は、種別のあとに括弧でスコープを付けてください。例: `研究(sam2): …`、`運用(kaggle): …`、`スキル(共通): …`（2026-11-13）。
-  - スコープはプロジェクトの短縮名です: `sam2`（sam2-mamba-motion-tracking）、`kaggle`（kaggle-name-that-llm、`.agents/skills/kaggle-workflow/` を含む）、`governance`（research-workspace-governance）。
+  - スコープはプロジェクトの短縮名です: `sam2`（sam2-mamba-motion-tracking）、`kaggle`（kaggle-name-that-llm、`.agents/skills/kaggle-workflow/` を含む）、`governance`（research-workspace-governance）、`quant`（lab-study-quantization）。
   - プロジェクトに属さない変更（秘書室、共通スキル、AGENTS.md、README など）は `共通` にしてください。
   - 新しいプロジェクトを作ったら、短縮名を決めてこの一覧に追記してください。
   - 1つのコミットに複数プロジェクトの変更を混ぜないでください。
