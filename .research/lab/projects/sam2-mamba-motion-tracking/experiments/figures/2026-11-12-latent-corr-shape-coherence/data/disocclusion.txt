@@ -1,0 +1,4 @@
+rows 3185
+softmax   fp   38862  in t-1 object 0.52  next to t object 0.65  fn   43585
+raft      fp   88312  in t-1 object 0.67  next to t object 0.54  fn   70881
+identity  fp  115669  in t-1 object 1.00  next to t object 0.56  fn  117535
