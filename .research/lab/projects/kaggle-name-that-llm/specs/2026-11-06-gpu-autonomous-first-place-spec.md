@@ -157,7 +157,7 @@ Codexの週次利用枠が不足したときに、Claude Code CLIで同じgoal�
 - 手順
   - research-workspaceでは他の作業（SAM2など）も同時に進むため、対象のパスだけを `git add -- <path>` で追加し、`git commit -m "<message>" -- <対象のパス>` のようにパスを指定してコミットする。他のセッションがstageした変更を混ぜない。`git add -A`・`git add .` は使わない。
   - コミットの前に、stageした内容（`git diff --cached --stat`）を確認する。認証情報（`.env`、`kaggle.json`、token）、`artifacts/`・`data/`・`submissions/`・Datasetの資材、5MBを超えるファイルは含めない。
-  - メッセージは既存の形式に合わせ、`研究:`・`調査:`・`運用:`・`実装:`・`研究管理:` などで始まる日本語にする。中身ごとにコミットを分ける。
+  - メッセージは `研究(kaggle):`・`調査(kaggle):`・`運用(kaggle):`・`実装(kaggle):`・`研究管理(kaggle):` のように、種別のあとに `(kaggle)` を付けて始まる日本語にする（AGENTS.mdの「Gitコミット」、2026-11-13）。実装リポジトリ側も同じ形式にそろえる。中身ごとにコミットを分ける。
   - pushはしない（ユーザーの指示があるときだけ）。
 - 最初のコミット
   - この節を入れた時点でたまっている変更（実装リポジトリの未コミット73件、research-workspaceのKaggleの変更）を、中身ごとに分けてコミットする。
