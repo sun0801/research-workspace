@@ -5,7 +5,7 @@ type: meeting-materials
 status: ready
 target_meeting: 2026-11-13
 previous_meeting: 2026-11-06
-notion_url: null
+notion_url: https://app.notion.com/p/4168c1b45b60815b8473ff141fc4f2e0
 notion_export: null
 tags: [meeting-materials, research]
 ---
