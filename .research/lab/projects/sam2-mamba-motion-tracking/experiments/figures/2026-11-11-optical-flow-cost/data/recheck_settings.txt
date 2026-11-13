@@ -1,0 +1,10 @@
+24df9789 t=3: GT centroid shift dx=-148.7 dy=-2.4 px @1024
+  farneback L3 w15 (used)  mean flow dx=   -3.4 dy=  4.9  IoU=0.33  339 ms
+  farneback L5 w15         mean flow dx=  -53.0 dy=  5.0  IoU=0.57  401 ms
+  DIS ultrafast (used)     mean flow dx= -151.7 dy= -2.7  IoU=0.87  17 ms
+  DIS medium               mean flow dx= -152.5 dy= -2.7  IoU=0.92  174 ms
+198021ad t=11: GT centroid shift dx=7.0 dy=-0.7 px @1024
+  farneback L3 w15 (used)  mean flow dx=    5.3 dy= -0.8  IoU=0.97  304 ms
+  farneback L5 w15         mean flow dx=    5.3 dy= -0.8  IoU=0.97  361 ms
+  DIS ultrafast (used)     mean flow dx=    6.5 dy= -1.0  IoU=0.97  18 ms
+  DIS medium               mean flow dx=    6.3 dy= -0.9  IoU=0.98  166 ms
