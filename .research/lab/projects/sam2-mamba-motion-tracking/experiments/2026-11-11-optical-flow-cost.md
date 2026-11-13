@@ -170,3 +170,28 @@ GPU にすると速くなるかを見るため、`.venv-sam2` の torchvision 0.
   - 1組ずつの確認。時間は1回だけの計測で、上の表（120組の中央値）とは条件が違う。図05は元の大きさで描いていて、DIS が「途中まで引き伸ばされる」ように見えたが、1024 で測ると IoU 0.87 だった。
   - 再現：[recheck_settings.py](figures/2026-11-11-optical-flow-cost/recheck_settings.py)、出力は [data/recheck_settings.txt](figures/2026-11-11-optical-flow-cost/data/recheck_settings.txt)。
 - **言い直し**：計算量の結論（DIS なら A-a をやらない理由にならない）はそのまま。「速さなら DIS、質なら RAFT」は撤回する。設定を振った比較を6本全体でやり直すまで、flow の手法の良し悪しは言わない。
+
+## 追試：設定を振った比較（2026-11-13）
+
+- 方法：同じ6本・最初の20組（158組×物体）で、Farneback 4設定・DIS 3設定・RAFT 2種（更新12回）を、すべて 1024×1024 で比べた。指標は、t の物体の全画素を flow で前に動かした領域（画面の外に出た画素は捨て、9×9 で穴を埋める）と、t+1 の正解の IoU。物体が画面の端に触れる組は、見えている部分が物体どおりに動かないので分けた。
+- 結果（動画ごとに平均し、3本の平均。時間は1組の中央値。CPU は1スレッド）：
+
+| 設定 | 速い・端に触れない（14組） | 速い・端に触れる（30組） | 遅い（114組） | 時間 ms |
+|---|---|---|---|---|
+| Farneback levels 3・winsize 15（11/11 の設定） | 0.45 | 0.38 | 0.75 | 270 |
+| Farneback levels 5・winsize 15 | 0.61 | 0.43 | 0.75 | 337 |
+| Farneback levels 5・winsize 31 | 0.61 | 0.43 | 0.74 | 365 |
+| Farneback levels 7・winsize 21 | 0.63 | 0.45 | 0.73 | 459 |
+| DIS ultrafast | 0.79 | 0.45 | 0.78 | 16 |
+| DIS fast | 0.78 | 0.42 | 0.78 | 33 |
+| DIS medium | 0.83 | 0.49 | 0.81 | 159 |
+| RAFT small（GPU） | 0.73 | 0.50 | 0.80 | 196※ |
+| RAFT large（GPU） | 0.79 | 0.52 | 0.81 | 456※ |
+
+  ※ RAFT の時間は、同じ GPU で別の計算（A-b の追試）を同時に回していたので、11/11 の値（91・214 ms）より遅い。11/11 の値を使う。
+- 読み取り：
+  - Farneback は段を増やすと速い物体で 0.45 → 0.63 まで上がるが、DIS・RAFT に届かない。11/11 の「Farneback は動かない」は設定によるもので、設定を変えても今回の候補の中では一番低い。
+  - 速い物体（端に触れない）では、DIS medium（0.83）・DIS ultrafast（0.79）・RAFT large（0.79）が同じ程度。「質なら RAFT」は、この指標では言えない。
+  - 端に触れる組はどれも 0.4〜0.5 で、この指標では比べられない。
+  - 速い・端に触れないのは3本・14組だけ。区間は出していない。
+- 再現：[flow_sweep.py](figures/2026-11-11-optical-flow-cost/flow_sweep.py)、[summarize_sweep.py](figures/2026-11-11-optical-flow-cost/summarize_sweep.py)、出力は [data/sweep_summary.md](figures/2026-11-11-optical-flow-cost/data/sweep_summary.md) と `data/sweep.jsonl`。

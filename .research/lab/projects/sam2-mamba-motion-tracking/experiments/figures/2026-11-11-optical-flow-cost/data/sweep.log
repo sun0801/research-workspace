@@ -1,0 +1,8 @@
+/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/.venv-sam2/lib/python3.12/site-packages/torch/cuda/__init__.py:65: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+24df9789 fast done
+b6cadd11 fast done
+2e85e790 fast done
+198021ad slow done
+5f14e5d2 slow done
+f28b429a slow done
