@@ -23,6 +23,7 @@
 ├── experiments/
 │   └── figures/
 ├── materials/
+│   ├── entries/
 │   └── figures/
 ├── references/
 └── papers/
@@ -35,6 +36,7 @@
 - `README.md`: プロジェクトのSingle Source of Truth。frontmatter、概要、現在の状況、マイルストーン、更新履歴を管理する。
 - `meetings/`: MTG後の議事録専用。MTG前資料は置かない。
 - `materials/`: MTG前の相談資料、進捗報告資料、実験レビュー資料、方針相談資料。
+- `materials/entries/`: 進捗ごとのMTG用エントリ（1進捗1ファイル）。MTG直前に資料へまとめ、まとめた後も残す。
 - `materials/figures/`: MTG説明用に再構成した図、概念図、方針比較図。
 - `specs/`: 実験計画、設計計画、brainstorm後に固まった実行プラン。
 - `experiments/`: 実験ログ、研究出力、結果メモ。
@@ -47,8 +49,8 @@
 ## スキルの使い分け
 
 - MTG前資料は `meeting-materials` スキルに委ねてください。
-  - 実験・実装・調査・原稿などの作業が一区切りしたら（実験ログを書いた・宿題を片付けたなど）、頼まれなくても `meeting-materials` の記録モードで、次回MTG資料（`materials/` の `status: recording` のファイル）に短いエントリを追記してください。
-  - MTG直前は、同じスキルの仕上げモードでエントリを並べ替え・削って資料にします。
+  - 実験・実装・調査・原稿などの作業が一区切りしたら（実験ログを書いた・宿題を片付けたなど）、頼まれなくても `meeting-materials` の記録モードで、その進捗だけを書いたエントリを `materials/entries/YYYY-MM-DD-<topic>.md` に1ファイル作ってください。
+  - MTG直前は、同じスキルの仕上げモードでエントリを1つの資料にまとめ、並べ替え・削って仕上げます。
 - MTG後議事録は `meeting-minutes` スキルに委ねてください。
 - 研究相談、仮説整理、spec化前の壁打ちは `brainstorm` スキルに委ねてください。
 - プロジェクト作成、TODO、ダッシュボード、README/frontmatter管理は `research-workspace` スキルに委ねてください。

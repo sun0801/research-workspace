@@ -4,16 +4,16 @@
     {
       "id": 1,
       "prompt": "sample-research-project の評価指標の予備実験が終わったので、実験ログを書いておいて。",
-      "expected_output": "実験ログを書いた後、記録モードで materials/ の status: recording の資料（なければ前回MTG+7日の日付で新規作成し、最新議事録の次やることを宿題として写す）に、短いエントリを追記する。報告に「次回MTG資料に追記しました」と1行添える。",
+      "expected_output": "実験ログを書いた後、記録モードで materials/entries/YYYY-MM-DD-<topic>.md に、その進捗だけを書いたエントリ（status: pending）を1ファイル作る。資料ファイルやほかのエントリには書き込まない。報告に「次回MTG用のエントリを作りました」と1行添える。",
       "files": [],
       "assertions": [
         {
           "name": "record_mode_triggered_without_request",
-          "description": "明示の依頼がなくても、実験ログを書いた区切りで次回MTG資料にエントリを追記する"
+          "description": "明示の依頼がなくても、実験ログを書いた区切りで次回MTG用の個別エントリを作成する"
         },
         {
-          "name": "recording_file_found_or_created",
-          "description": "status: recording のファイルを使い、なければMTG日付のファイル名で作成して前回の宿題を写す"
+          "name": "separate_entry_file",
+          "description": "materials/entries/ に作業日付きの別ファイルとして作り、frontmatterを status: pending にする。資料ファイル・ほかのエントリ・宿題の一覧には触れない"
         },
         {
           "name": "entry_is_short",
@@ -21,38 +21,42 @@
         },
         {
           "name": "record_reported",
-          "description": "報告に次回MTG資料へ追記したことを1行で書く"
+          "description": "報告に次回MTG用のエントリを作ったことを1行で書く"
         }
       ]
     },
     {
       "id": 2,
       "prompt": "明日のMTGの資料を仕上げて。",
-      "expected_output": "status: recording の資料と最新議事録を読み、抜けの確認、相談のあるトピックを前に並べ替え、各トピック末尾の太字の相談を選択肢の形に整え、MTGで口に出さない内容を削り、値を実装・実験ログと照合する。記録メモを消して status: ready にし、相談の一覧と口頭準備をチャットで渡す。",
+      "expected_output": "materials/entries/ の status: pending のエントリと最新議事録を読み、前回の宿題との対応表をチャットで見せて対応のない宿題を確認し、エントリを materials/YYYY-MM-DD-weekly-progress-mtg-materials.md に1つにまとめる。相談のあるトピックを前に並べ替え、各トピック末尾の相談を選択肢の形に整え、MTGで口に出さない内容を削り、値を実装・実験ログと照合する。まとめたエントリを status: used にし、相談の一覧と口頭準備をチャットで渡す。",
       "files": [],
       "assertions": [
         {
-          "name": "reads_recording_file_and_minutes_only",
-          "description": "記録中の資料と最新議事録を中心に読み、experiments/ を総読みして作り直さない"
+          "name": "reads_entries_and_minutes_only",
+          "description": "pending のエントリと最新議事録を中心に読み、experiments/ を総読みして作り直さない"
+        },
+        {
+          "name": "homework_table_in_chat",
+          "description": "議事録の次やることとエントリの対応表をチャットで見せ、対応のない宿題をユーザーに確認する。表は資料に入れない"
         },
         {
           "name": "consults_at_topic_end",
-          "description": "相談は冒頭の一覧ではなく各トピック末尾の「→ 相談：」に置き、選択肢の形にし、今日決めてほしい相談を前に、次回でもよい相談を後ろに置く"
+          "description": "相談は冒頭の一覧ではなく各トピック末尾の「→ 相談：」に置き、選択肢の形にし、今日決めてほしい相談を前に、次回でもよい相談を後ろに置く。自分で決めて進められる確認は相談にせず、相談のないトピックがあってよい"
         },
         {
           "name": "length_and_labels_trimmed",
           "description": "分量の目標ではなく「MTGで口に出すか」で削り、実験ログの記号を持ち込まない"
         },
         {
-          "name": "status_ready_and_oral_prep",
-          "description": "記録メモを消して status: ready にし、完了報告で口頭準備を渡す"
+          "name": "entries_marked_used_and_oral_prep",
+          "description": "まとめたエントリを status: used にして used_in を書き、消さない。完了報告で口頭準備を渡す"
         }
       ]
     },
     {
       "id": 3,
-      "prompt": "次回MTGの資料を作って。今週は記録してなかった。",
-      "expected_output": "記録中のファイルがないため、前回MTG以降の日付の実験ログ・spec・brainstormから記録モードと同じ形のエントリを作ってから仕上げる。長い報告書型の章立て（Evidence/Interpretation/Ask など）は使わない。",
+      "prompt": "次回MTGの資料を作って。今週はエントリを作ってなかった。",
+      "expected_output": "pending のエントリがないため、前回MTG以降の日付の実験ログ・spec・brainstormから記録モードと同じ形のエントリを作ってから、1つの資料にまとめて仕上げる。長い報告書型の章立て（Evidence/Interpretation/Ask など）は使わない。",
       "files": [],
       "assertions": [
         {
@@ -92,7 +96,7 @@
     {
       "id": 5,
       "prompt": "さっきのbrainstormで出た評価方針を、先生に相談する資料にして。",
-      "expected_output": "壁打ちログを貼らず、相談したい方針をトピックにまとめ、末尾に選択肢の形の相談を置く。週次資料が記録中ならそこにエントリとして追記し、単発なら materials/YYYY-MM-DD-<topic>-mtg-materials.md に同じ形で保存する。spec化やTODO追加はしない。",
+      "expected_output": "壁打ちログを貼らず、相談したい方針をトピックにまとめ、末尾に選択肢の形の相談を置く。週次MTGで話すなら materials/entries/ にエントリとして作り、単発なら materials/YYYY-MM-DD-<topic>-mtg-materials.md に同じ形で保存する。spec化やTODO追加はしない。",
       "files": [],
       "assertions": [
         {

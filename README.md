@@ -220,8 +220,8 @@ research-workspace スキルで初回セットアップして。
 
 MTG資料を2段階で作ります。
 
-- 記録モード: 実験・実装などの作業が一区切りするたびに、次回MTG資料へ短いエントリを追記します。AIは頼まれなくても区切りで追記します。
-- 仕上げモード: MTG直前に、エントリを並べ替え・削り、各トピック末尾の相談を整えて、話せる資料にします。
+- 記録モード: 実験・実装などの作業が一区切りするたびに、その進捗だけを書いたエントリを `materials/entries/` に1ファイル作ります。AIは頼まれなくても区切りで作ります。
+- 仕上げモード: MTG直前に、エントリを1つの資料にまとめ、前回の宿題と照らし合わせ、並べ替え・削り、必要な相談を整えて、話せる資料にします。
 
 資料はNotionの「やったこと／次やること」にそのまま貼れる形です。
 
@@ -242,6 +242,7 @@ MTG資料を2段階で作ります。
 保存先:
 
 ```text
+.research/lab/projects/<project>/materials/entries/YYYY-MM-DD-topic.md                   # 日付は作業した日
 .research/lab/projects/<project>/materials/YYYY-MM-DD-weekly-progress-mtg-materials.md  # 日付はMTGの日
 .research/lab/projects/<project>/materials/figures/YYYY-MM-DD-topic/
 ```
