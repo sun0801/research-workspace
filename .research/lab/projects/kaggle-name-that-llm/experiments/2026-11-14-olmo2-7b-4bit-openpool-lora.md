@@ -31,3 +31,15 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - rate guardは14:36:56 JSTに通過（5h残95%、週間残99%）。Host142 GPU0の直前2 snapshot（14:37:15/20 JST）は同じUUID・A4000、15 MiB使用・15,960 MiB free、target compute PIDなし。`artifacts/.gpu0-run.lock`取得可能、MemAvailable約208 GiB、disk空き6,993 GiB。許容reserve 4,096 MiB、pilot gateを満たした。
 - Host142ローカルでtmux `olmo4-pilot`を起動。PID`3464206`、CUDA_VISIBLE_DEVICESはGPU0 UUID固定、config `gpu18-olmo2-1124-7b-4bit-openpool-v15.json`、model cache `candidate18-olmo2-1124-7b-hf`、log `artifacts/gpu18-olmo2-1124-7b-4bit-openpool-v15/pilot-run.log`。コマンドは新規runnerの`--pilot`。
 - 起動直後はPython runnerが生存し、GPU0は18 MiB使用、GPU1はMistral PID`2872240`が15,008 MiB使用。pilotは実行中で、pass/fail・peak・step時間はまだ未確定。GPU1には触れていない。
+
+## 14:38 JST — NF4 pilot pass
+
+- `pilot.json`でfinite outputs/loss、finite trainable gradients、`pass_reserve=true`を確認。Host142 GPU0 A4000、measured peak reserved 7,284 MiB（allocated 5,372 MiB）、pilot開始snapshot free 15,958 MiB、step 1.493秒、終了時free 8,457 MiB、MemAvailable 205.84 GiB。4,096 MiB reserve gateを通過。
+- Integrity check: 一致。`sha256sum -c artifacts/gpu18-olmo2-1124-7b-4bit-openpool-v15/pilot-SHA256SUMS`。config prefix `19260ce9`、runner prefix `3acb3724`。
+- pilotの1 sample時間はfull-run時間見積りの不確実性が大きいため確定所要時間とは扱わない。full OOFは25 optimizer stepごと（およそ450 training rows相当）とepoch終端にatomic checkpointを残し、中断時は同じstage/epoch/batch位置から再開する。
+- 次: pilot後のrate guardを再確認し、Host142 GPU0のUUID・compute process・global lock・RAM・disk・free VRAMを2 snapshotで確認してprimary OOFを開始する。Mistral GPU1は並行継続し、次pollは14:57 JST。
+
+## 14:43 JST — checkpoint頻度固定に伴う再pilot
+
+- 初回pilotはpass済みだが、full OOF停止時の巻き戻りを抑えるためcheckpointを500から25 optimizer stepsごとへ変更。configとrunnerのchecksum identityが変わるため、初回`pilot.json`はfull runの根拠にせず、`pilot-previous-14-38/`へ保全して最終設定で再pilotする。runnerはpilot証拠の上書きを拒否する。
+- 変更後の構文/config確認は通過。モデル重み・学習条件・GPU UUID・LoRA範囲は変更していない。次はrate guardとHost142 GPU0資源gateを再実行し、pilotをやり直す。
