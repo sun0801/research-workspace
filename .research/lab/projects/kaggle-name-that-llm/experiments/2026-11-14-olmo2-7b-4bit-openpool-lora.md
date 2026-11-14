@@ -25,3 +25,9 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - 取得command: `uv run --env-file .env kaggle models instances versions download allenai/olmo-2/transformers/1124-7b/1 -p /mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/model-cache/candidate18-olmo2-1124-7b-hf --untar --quiet`（exit 0）。cache合計は約28 GiB、6 safetensors shardsの合計29,194,510,544 bytes。`config.json`は`model_type=olmo2`、32 layers、hidden size 4096。tokenizer filesも存在する。64桁hashは転記していない。
 - 13:56 JSTに記録した5h/weekly rate guardは97%/100%で通過。取得開始前の14:17 JST再確認は96%/99%で通過。次のpilot開始直前にもguardを再確認する。
 - OLMo重みは展開済み。GPU pilot・full OOFは未実行。次はHost142 GPU0のUUID・2 snapshot・compute PID・global lock・MemAvailable・diskを取り直し、gate通過時だけ384-token pilotを行う。Host142 GPU1のMistral jobは14:27 pollで継続を確認し、変更なし。
+
+## 14:37 JST — NF4 pilot起動
+
+- rate guardは14:36:56 JSTに通過（5h残95%、週間残99%）。Host142 GPU0の直前2 snapshot（14:37:15/20 JST）は同じUUID・A4000、15 MiB使用・15,960 MiB free、target compute PIDなし。`artifacts/.gpu0-run.lock`取得可能、MemAvailable約208 GiB、disk空き6,993 GiB。許容reserve 4,096 MiB、pilot gateを満たした。
+- Host142ローカルでtmux `olmo4-pilot`を起動。PID`3464206`、CUDA_VISIBLE_DEVICESはGPU0 UUID固定、config `gpu18-olmo2-1124-7b-4bit-openpool-v15.json`、model cache `candidate18-olmo2-1124-7b-hf`、log `artifacts/gpu18-olmo2-1124-7b-4bit-openpool-v15/pilot-run.log`。コマンドは新規runnerの`--pilot`。
+- 起動直後はPython runnerが生存し、GPU0は18 MiB使用、GPU1はMistral PID`2872240`が15,008 MiB使用。pilotは実行中で、pass/fail・peak・step時間はまだ未確定。GPU1には触れていない。
