@@ -64,3 +64,4 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 
 - Host142ローカルpollで`olmo4-primary`/PID`3469081`の継続を確認。fold 0 stage 1、optimizer step 50/2500、next batch 900、平均loss 2.8911。最新checkpoint `primary/fold-0/stage1/step-000050`へ再開位置を保存。
 - GPU0 UUIDは固定、使用7,517 MiB・free 8,458 MiB、MemAvailable約203 GiB。安全reserveを維持し、stop/errorなし。次の軽量pollは15:29 JST。
+- Major-checkpoint rate guardは15:01:11 JSTに通過（5h残92%、週間残99%）。
