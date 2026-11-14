@@ -58,3 +58,4 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - 起動前rate guardは14:47:35 JSTに通過（5h残93%、weekly残99%）。Host142 GPU0の14:47:48/53 JST 2 snapshotは同一UUID、15 MiB使用・15,960 MiB free、target compute PIDなし、global lock free、MemAvailable約208 GiB、disk空き6,993 GiB。
 - tmux `olmo4-primary`、Host142 GPU0、runner PID`3469081`、`--split primary`。CUDA_VISIBLE_DEVICESはGPU0 UUID固定。config/runner identityはpassing pilotに一致。checkpointは25 optimizer stepごととepoch終端に保存。logは`artifacts/gpu18-olmo2-1124-7b-4bit-openpool-v15/primary-run.log`。
 - OOFは起動直後のためfold進捗・所要時間は未確定。Host142 GPU1は引き続きMistral PID`2872240`が使用中で、変更していない。次の軽量pollは14:57 JST。
+- Evaluation readiness: adopted baseline primary is aligned with the saved primary fold assignment on all 2,699 IDs, prompt IDs, and labels (150 prompts); the independent confirmation baseline also exists with 2,699 rows. No candidate predictions have been analyzed.
