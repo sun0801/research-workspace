@@ -35,3 +35,12 @@ type: host-continuation-poll
 ## 11/14 12:42 JST — Mistral confirmation fold 2完了
 
 - fold 2が12:27 JSTに完了（BA `.566667`、VRAM peak 14,368 MiB、MemAvailable 209 GiB）。fold 0〜2は `.561` / `.583` / `.567`。所要は約6.8時間。残り2 foldは約13.6時間で、全5 fold完了は11/15 02時ごろの見込み。
+
+## 11/14 13:20 JST — 担当をClaude CodeからCodexへ戻す（引き継ぎ）
+
+- ユーザーの指示により、担当をCodexへ戻す（Codexの週間枠リセットのため）。Claude Codeの`/loop`の次回予約は解除済み。新しい実験・提出・実装は始めていない。
+- **実行中job**: tmux `mistral-confirm`（Host142 GPU1 `GPU-8a059266-...`、PID`2872240`、flock`artifacts/.gpu1-run.lock`）。`--split confirmation --resume`、ログ`artifacts/gpu03-mistral-7b-v0-1-openpool-v15/confirmation-run.log`。fold 0〜2完了（BA`.561`/`.583`/`.567`）、fold 3は11/14 19:15ごろ、fold 4を含む全5 fold完了は11/15 02時ごろ（1 fold約6.8h）。再開が要る場合は同じコマンドに`--resume`（コマンドは15:55の節）。**止めない・二重起動しない。** 停止中のCandidate09 watcher（PID`3748103`）は再開しない（GPU1のqueue判断はMistral完了後）。
+- **次に確認すること**: (1) fold 3・4の完了を確認し、各fold完了を1回だけ追記。(2) 全5 fold完了後、[確認spec](../specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)のCPU評価（1スレッド。評価runnerはconfirmation OOF完成後に新規作成、出力は`artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/`）。(3) 通過した場合のみ、`.769`（11/13）とCV-LB対応（v12 `.541`・v13 `.560`、約1/4しか転移しない点）を踏まえてprivate Notebook runtime検証の要否を判断。通過しなければ棄却。
+- **承認待ち**: 16GB GPU（Host141 GPU0〜2、Host142 GPU0）で回せる未実施候補は、4-bit＋Open Pool二段階LoRA runnerの新規実装（OLMo2-7B等）のみ。runner新規実装・数日規模の学習を伴うため、ユーザーの実装開始承認が要る。official-only QLoRAは候補10（BA`.254`）で棄却済み、Qwen3-14B QLoRAはA4000でpilot不通過のため、同じ領域は繰り返さない。
+- **Claude Codeセッションで作ったもの**: spec — [`2026-11-13-baseline-spectral-notebook-lb-check-spec.md`](../specs/2026-11-13-baseline-spectral-notebook-lb-check-spec.md)、[`2026-11-13-qwen3-14b-qlora-a4000-spec.md`](../specs/2026-11-13-qwen3-14b-qlora-a4000-spec.md)。ログ — [`2026-11-13-baseline-spectral-notebook-lb-check.md`](2026-11-13-baseline-spectral-notebook-lb-check.md)、[`2026-11-13-qwen3-14b-qlora-a4000-pilot.md`](2026-11-13-qwen3-14b-qlora-a4000-pilot.md)。実装（`/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/`）— `notebooks/spectral-port/spectral_cell.py`（凍結Spectralの移植）、`notebooks/name-that-llm-private-baseline-v13-spectral-source/`（v13 Notebook、kernel`suntree0801/name-that-llm-private-baseline-blend-v13-spectral`）、`scripts/verify_spectral_port.py`・`scripts/check_spectral_pooled.py`、`configs/gpu17-qwen3-14b-qlora-a4000-prompt-grouped.json`。
+- **利用枠の確認**: Claude側は`claude_rate_limit.py --guard 15`（11/14 13:18時点 5h残43%・週間100%）。Codex側は`codex_rate_limit.py --guard 15`。
