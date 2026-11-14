@@ -21,9 +21,9 @@ last_updated: 2026-11-15
 - 現bestは基準blend＋Spectral補正。primary BA`.664952`／independent confirmation BA`.653828`、Public LB`.560`（v13 ref`58300703`、11/13）。補正なしv12 ref`58261829`はPublic`.541`。CVの改善`+.078`がLBでは`+.019`で、CV-LB対応は2点。公開首位`.771`（11/15確認、5,848 teams）。[v13ログ](experiments/2026-11-13-baseline-spectral-notebook-lb-check.md) · [公式状況](experiments/2026-11-15-official-competition-status.md)
 - Mistral confirmation 5/5 foldと固定CPU gate通過（BA`.676823`、delta`+.022995`、CI下限`+.011596`、両simulation各20/20 positive）。v14 private source/assets準備とHost141の2×16GB A4000 64-row pilot通過（peak reserved 6,776/7,222 MiB、Mistral-only投影1.75h）。Kaggle合算runtime未測定・push未実施。書込みcredentialなし。[runtime log](experiments/2026-11-15-mistral-spectral-private-notebook-runtime.md)
 - 現公開首位`.771`（11/15確認）。Public LBとCVの対応は2点のみ（v12`.541`、v13`.560`）のため、このconfirmationだけではNotebook runtime検証の価値を確定できない。[確認spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)の判断条件を維持。
-- Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装済み。最終pilot pass（peak reserved 7,284 MiB）。Primary OOFはtmux `olmo4-primary`、Host142 GPU0、PID`3469081`でfold 0 BA`.574074`完了、fold 1 stage 1 step 625/2500を02:40 JSTに確認。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
+- Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装済み。最終pilot pass（peak reserved 7,284 MiB）。Primary OOFはtmux `olmo4-primary`、Host142 GPU0、PID`3469081`でfold 0 BA`.574074`完了、fold 1 stage 1 step 750/2500を03:10 JSTに確認。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。見送り・保留の公開調査の結論は下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
-- 次にすること: 03:10 JSTの軽量pollでOLMo primaryの進捗を確認。Host142 GPU1には触れない。Mistral v14のKaggle合算runtime実測とpush/提出は書込み認証復旧後、fresh official/privacy/runtime/quota gateを通して行う。
+- 次にすること: 03:40 JSTの軽量pollでOLMo primaryの進捗を確認。Host142 GPU1には触れない。Mistral v14のKaggle合算runtime実測とpush/提出は書込み認証復旧後、fresh official/privacy/runtime/quota gateを通して行う。
 
 ## 記録方針
 
@@ -156,6 +156,7 @@ last_updated: 2026-11-15
 
 ## 更新履歴
 
+- 2026-11-15: 定刻pollでOLMo primary fold 1 step 750を確認。Host142 GPU0で継続し、次pollは03:40 JST。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - 2026-11-15: Mistral v14 private Notebook/source assetを準備し、Host141 2×A4000の64-row inference pilotがVRAM reserve・4,000-row projection gateを通過。Kaggle runtimeと提出は未実施。書込みcredentialが見つからない。[runtime log](experiments/2026-11-15-mistral-spectral-private-notebook-runtime.md)
 - 2026-11-15: Mistral confirmation全5 foldと固定CPU評価が完了。確認gateを通過しBA`.676823`、CI下限`+.011596`、mild/moderate simulationsは各20/20 positive。Notebook push・提出は未実施。[継続ログ](experiments/2026-11-13-host-continuation-poll.md)
 - 2026-11-15: Kaggle公式MCPでLeaderboard・Rules・Evaluationを再確認。公開首位`.771`、5,848 teams。OLMo primary fold 0完了（BA`.574074`）、fold 1 stage 1がstep 150に進行。[公式状況](experiments/2026-11-15-official-competition-status.md) · [OLMo実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
