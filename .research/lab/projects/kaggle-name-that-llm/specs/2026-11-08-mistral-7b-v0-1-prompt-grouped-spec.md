@@ -4,7 +4,7 @@ project: kaggle-name-that-llm
 source: autonomous-goal
 status: approved
 approval_basis: active-goal-2026-11-06-gpu-autonomous-first-place-spec
-execution_status: primary-gates-passed; fixed-addition-screen-positive; confirmation-awaits-current-runner-pilot-and-host142-access
+execution_status: primary-gates-passed; fixed-addition-screen-positive; confirmation-running-host142-gpu1
 tags: [spec, experiment, gpu, mistral, prompt-grouped]
 ---
 
@@ -38,8 +38,8 @@ tags: [spec, experiment, gpu, mistral, prompt-grouped]
 
 - Fixed Mistral v0.1 revision/model/config and all 5 primary prompt-grouped OOF folds are saved under `artifacts/gpu03-mistral-7b-v0-1-openpool-v15/primary/`. The primary comparison versus adopted prompt-centered SVC (2,699 rows, 150 prompts, 5,000 paired prompt-bootstrap replicates, seed 42) gives Mistral BA `.587566` vs SVC `.501934`, delta CI `[+.062961, +.107777]`; the Mistral primary adoption gate passed.
 - A fixed Mistral 1/4 addition followed by the frozen Spectral transform passed a primary-only complementarity screen: BA `.689791` vs existing Spectral `.664952`, delta `+.024840`, 5,000 prompt-paired bootstrap CI `[+.013063, +.036412]`; mild/moderate retention simulations were positive in 20/20 seeds each. This remains primary-only and does not replace independent confirmation. See [screen log](../experiments/2026-11-12-mistral-spectral-complementarity-screen.md).
-- Confirmation has no OOF result. The 2026-11-11 preflight passed resource checks but the runner stopped before training because the saved pilot evidence does not match the current runner. The pilot was recorded with runner prefix `3bd614d9`; current worktree runner prefix is `7723b086`, while the fixed config prefix remains `c04ff481`. The inspected uncommitted runner diff changes checksum manifests/pilot integrity logging and final-fit metadata; it does not alter the training loop. Preserve the existing primary folds and pilot evidence.
-- Next: once Host142's host key can be verified and the registered GPU1 queue is safely clear, preserve the legacy `pilot.json`, rerun the unchanged fixed-configuration pilot with the current runner on its specified GPU1, and only after it passes launch the independent confirmation folds under this approved spec. Do not reassign the run to Host141 or overlap another user's work.
+- A prior 2026-11-11 attempt stopped before training because its saved pilot matched an older runner; that record and the primary folds remain preserved. On 2026-11-13, Host142 was checked locally, the registered GPU1 queue/resource gates passed, and the unchanged fixed-configuration pilot passed under the current runner. Confirmation is now running in tmux `mistral-confirm` on the specified GPU1; see the [continuation log](../experiments/2026-11-13-host-continuation-poll.md). Do not stop, duplicate, or reassign the active run.
+- Next: complete all five independent confirmation folds, then run the fixed CPU complementarity evaluator from the confirmation spec. Do not create its evaluator before the OOF outputs are complete.
 
 ## 関連資料
 

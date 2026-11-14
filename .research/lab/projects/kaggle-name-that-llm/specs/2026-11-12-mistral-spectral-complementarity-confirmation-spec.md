@@ -3,7 +3,7 @@ date: 2026-11-12
 project: kaggle-name-that-llm
 status: approved-under-active-goal
 approval_basis: 2026-11-06-gpu-autonomous-first-place-spec
-execution_status: awaiting-mistral-confirmation-oof-and-host142-gates
+execution_status: confirmation-running-host142-gpu1
 tags: [spec, experiment, confirmation, prompt-grouped, mistral, spectral]
 ---
 
@@ -25,10 +25,9 @@ The fixed Mistral 1/4 addition followed by the frozen Spectral transform passed 
 
 - Confirmation passes only if the paired 95% CI lower bound is strictly above zero and both simulation means are positive with at least 60% positive replicates. Otherwise reject the composition for adoption.
 - CPU evaluation only, one thread. Never overwrite primary/confirmation source outputs. Store new outputs under `artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/` and add the runner only after Mistral confirmation OOF exists.
-- Even if confirmed, compare the candidate to the current `.768` Public Leaderboard and the v12 BA-to-LB calibration before deciding whether a private Notebook runtime check is worthwhile. Any push/submission still requires fresh pre-action official, privacy, runtime, and quota gates.
+- Even if confirmed, compare the candidate to the current Public Leaderboard (latest official check: `.769` on 2026-11-14) and the v12/v13 BA-to-LB observations before deciding whether a private Notebook runtime check is worthwhile. Any push/submission still requires fresh pre-action official, privacy, runtime, and quota gates.
 
-## Current blockers
+## Current execution state
 
-- Host142 strict SSH host-key verification failed on the last scheduled poll. No trust bypass is permitted.
-- Existing Mistral pilot evidence was recorded against an older runner; the current runner rejected it before training. Preserve the old pilot, rerun the fixed pilot under the current runner only after Host142 and queue safety gates pass.
-- Host141 GPU2 is another user's active job; the Mistral run remains tied to Host142 GPU1.
+- Host142 was checked locally. The registered queue/lock/resource gates and current-runner pilot passed on 2026-11-13, then confirmation started in tmux `mistral-confirm` on the pinned GPU1. The active process is PID `2872240`; do not stop it, duplicate it, or move it. Latest state and resume command are in the [continuation log](../experiments/2026-11-13-host-continuation-poll.md).
+- At the 2026-11-14 13:20 JST poll, folds 0–2 were complete and fold 3 was in progress. After all five confirmation OOF folds finish, run only the fixed CPU evaluation above; do not alter weights, splits, or the frozen Spectral transform.
