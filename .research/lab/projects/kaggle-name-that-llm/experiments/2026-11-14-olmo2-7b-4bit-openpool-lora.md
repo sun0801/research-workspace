@@ -19,3 +19,9 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - 新規`src/gpu_openpool_qlora.py`とcandidate18 configを実装。既存generic runnerのfoldwise Open Pool除外・二段階学習を保ち、NF4/double quant/BF16 compute、k-bit preparation、quantized checkpoint reload、UUID固定、GPU0 global lock、disk/RAM/VRAM gateを追加。checkpointはoptimizer step 500回ごととepoch終端にatomic保存し、resume時にstage/epoch/batch位置から再開する。final-fit・test推論・submission生成のCLI経路は含めない。
 - `.venv`でPython compileとconfig schema検証は通過。train/pool/prompt reconstruction/primary foldsは存在し、model cacheにOLMo重みはまだない。ディスク空きは約7,020 GiB。モデル取得、GPU pilot、学習は未実行。
 - 次: rate guardを再確認し、Kaggle CLIから登録済みOLMo2 version 1をcandidate18専用cacheへ取得する。取得後にpilot直前のrate/GPU/RAM/disk/lock gateを取り直す。Host142 GPU1のMistral jobは継続・非接触。
+
+## 14:34 JST — OLMo2 version 1取得完了
+
+- 取得command: `uv run --env-file .env kaggle models instances versions download allenai/olmo-2/transformers/1124-7b/1 -p /mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/model-cache/candidate18-olmo2-1124-7b-hf --untar --quiet`（exit 0）。cache合計は約28 GiB、6 safetensors shardsの合計29,194,510,544 bytes。`config.json`は`model_type=olmo2`、32 layers、hidden size 4096。tokenizer filesも存在する。64桁hashは転記していない。
+- 13:56 JSTに記録した5h/weekly rate guardは97%/100%で通過。取得開始前の14:17 JST再確認は96%/99%で通過。次のpilot開始直前にもguardを再確認する。
+- OLMo重みは展開済み。GPU pilot・full OOFは未実行。次はHost142 GPU0のUUID・2 snapshot・compute PID・global lock・MemAvailable・diskを取り直し、gate通過時だけ384-token pilotを行う。Host142 GPU1のMistral jobは14:27 pollで継続を確認し、変更なし。
