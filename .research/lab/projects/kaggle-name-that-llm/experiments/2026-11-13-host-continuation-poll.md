@@ -51,3 +51,31 @@ type: host-continuation-poll
 - GPU1 is the pinned UUID (`GPU-8a059266-...`), using 15,008 MiB with 17,092 MiB free at 35% utilization. `MemAvailable` is 218,022,716 kB. The candidate lock file exists. No process or job was changed.
 - `.agents/skills/kaggle-workflow/scripts/codex_rate_limit.py --guard 15` passed at 13:19:45 JST: 5-hour and weekly windows both 100% remaining.
 - Next light poll: 13:50 JST. Based on the prior ~6.8 h/fold, fold 3 is estimated around 19:15 and all five folds around Nov 15 02:00; these are estimates, not completion evidence.
+
+## 11/14 19:01 JST — Mistral confirmation fold 3 stage progress
+
+- Host142 was checked locally. `mistral-confirm`/PID `2872240` remains alive on GPU1; no state change was made. Fold 3 stage 1 completed at 18:37 JST (mean loss 1.5854, peak allocated 14,368 MiB), and stage 2 epoch 1 completed at 18:55 JST (mean loss 1.2721). Fold 3 has not completed; stage 2 is configured for two epochs.
+- GPU1 remains on the registered UUID, using 15,008 MiB with 17,092 MiB free. Host `MemAvailable` is about 203 GiB. Fold completion near 19:15 and all five folds near Nov 15 02:00 remain estimates.
+- OLMo primary concurrently remains active on GPU0; its 19:01 checkpoint is recorded in [the OLMo experiment log](2026-11-14-olmo2-7b-4bit-openpool-lora.md). Rate guard passed: 5-hour 99%, weekly 98%. Next light poll: 19:31 JST.
+
+## 11/14 19:31 JST — Mistral confirmation fold 3 complete
+
+- Host142 local poll confirmed `mistral-confirm`/PID `2872240` remains alive on the registered GPU1 UUID. Fold 3 completed at 19:14 JST with balanced accuracy `.586079` and peak allocated VRAM 14,368 MiB. Fold 4 data preparation began immediately afterward; no fold 4 completion yet.
+- GPU1 uses 15,008 MiB with 17,092 MiB free; host `MemAvailable` is about 203 GiB. No job or GPU state was changed. All-fold completion near Nov 15 02:00 remains an estimate.
+- OLMo primary remains active on GPU0 at step 1350; details are in [the OLMo experiment log](2026-11-14-olmo2-7b-4bit-openpool-lora.md). Rate guard passed: 5-hour 99%, weekly 98%. Next light poll: 20:01 JST.
+
+## 11/15 01:30 JST — Mistral confirmation fold 4 stage 1 complete
+
+- Host142 local poll confirmed `mistral-confirm`/PID `2872240` remains alive on GPU1. Fold 4 stage 1 completed at 01:20 JST (mean loss 1.5856, peak allocated VRAM 14,368 MiB); fold 4 itself has not completed yet. No process or GPU state was changed.
+- GPU1 remains on the registered UUID, using 15,008 MiB with 17,092 MiB free. Host `MemAvailable` is about 203 GiB.
+- OLMo primary concurrently remains active on GPU0 at fold 1 stage 1 step 275; details are in [the OLMo experiment log](2026-11-14-olmo2-7b-4bit-openpool-lora.md). Rate guard passed: 5-hour 95%, weekly 96%. Next light poll: 02:00 JST.
+
+## 11/15 02:10 JST — Mistral confirmation完了・固定CPU評価通過
+
+- Host142をローカル確認。Mistral confirmationはfold 4まで完了し、tmux `mistral-confirm` とPID`2872240`は終了。GPU1は172 MiB・0%、空き31,929 MiB。GPU1のjob停止や再起動は行っていない。
+- fold 4は01:56 JST完了（stage 2 epoch losses 1.27327 / 0.445238、BA`.588889`、peak allocated VRAM 14,368 MiB）。5 fold BAは`.561111` / `.583333` / `.566667` / `.586079` / `.588889`。
+- 承認済み[確認spec](../specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)どおり、CPU・1 threadで確認評価を実行。2,699行・150 prompts・18 classes、baselineと凍結Spectralの再現はexact。固定candidate `(3*baseline_probability + softmax(Mistral_logits))/4` の後にSpectralを適用した。
+- confirmation BAは基準`.653828`から`.676823`へ`+.022995`。paired prompt bootstrap（5,000回、seed 42）の95% CIは`[+.011596, +.034074]`。fold別の基準→candidate BAは`.624074→.637037`、`.679630→.690741`、`.648148→.679630`、`.674713→.687995`、`.642593→.688889`。
+- mild retention simulationは平均delta`+.020751`・20/20 positive、moderateは`+.017810`・20/20 positive。specの確認gateを通過し独立confirmation上の候補として採用。ただしNotebook push・提出は未承認で未実施。評価出力は`/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/`。
+- OLMo primaryはHost142 GPU0で継続（PID`3469081`、02:10時点で稼働）。同時点のGPU0は7,517 MiB使用・8,458 MiB空き、MemAvailable約208 GiB。最後に読めたcheckpointはfold 1 stage 1 step 425（02:01 JST）。次の軽量pollは02:30 JST。
+- rate guardは5h残93%・週間残96%で通過。runner SHA-256 prefixは`0c70e361`（評価summary記録）。
