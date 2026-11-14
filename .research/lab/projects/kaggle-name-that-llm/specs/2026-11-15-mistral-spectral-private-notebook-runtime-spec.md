@@ -19,13 +19,14 @@ tags: [spec, kaggle, private-notebook, mistral, spectral, runtime]
 ## Fixed candidate and inference
 
 - Base model: Kaggle `mistral-ai/mistral/pytorch/7b-v0.1-hf`, version 1, Apache-2.0; pin to the approved training revision and use FP16 inference where the accelerator does not support BF16.
-- Use the five primary-fold `stage2/epoch-002/adapter` checkpoints from `artifacts/gpu03-mistral-7b-v0-1-openpool-v15/primary/fold-{0..4}/`. Do not use confirmation-fold models for prediction or change training weights.
+- Use the five primary-fold `stage2/epoch-002/adapter` checkpoints and matching classifier/norm heads from `artifacts/gpu03-mistral-7b-v0-1-openpool-v15/primary/fold-{0..4}/`. The head weights are in each matching `state.pt`; export only `classifier` and `norm` tensors to small `head.pt` files, excluding optimizer and RNG state. Do not use confirmation-fold models for prediction or change training weights.
 - For each test row, obtain each fold model's row-wise softmax probabilities and average the five fold probabilities. Compose the fourth component using `(3 * baseline_probability + mean_mistral_fold_probability) / 4`, then apply the already frozen Spectral mean-field transform exactly as in v13. Do not tune weights, labels, or post-processing on test scores.
 - Keep the current three-component Qwen8/Qwen1.7/SVC predictions unchanged. Preserve the test-only input, ID sequence, 4,000-row hidden-run behavior, `submission.parquet` schema, and offline runtime. Notebook and all Kaggle artifacts must remain private.
 
 ## Scope
 
 - Create a new source directory `notebooks/name-that-llm-private-baseline-v14-mistral-spectral-source/` by deriving from the scored v13 source. Add only Mistral inference and the fixed four-component composition; preserve v13 unchanged.
+- Add a read-only export/package helper under `scripts/` to extract the five matching classifier/norm heads from completed `state.pt` files and assemble the five adapters plus heads in the local private asset staging layout. Do not edit training checkpoints.
 - Add the five selected adapter files to a private, versioned inference asset bundle. Keep model weights, datasets, submission files, and generated outputs outside Git. Use the existing Kaggle asset dataset if its private update can be made; otherwise stop before any public creation.
 - Expected code changes are the new v14 Notebook and its metadata, plus a narrowly scoped asset packaging helper only if needed. No training runner, OOF source, baseline, Spectral implementation, or split changes.
 
