@@ -48,3 +48,13 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 
 - rate guardは14:45:00 JSTに通過（5h残94%、週間残99%）。Host142 GPU0の14:45:13/18 JST 2 snapshotは同じUUID、15 MiB使用・15,960 MiB free、compute PIDなし、global lock free、MemAvailable約208 GiB、disk空き6,993 GiB。
 - tmux `olmo4-pilot`、Host142 GPU0、runner PID`3468098`で`--pilot`再実行中。最終configはcheckpoint interval 25、model cache/LoRA/data settingsは初回pilotから不変。初回pilot evidenceは`pilot-previous-14-38/`に残した。
+
+## 14:46 JST — 最終identity pilot pass
+
+- Updated pilot is passing: finite outputs/loss and trainable gradients, `pass_reserve=true`, peak reserved 7,284 MiB, end free 8,457 MiB, MemAvailable 205.80 GiB, step 1.335 s. Integrity check: 一致。`sha256sum -c artifacts/gpu18-olmo2-1124-7b-4bit-openpool-v15/pilot-SHA256SUMS`; config prefix `1b351f9c`, runner prefix `a45e8eeb`.
+
+## 14:47 JST — primary OOF開始
+
+- 起動前rate guardは14:47:35 JSTに通過（5h残93%、weekly残99%）。Host142 GPU0の14:47:48/53 JST 2 snapshotは同一UUID、15 MiB使用・15,960 MiB free、target compute PIDなし、global lock free、MemAvailable約208 GiB、disk空き6,993 GiB。
+- tmux `olmo4-primary`、Host142 GPU0、runner PID`3469081`、`--split primary`。CUDA_VISIBLE_DEVICESはGPU0 UUID固定。config/runner identityはpassing pilotに一致。checkpointは25 optimizer stepごととepoch終端に保存。logは`artifacts/gpu18-olmo2-1124-7b-4bit-openpool-v15/primary-run.log`。
+- OOFは起動直後のためfold進捗・所要時間は未確定。Host142 GPU1は引き続きMistral PID`2872240`が使用中で、変更していない。次の軽量pollは14:57 JST。
