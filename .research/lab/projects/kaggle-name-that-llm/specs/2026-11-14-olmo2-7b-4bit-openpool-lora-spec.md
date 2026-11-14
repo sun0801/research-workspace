@@ -3,7 +3,7 @@ date: 2026-11-14
 project: kaggle-name-that-llm
 status: approved
 approval_basis: explicit-user-approval-2026-11-14
-execution_status: spec-written-implementation-not-started
+execution_status: primary-running
 tags: [spec, experiment, gpu, olmo, qlora, open-pool, prompt-grouped]
 ---
 
