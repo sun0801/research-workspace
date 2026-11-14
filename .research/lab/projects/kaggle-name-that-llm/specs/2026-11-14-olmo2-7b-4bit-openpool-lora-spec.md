@@ -34,11 +34,11 @@ tags: [spec, experiment, gpu, olmo, qlora, open-pool, prompt-grouped]
 ## 16GB GPUの資源gate
 
 - 利用許可GPUはHost141 GPU0〜2とHost142 GPU0のみ。Host142 GPU1（`mistral-confirm`）は対象外で、プロセス停止・変更・二重起動・そのGPU上への配置をしない。Host142はローカルコマンドだけで調べ、Host141は`ssh 141`で調べる。Host141は**各利用の直前**に空きを確認する。
-- 各pilot/full-run起動直前にrate guardを実行しexit 0を必須とする。選択GPUについて5秒以上離した2 snapshotで同じhost/device/UUID、対象GPU上に他compute PIDなし、GPU固有lockなしを確認する。UUID指定で可視化・固定し、別GPUへのfallbackを禁止する。
+- モデル取得・各pilot/full-runの直前にrate guardを実行しexit 0を必須とする。選択GPUについて5秒以上離した2 snapshotで同じhost/device/UUID、対象GPU上に他compute PIDなし、GPU固有lockなしを確認する。UUID指定で可視化・固定し、別GPUへのfallbackを禁止する。
 - 起動時にGPU空きVRAMが総容量から4,096 MiB以上差し引いた値以上、`MemAvailable >=16 GiB`、`/mnt/HDD10TB-2`の空き容量`>=45 GiB`を必須とする。モデル原本約29.2 GBに加えてcheckpoint・一時領域を確保する。条件を満たさない場合は待機し、他jobを止めない。
 - pilotは384 token、microbatch 1で、モデルload・forward・backward・optimizer stepを実行する。finite loss/logits/gradient、同一UUID、peak allocated/reserved VRAM、step時間、host RAMを記録する。pilot終了後に**実測peak + 4,096 MiB reserve**が対象GPU容量内に収まり、再確認時のfree VRAMもその値以上、RAM・disk・process/lock gateが継続している場合だけfull OOFを開始する。
 - pilotが失敗、非有限値、OOM、資源reserve不通過の場合は同じ設定での実験を棄却し、系列長やbatch、quantization、LoRA範囲を変えて再試行しない。変更案は新しいspecと承認対象に戻す。
-- 長時間runはtmux等に切り離し、host、GPU UUID、PID、config識別、log、checkpoint、再開位置を記録する。30分ごとに軽い1コマンドで監視し、変化があった時だけ記録する。安全条件不成立時はこのcandidateだけを安全に停止し、checkpointを保持する。
+- 長時間runはtmux等に切り離し、host、GPU UUID、PID、config識別、log、checkpoint、再開位置を記録する。optimizer step 500回ごととepoch終端にatomic checkpointを保存し、再開時は同じstage/epoch/batchから続ける。30分ごとに軽い1コマンドで監視し、変化があった時だけ記録する。安全条件不成立時はこのcandidateだけを安全に停止し、checkpointを保持する。
 
 ## Pilot・prompt-grouped評価・採用判定
 

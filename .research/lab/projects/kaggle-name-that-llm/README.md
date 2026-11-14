@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestは基準blend＋Spectral（confirmation BA`.654`、Public`.560`）。Mistral confirmationはHost142 GPU1で継続中。承認済みOLMo2 4-bit runnerはspec作成済み、次は実装・pilot。
+summary: 現bestは基準blend＋Spectral（confirmation BA`.654`、Public`.560`）。Mistral confirmationはHost142 GPU1で継続中。承認済みOLMo2 4-bit runner/configは実装済み、モデル取得後にpilot。
 created: 2026-11-02
 last_updated: 2026-11-14
 ---
@@ -21,9 +21,9 @@ last_updated: 2026-11-14
 - 現bestは基準blend＋Spectral補正。primary BA`.664952`／independent confirmation BA`.653828`、Public LB`.560`（v13 ref`58300703`、11/13）。補正なしv12 ref`58261829`はPublic`.541`。CVの改善`+.078`がLBでは`+.019`で、CV-LB対応は2点。公開首位`.769`（11/14確認、5,810 teams）。[v13ログ](experiments/2026-11-13-baseline-spectral-notebook-lb-check.md) · [公式状況](experiments/2026-11-14-official-competition-status.md)
 - **実行中job**: Mistral confirmation（tmux `mistral-confirm`、Host142 GPU1、PID`2872240`）。fold 0〜2完了（BA`.561`/`.583`/`.567`）、fold 3は処理中。13:56 JSTのローカルpollで継続を確認し、状態変化なし。fold 3は19:15ごろ、全5 foldは11/15 02時ごろの見込み。次poll 14:26。完了後は[確認spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)に沿ってCPU評価。[継続ログ](experiments/2026-11-13-host-continuation-poll.md)
 - Mistral＋Spectral primary BA`.689791`（固定addition、CI下限>0、shape screen通過）は独立confirmation待ち。confirmationで下限>0かつ両simulation通過なら、現公開首位`.769`・CV-LB対応と合わせて[private Notebook runtime検証](specs/2026-11-13-baseline-spectral-notebook-lb-check-spec.md)を判断する。
-- Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは11/14承認済み、[spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)作成済み。次は新規runner/configの実装と16GB GPU pilot。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
+- Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは11/14承認済み、[spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い新規runner/config実装と静的確認が完了。OLMo重み未取得のため、次はrate guard後に取得しpilot。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。見送り・保留の公開調査の結論は下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
-- 次にすること: OLMo2 4-bit runnerを実装し、起動直前に空きと全資源gateを確認してpilot。Mistral confirmationは継続し、次pollは14:26 JST。Host142 GPU1は使用禁止。blocker: なし。
+- 次にすること: OLMo2重みを取得後、起動直前にHost142 GPU0の空きと全資源gateを確認してpilot。Mistral confirmationは継続し、次pollは14:26 JST。Host142 GPU1は使用禁止。blocker: 重み未取得。
 
 ## 記録方針
 
@@ -155,7 +155,7 @@ last_updated: 2026-11-14
 
 ## 更新履歴
 
-- 2026-11-14: ユーザー承認に基づき、OLMo2-7B NF4 + Open Pool二段階LoRAのspecを作成。実装・pilotは登録済みGPU資源gateを満たした後に進める。[spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md) · [実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
+- 2026-11-14: ユーザー承認に基づき、OLMo2-7B NF4 + Open Pool二段階LoRAのspecを作成。新規runner/config実装と静的確認を完了。重み取得とpilotはrate/GPU資源gate後に進める。[spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md) · [実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 
 - 2026-11-12: 記録運用を改訂。見送り・保留は日次一覧、実験はspec・結果ログへ集約し、変化なしの監視追記を省く。詳細は承認済みspecの記録運用改訂を参照。
 
