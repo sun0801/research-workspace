@@ -43,3 +43,8 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 
 - 初回pilotはpass済みだが、full OOF停止時の巻き戻りを抑えるためcheckpointを500から25 optimizer stepsごとへ変更。configとrunnerのchecksum identityが変わるため、初回`pilot.json`はfull runの根拠にせず、`pilot-previous-14-38/`へ保全して最終設定で再pilotする。runnerはpilot証拠の上書きを拒否する。
 - 変更後の構文/config確認は通過。モデル重み・学習条件・GPU UUID・LoRA範囲は変更していない。次はrate guardとHost142 GPU0資源gateを再実行し、pilotをやり直す。
+
+## 14:45 JST — 最終identityでpilot再実行
+
+- rate guardは14:45:00 JSTに通過（5h残94%、週間残99%）。Host142 GPU0の14:45:13/18 JST 2 snapshotは同じUUID、15 MiB使用・15,960 MiB free、compute PIDなし、global lock free、MemAvailable約208 GiB、disk空き6,993 GiB。
+- tmux `olmo4-pilot`、Host142 GPU0、runner PID`3468098`で`--pilot`再実行中。最終configはcheckpoint interval 25、model cache/LoRA/data settingsは初回pilotから不変。初回pilot evidenceは`pilot-previous-14-38/`に残した。
