@@ -3,7 +3,7 @@ date: 2026-11-12
 project: kaggle-name-that-llm
 status: approved-under-active-goal
 approval_basis: 2026-11-06-gpu-autonomous-first-place-spec
-execution_status: confirmation-running-host142-gpu1
+execution_status: confirmation-and-fixed-cpu-evaluation-complete
 tags: [spec, experiment, confirmation, prompt-grouped, mistral, spectral]
 ---
 
@@ -27,7 +27,8 @@ The fixed Mistral 1/4 addition followed by the frozen Spectral transform passed 
 - CPU evaluation only, one thread. Never overwrite primary/confirmation source outputs. Store new outputs under `artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/` and add the runner only after Mistral confirmation OOF exists.
 - Even if confirmed, compare the candidate to the current Public Leaderboard (latest official check: `.769` on 2026-11-14) and the v12/v13 BA-to-LB observations before deciding whether a private Notebook runtime check is worthwhile. Any push/submission still requires fresh pre-action official, privacy, runtime, and quota gates.
 
-## Current execution state
+## Execution result
 
-- Host142 was checked locally. The registered queue/lock/resource gates and current-runner pilot passed on 2026-11-13, then confirmation started in tmux `mistral-confirm` on the pinned GPU1. The active process is PID `2872240`; do not stop it, duplicate it, or move it. Latest state and resume command are in the [continuation log](../experiments/2026-11-13-host-continuation-poll.md).
-- At the 2026-11-14 13:20 JST poll, folds 0–2 were complete and fold 3 was in progress. After all five confirmation OOF folds finish, run only the fixed CPU evaluation above; do not alter weights, splits, or the frozen Spectral transform.
+- Host142 was checked locally; confirmation ran only on the pinned GPU1 after the registered queue/resource gates and current-runner pilot passed. The job completed all five folds on 2026-11-15 and ended naturally. Fold BA: `.561111` / `.583333` / `.566667` / `.586079` / `.588889`.
+- The fixed CPU evaluation completed under the approved split and transform: 2,699 rows, 150 prompts, 18 classes. Candidate BA `.676823` vs frozen Spectral baseline `.653828` (`+.022995`); paired prompt bootstrap 95% CI `[+.011596, +.034074]`. Mild and moderate retention simulations each had positive mean and 20/20 positive replicates. Confirmation gate passed; detailed class recalls and execution evidence are in the [continuation log](../experiments/2026-11-13-host-continuation-poll.md) and evaluator summary JSON.
+- No Kaggle Notebook push or submission was made by this confirmation evaluation. The next private runtime decision and its implementation gates are in the [2026-11-15 runtime spec](2026-11-15-mistral-spectral-private-notebook-runtime-spec.md).

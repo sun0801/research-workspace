@@ -40,6 +40,7 @@ last_updated: 2026-11-15
 ## 関連記録
 
 - [2026-11-14 OLMo2-7B 4-bit + Open Pool二段階LoRA spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md) · [実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
+- [Mistral + Spectral independent confirmation spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md) · [2026-11-15 private Notebook runtime spec](specs/2026-11-15-mistral-spectral-private-notebook-runtime-spec.md)
 - [2026-11-12 README状況整理・提出失敗診断更新](experiments/2026-11-12-readme-status-archive.md)
 - (a) specにして試す — [DeBERTa-v3-large clean-base candidate](experiments/2026-11-12-deberta-v3-large-candidate-selection.md) · [fixed prompt-grouped spec](specs/2026-11-12-deberta-v3-large-official-prompt-grouped-spec.md)
 - (b) 試さない — [Qwen3-14B single-model `.657` Discussion audit](experiments/2026-11-12-qwen14b-0657-single-model-discussion-audit.md)（CV/LBの区別と再現根拠なし）
