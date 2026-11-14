@@ -31,3 +31,7 @@ type: host-continuation-poll
 ## 11/14 05:44 JST — Mistral confirmation fold 1完了
 
 - fold 1が05:38 JSTに完了（BA `.583333`、VRAM peak 14,368 MiB、MemAvailable 209 GiB）。fold 0は`.561111`。所要は約6.8時間。残り3 foldは約20時間で、全5 fold完了は11/15 02〜03時ごろの見込み。
+
+## 11/14 12:42 JST — Mistral confirmation fold 2完了
+
+- fold 2が12:27 JSTに完了（BA `.566667`、VRAM peak 14,368 MiB、MemAvailable 209 GiB）。fold 0〜2は `.561` / `.583` / `.567`。所要は約6.8時間。残り2 foldは約13.6時間で、全5 fold完了は11/15 02時ごろの見込み。
