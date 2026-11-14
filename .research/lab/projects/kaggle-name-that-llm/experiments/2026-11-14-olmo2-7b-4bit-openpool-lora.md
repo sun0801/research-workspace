@@ -59,3 +59,8 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - tmux `olmo4-primary`、Host142 GPU0、runner PID`3469081`、`--split primary`。CUDA_VISIBLE_DEVICESはGPU0 UUID固定。config/runner identityはpassing pilotに一致。checkpointは25 optimizer stepごととepoch終端に保存。logは`artifacts/gpu18-olmo2-1124-7b-4bit-openpool-v15/primary-run.log`。
 - OOFは起動直後のためfold進捗・所要時間は未確定。Host142 GPU1は引き続きMistral PID`2872240`が使用中で、変更していない。次の軽量pollは14:57 JST。
 - Evaluation readiness: adopted baseline primary is aligned with the saved primary fold assignment on all 2,699 IDs, prompt IDs, and labels (150 prompts); the independent confirmation baseline also exists with 2,699 rows. No candidate predictions have been analyzed.
+
+## 14:59 JST — primary checkpoint進捗
+
+- Host142ローカルpollで`olmo4-primary`/PID`3469081`の継続を確認。fold 0 stage 1、optimizer step 50/2500、next batch 900、平均loss 2.8911。最新checkpoint `primary/fold-0/stage1/step-000050`へ再開位置を保存。
+- GPU0 UUIDは固定、使用7,517 MiB・free 8,458 MiB、MemAvailable約203 GiB。安全reserveを維持し、stop/errorなし。次の軽量pollは15:29 JST。
