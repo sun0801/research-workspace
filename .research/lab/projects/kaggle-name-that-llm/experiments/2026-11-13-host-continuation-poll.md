@@ -76,6 +76,7 @@ type: host-continuation-poll
 - fold 4は01:56 JST完了（stage 2 epoch losses 1.27327 / 0.445238、BA`.588889`、peak allocated VRAM 14,368 MiB）。5 fold BAは`.561111` / `.583333` / `.566667` / `.586079` / `.588889`。
 - 承認済み[確認spec](../specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)どおり、CPU・1 threadで確認評価を実行。2,699行・150 prompts・18 classes、baselineと凍結Spectralの再現はexact。固定candidate `(3*baseline_probability + softmax(Mistral_logits))/4` の後にSpectralを適用した。
 - confirmation BAは基準`.653828`から`.676823`へ`+.022995`。paired prompt bootstrap（5,000回、seed 42）の95% CIは`[+.011596, +.034074]`。fold別の基準→candidate BAは`.624074→.637037`、`.679630→.690741`、`.648148→.679630`、`.674713→.687995`、`.642593→.688889`。
+- 18クラスのfold平均recallでは14クラスが改善、4クラスが低下（平均差`+.023027`）。最大低下はgemini-3.8-flash（`-.040`）、claude-opus-5（`-.033`）、glm-5.3（`-.020`）。全クラス×foldの詳細は同summary JSONの`metrics.per_fold[].class_recalls`。
 - mild retention simulationは平均delta`+.020751`・20/20 positive、moderateは`+.017810`・20/20 positive。specの確認gateを通過し独立confirmation上の候補として採用。ただしNotebook push・提出は未承認で未実施。評価出力は`/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/`。
 - OLMo primaryはHost142 GPU0で継続（PID`3469081`、02:10時点で稼働）。同時点のGPU0は7,517 MiB使用・8,458 MiB空き、MemAvailable約208 GiB。最後に読めたcheckpointはfold 1 stage 1 step 425（02:01 JST）。次の軽量pollは02:30 JST。
 - rate guardは5h残93%・週間残96%で通過。runner SHA-256 prefixは`0c70e361`（評価summary記録）。
