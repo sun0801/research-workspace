@@ -22,7 +22,7 @@ last_updated: 2026-11-16
 - Mistral confirmation 5/5 fold・固定CPU gate・Host141 2×16GB pilot通過（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive、peak 6,776/7,222 MiB）。Private asset Dataset v2はReady・remote private。v14 v2はMistralロード前にQwenの呼び出し元参照が残る解放漏れでOOM。明示解放とVRAM診断を加えたv3をremote private/offline/T4確認のうえ再実行中（`QUEUED`）。[v14 push/runtime log](experiments/2026-11-16-mistral-v14-private-push-runtime.md)
 - Public LBとCVの対応はv12`.541`・v13`.560`の2点。新方針では手元best`.560`を候補比較基準とし、現首位`.774`未満は見送り理由にしない。次の公開Notebook基準作り後、Spectral・Mistral・OLMoをLBで追加確認する。
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
-- DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。見送り・保留の公開調査の結論は下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
+- DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
 - 次にすること: Mistral v14 runtime gateの完了を確認し、競技提出の前に結果を報告する。その後、最強のRules/ライセンス準拠公開Notebook系統をprivate forkしてPublic `.560`基準を作り、Spectral・Mistral・OLMoを順に追加評価する。提出枠は候補がある限り毎日使う。Host142 GPU1には触れない。
 
 ## 記録方針
