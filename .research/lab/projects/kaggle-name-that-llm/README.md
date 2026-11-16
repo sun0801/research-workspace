@@ -1,9 +1,9 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestはv13 Public`.560`。公開基準候補Nishant Dahal v2 Public`.620`を選定。private pushはKaggle GPU週次quotaの確認待ち。
+summary: 現bestはv13 Public`.560`。公開基準候補Nishant Dahal v2 Public`.620`をprivate pushし、Kaggle runtimeを実行中。
 created: 2026-11-02
-last_updated: 2026-11-16
+last_updated: 2026-11-17
 ---
 
 # Kaggle — Name That LLM
@@ -23,7 +23,8 @@ last_updated: 2026-11-16
 - Public LBとCVの対応はv12`.541`・v13`.560`の2点。新方針では手元best`.560`を候補比較基準とし、現首位`.774`未満は見送り理由にしない。公開Notebook候補は[Two-stage LoRA part two v2](experiments/2026-11-16-public-notebook-baseline.md)（Kaggle Public`.620`、CC BY-SA 4.0資産とApache/MITモデル）を選定。
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
-- 次にすること: private Notebookのmetadata準備済み。Kaggle GPU週次quota確認後にpush・全runtime検証・提出を行い、新しいPublic LB基準を作る。その後Spectral・Mistral・OLMoを追加確認する。quota確認前のpush/run/提出は未実施。提出枠は候補がある限り毎日使う。Host142 GPU1には触れない。
+- 2026-11-17 00:40 JST、Nishant Dahal v2をprivate kernel `suntree0801/name-that-llm-private-two-stage-lora-baseline` v1としてT4×2でpush。Internet無効、競技データと公開dataset/modelsを指定。Kaggle quotaはGPU 29.79h/30h、当日提出0/5。runtime `RUNNING`、competition submissionは未実施。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
+- 次にすること: 30分以上の間隔でruntime状態を確認し、完了後にログ・出力`submission.parquet`の整合性を検証する。runtime gate通過後、最新quota・Rules・提出枠を再確認して1件提出し、新しいPublic LB基準を作る。その後Spectral・Mistral・OLMoを追加確認する。Host142 GPU1には触れない。
 
 ## 記録方針
 

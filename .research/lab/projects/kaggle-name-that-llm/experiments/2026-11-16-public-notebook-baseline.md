@@ -29,3 +29,10 @@ status: preflight
 - Runtime gate: Kaggleで全処理成功、Internet無効、出力`submission.parquet`の形式・件数・ID順を検証し、9時間以内。失敗した場合はログと原因を残し、構成を変えず報告する。
 - Runtime gate通過後にquotaと日次残数を再確認して1件提出し、score・順位・version・時刻・残枠を追記する。public LBの`.620`との差は参考として記録し、以後のLB比較は手元Public`.560`を基準とする。
 
+## 2026-11-17 実行
+
+- 00:36 JST: ユーザー指定の`kaggle quota`でGPU残量29.79h/30h、refresh 2026-11-21 09:00 JSTを確認。`codex_rate_limit.py --guard 15`は5h 100%・weekly 74%。
+- 00:37 JST: Kaggle MCPで公式Rules/Evaluation/competition metadataを確認。Notebook-only competition、Internet無効・`submission.parquet`、1日5件・最終選択2件、外部data/modelは無料かつ全参加者に公開される条件。現在のleaderは`.775`だが、本実験の候補基準は承認済み改訂に従い手元Public`.560`。
+- 00:40 JST: 認証付きCLIで当日提出0/5を確認。既存の準備済みsource/metadataを変更せず、`is_private=true`、GPU有効、`enable_internet=false`、competition `name-that-llm`、dataset `nishantdahal/ntl-handwriting-blend`、Qwen3-14B-Base/Qwen2.5-14B model version 1を再確認。`kaggle kernels push --path /tmp/ntl-public-baseline-pull --accelerator NvidiaTeslaT4`が成功し、private kernel v1を開始。
+- push直後の認証付き`kaggle kernels status`は`KernelWorkerStatus.RUNNING`。T4×2を指定。competition submissionは未実施。runtime完了後に出力・ログを確認し、全test行の`id`/`model`整合と9時間以内を検証する。通過時は直前にquota・当日提出枠を再確認して、v1を1回提出する。
+
