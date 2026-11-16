@@ -3,7 +3,7 @@ date: 2026-11-16
 project: kaggle-name-that-llm
 type: experiment-log
 spec: ../specs/2026-11-15-mistral-spectral-private-notebook-runtime-spec.md
-status: private-runtime-queued
+status: private-runtime-rerun-queued
 ---
 
 # Mistral v14 private push and Kaggle runtime
@@ -30,3 +30,11 @@ This is the fixed v14 Mistral + Spectral candidate approved by the active goal a
 - Default `kaggle kernels push` saved Notebook version 2 and started the runtime check. The immediate status was `KernelWorkerStatus.QUEUED`. This is not a competition submission; the daily submission count remained zero after version 1 was saved.
 - Runtime gate is pending. On completion, recover `runtime_estimate.json` and output logs, verify both GPUs retained at least 10% VRAM, `runtime_gate_pass=true` with the 1.25× hidden-row estimate below 9h, and the exact interactive test ID sequence/valid output schema. If any runtime gate fails, do not submit.
 - Before a competition submission, report the measured runtime, memory, gate result, and candidate context to the user. The current public-top score is not a reason to reject a candidate; compare any score to the hand-held `.560` baseline under the 2026-11-16 policy.
+
+## Runtime v2 failure diagnosis and v3 rerun — 2026-11-16 JST
+
+- The first Kaggle runtime ended `ERROR` after 315 seconds during the Mistral base-model load. Kaggle exposed two Tesla T4 GPUs (14.56 GiB each); Transformers' allocator warmup requested 6.31 GiB on GPU0 with 5.77 GiB free and 8.79 GiB already used. Qwen8B and Qwen1.7B had completed their 64-row probes. The failure occurred before the Mistral probe, so the 10% VRAM and runtime-projection gates remain unmeasured; no submission artifact or competition submission was produced.
+- Diagnosis from the source and trace: `unload_qwen()` deleted only its local parameters. The notebook-level `model` and `tokenizer` names still referenced the final Qwen model when Mistral loading began, retaining its GPU allocation. This is a reference-lifetime bug; no evidence indicates the approved unquantized Mistral path itself exceeds the T4 pair.
+- Fixed the builder and regenerated v14 to explicitly delete the caller references after each Qwen probe and before final Mistral inference. Added a diagnostic of allocated VRAM immediately before Mistral loading. Model weights, precision, device placement, five-fold averaging, blend weights, and Spectral transform are unchanged. All five code cells compile. v13 source remains 一致 under `sha256sum -c /tmp/mistral-v13-preserved.sha256`.
+- Pre-push gates on 2026-11-16: Codex rate guard passed (5h remaining 95%, weekly 80%); official rules and Evaluation reconfirmed; official leaderboard top `.774`, 6,043 teams; authenticated competition submission list showed zero submissions on 11/16. Remote kernel metadata was verified `is_private=true`, GPU enabled, internet disabled, `NvidiaTeslaT4`, with the approved data/model sources.
+- Pushed private Notebook version 3. Kaggle reports `KernelWorkerStatus.QUEUED`; the immediate post-push metadata check reconfirmed private/offline/T4. This is a runtime rerun only, not a competition submission. Next action is to recover the terminal runtime log and check the pre-Mistral memory diagnostic, 10% VRAM reserve, and 4,000-row/9-hour projection. Do not submit unless every gate passes, and report to the user before any competition submission.
