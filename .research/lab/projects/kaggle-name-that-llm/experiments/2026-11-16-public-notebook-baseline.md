@@ -15,6 +15,11 @@ status: preflight
 - License: dataset v1はCC BY-SA 4.0で、説明にpoolの由来と各元データのlicenseを記載。Qwen3-14B-Base/Qwen2.5-14BはApache 2.0、dataset内DeBERTa-v3-largeはMIT。Kaggleの公開Notebook codeはApache 2.0。private forkでも帰属情報を保持する。
 - 判定: **(a) 試す**。`.701`/`.694`/`.684`候補はQ14 LoRA等のlicense根拠がないため保留。現時点で確認した候補中、licenseとoffline/T4条件を確認でき、手元Public`.560`を超える最高スコア系統として本候補を選ぶ。
 
+## Source review
+
+- 2026-11-16 17:38 JSTに取得済みv2の全14セルを静的確認。外部通信・token/API credential参照・runtime package installはなく、すべての入力は`/kaggle/input`から読む。処理はSVC fit、2 LoRA推論、DeBERTa推論、全test時のみSinkhornを行い、最終出力`submission.parquet`を生成する。DeBERTa weightsの`/tmp`への複製以外に明示的な追加保存先なし。
+- Static reviewでKaggle全testの実行は証明されない。実runtime、成功状態、出力の全件/ID/label整合はprivate fork後のKaggle runで確認する。
+
 ## 実行・提出ゲート
 
 - private fork、push、Kaggle実行、competition submissionは未実施。CLI pullしたNotebook sourceは保持し、`/tmp/ntl-public-baseline-pull/kernel-metadata.json`のみ自分のslugに変更して`is_private=true`、`enable_internet=false`に設定済み。上流の内部IDは除去済み。
