@@ -18,12 +18,12 @@ last_updated: 2026-11-16
 
 ## 現在の状況
 
-- 現bestは基準blend＋Spectral補正。primary BA`.664952`／independent confirmation BA`.653828`、Public LB`.560`（v13 ref`58300703`、11/13）。補正なしv12 ref`58261829`はPublic`.541`。CVの改善`+.078`がLBでは`+.019`で、CV-LB対応は2点。公開首位`.774`（11/16確認、6,017 teams）。[v13ログ](experiments/2026-11-13-baseline-spectral-notebook-lb-check.md) · [公式状況](experiments/2026-11-16-official-competition-status.md)
-- Mistral confirmation 5/5 foldと固定CPU gate通過（BA`.676823`、delta`+.022995`、CI下限`+.011596`、両simulation各20/20 positive）。v14 private source/assets準備とHost141 2×16GB pilot通過（peak 6,776/7,222 MiB）。v13の2.59h projectionにMistralの1.75h local estimateを足すと概算4.34hだが、v14 T4合算gateは未測定。push未実施・書込みcredentialなし。[runtime log](experiments/2026-11-15-mistral-spectral-private-notebook-runtime.md)
-- 現公開首位`.774`（11/16確認）。Public LBとCVの対応は2点のみ（v12`.541`、v13`.560`）のため、このconfirmationだけではNotebook runtime検証の価値を確定できない。[確認spec](specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)の判断条件を維持。
+- 現bestは基準blend＋Spectral補正。primary BA`.664952`／independent confirmation BA`.653828`、Public LB`.560`（v13 ref`58300703`、11/13）。補正なしv12 ref`58261829`はPublic`.541`。CVの改善`+.078`がLBでは`+.019`で、CV-LB対応は2点。公開首位`.774`（11/16確認、6,035 teams）。[v13ログ](experiments/2026-11-13-baseline-spectral-notebook-lb-check.md) · [公式状況](experiments/2026-11-16-official-competition-status.md)
+- Mistral confirmation 5/5 fold・固定CPU gate・Host141 2×16GB pilot通過（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive、peak 6,776/7,222 MiB）。Private asset Dataset v2はReady・remote private。v14 Notebook v2はprivate/offline/T4 metadataをremote確認済みで、Kaggle runtime jobは`QUEUED`。64-row probe・10% GPU headroom・1.25×4,000行/9h gateの実測待ち。[v14 push/runtime log](experiments/2026-11-16-mistral-v14-private-push-runtime.md)
+- Public LBとCVの対応はv12`.541`・v13`.560`の2点。新方針では手元best`.560`を候補比較基準とし、現首位`.774`未満は見送り理由にしない。次の公開Notebook基準作り後、Spectral・Mistral・OLMoをLBで追加確認する。
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。見送り・保留の公開調査の結論は下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
-- 次にすること: Mistral v14のprivate push前に公式条件・privacy・T4 runtime・提出枠をfresh確認し、private pushとruntime実測を行う。競技提出の前に報告する。その後、最強のRules/ライセンス準拠公開Notebook系統をprivate forkしてPublic `.560`基準を作り、Spectral・Mistral・OLMoを順に追加評価する。Host142 GPU1には触れない。
+- 次にすること: Mistral v14 runtime gateの完了を確認し、競技提出の前に結果を報告する。その後、最強のRules/ライセンス準拠公開Notebook系統をprivate forkしてPublic `.560`基準を作り、Spectral・Mistral・OLMoを順に追加評価する。提出枠は候補がある限り毎日使う。Host142 GPU1には触れない。
 
 ## 記録方針
 
