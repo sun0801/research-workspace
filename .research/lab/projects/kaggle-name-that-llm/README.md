@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 採用baselineはPublic`.626`（OLMo add-on ref `58456880`）。Qwen単体ref `58459599`は採点待ち、Qwen+OLMo併用Notebookはruntime中。
+summary: 採用baselineはPublic`.626`（OLMo add-on ref `58456880`）。Qwen単体ref `58459599`はPublic`.623`（`.620`比`+.003`）、Qwen+OLMo併用Notebookはruntime中。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -26,7 +26,7 @@ last_updated: 2026-11-17
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。元基準`.620`との差`.002`はnoise threshold`.005`未満で単体では不採用。その後OLMo ref `58456880`が`.626`となり新baselineに更新。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入してruntime `COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`はPublic`.626`で完了し、新baselineに採用。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
-- 2026-11-17: Qwen3-8B add-on v1はprivate/offline T4 kernelで`COMPLETE`。3-row artifact gate pass、4,000-row＋1.25 margin runtime projection約32.2分、GPU peak reserved 7,236 MiB。Public `.620`基準のQwen単体ref `58459599`は16:16 JST時点で`PENDING`（30分poll待ち）。Qwen+OLMo固定weight併用kernel v1は16:24 JSTにprivate/offline T4 runtimeを開始。詳細は[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)。
+- 2026-11-17: Qwen3-8B add-on v1はprivate/offline T4 kernelで`COMPLETE`。3-row artifact gate pass、4,000-row＋1.25 margin runtime projection約32.2分、GPU peak reserved 7,236 MiB。Public `.620`基準のQwen単体ref `58459599`は16:46 JSTにPublic`.623`で`COMPLETE`（差`+.003`はnoise threshold`.005`未満、現best`.626`未満）。Qwen+OLMo固定weight併用kernel v1は16:24 JSTにprivate/offline T4 runtimeを開始。詳細は[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)。
 - 次にすること: Qwen単体ref `58459599`と併用kernel `suntree0801/name-that-llm-qwen8-olmo7-addon`を30分間隔の軽い1コマンドで監視し、runtime完了後にartifact gate・公式条件・quota・日次枠を確認して提出する。Host142 GPU1には触れない。
 
 ## 記録方針
