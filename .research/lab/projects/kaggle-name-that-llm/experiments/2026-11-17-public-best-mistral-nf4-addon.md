@@ -34,3 +34,8 @@ The candidate starts from private baseline ref `58456880` (Public `.626`) and us
 Priority remains (1) NF4 Mistral because independent five-fold confirmation gave BA `.676823`, delta `+.022995`, and bootstrap lower bound `+.011596`; (2) existing Qwen3-8B-on-`.626` blend as a secondary LB check, since its earlier `.623` result was only `+.003` over the `.620` baseline and below the `.005` noise threshold. Do not spend a submission on Qwen3-8B unless the Mistral gate/result warrants it or a slot is otherwise available under the daily-use policy.
 
 Resume with the next scheduled Kaggle session poll. If the pilot passes, record measured per-GPU reserved memory, fold timing, projected hidden runtime, and preview artifact checks before asking the user for the required pre-submission report. Do not submit before that report.
+
+## 2026-11-17 23:44 JST — private v2 started
+
+- The scheduled 30-minute session poll returned `RUNNING` for `suntree0801/name-that-llm-private-publicbest-mistral-nf4` (v2), changing from the prior authenticated CLI `QUEUED` state at 22:44 JST. No restart or duplicate push was made. Runtime gates, artifact checks, and submission remain pending.
+- Codex rate guard passed at 23:44 JST: 5-hour remaining 87%, weekly remaining 64%.
