@@ -13,6 +13,13 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - Official rules/evaluation and public leaderboard were checked on 2026-11-17. The competition allows up to five submissions/day and two final submissions; scoring reruns on about 4,000 passages, while interactive `test.csv` contains only three local preview rows. Current public top is `.776` (6,138 teams). See [official status](2026-11-17-official-competition-status.md).
 - Spectral v2 submission ref `58453689` remained `PENDING` with blank public score at 12:33 JST; two submissions had been made that day.
 
+## 12:46 JST — Spectral score recovered
+
+- Authenticated submission list reports ref `58453689` as `COMPLETE`, Public`.622`; the `.620` baseline ref `58452056` remains `COMPLETE`, Public`.620`.
+- Difference is `+.002`, below the approved `.005` noise threshold. Record the observed score but retain `.620` as the adopted comparison baseline; do not tune or repeat Spectral based on this small change.
+- Daily submissions used: 2/5. No submission was made for OLMo.
+- The OLMo kernel remained `RUNNING` at 12:46 JST; this was an early observation before the next 30-minute poll window, so no extra status poll is scheduled from this result.
+
 ## Local pilot and memory fix
 
 - The first 64-row trial sampled from local `data/test.csv`, which held only three preview rows and therefore repeated them. It was not accepted as a valid runtime pilot. Fold 0 ran, then the old helper's next-fold pre-load gate stopped before loading fold 1: free VRAM was 9,175 MiB against a required 11,878 MiB. A separate cleanup diagnostic showed only 9 MiB allocated but 6,574 MiB reserved by the process; process exit released GPU0 back to 15,960 MiB free. No OOM occurred.
