@@ -1,0 +1,34 @@
+{
+ "started": "2026-11-16T15:53:50",
+ "host": "142-X10DAi",
+ "gpu": "NVIDIA RTX A4000",
+ "torch": "2.10.0+cu128",
+ "argv": [
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-16-dataset-motion-diagnosis/motion_diag.py",
+  "--dataset",
+  "mose",
+  "--out",
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-16-dataset-motion-diagnosis/data/prelim_mose",
+  "--gaps",
+  "1",
+  "2",
+  "--pairs",
+  "3"
+ ],
+ "dataset": "mose",
+ "gaps": [
+  1,
+  2
+ ],
+ "pairs": 3,
+ "sequences": 125,
+ "raft": "torchvision raft_large, 12 updates, 1024x1024",
+ "dis": "medium preset, 1024x1024 gray",
+ "finished": "2026-11-16T16:01:20",
+ "rows": 1623,
+ "seconds": {
+  "raft": 289.0,
+  "dis": 49.5,
+  "pairs": 660.0
+ }
+}

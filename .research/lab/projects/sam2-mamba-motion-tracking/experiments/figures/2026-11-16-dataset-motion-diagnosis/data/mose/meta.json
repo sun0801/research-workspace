@@ -1,0 +1,40 @@
+{
+ "started": "2026-11-17T15:07:03",
+ "host": "142-X10DAi",
+ "gpu": "NVIDIA RTX PRO 4500 Blackwell",
+ "torch": "2.10.0+cu128",
+ "argv": [
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-16-dataset-motion-diagnosis/motion_diag.py",
+  "--dataset",
+  "mose",
+  "--out",
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-16-dataset-motion-diagnosis/data/mose",
+  "--gaps",
+  "1",
+  "2",
+  "4",
+  "--pairs",
+  "12",
+  "--expect-gpu",
+  "RTX PRO 4500",
+  "--save-fields",
+  "runs/latent_corr/motion_diag/20261116/mose_fields.pt"
+ ],
+ "dataset": "mose",
+ "gaps": [
+  1,
+  2,
+  4
+ ],
+ "pairs": 12,
+ "sequences": 125,
+ "raft": "torchvision raft_large, 12 updates, 1024x1024",
+ "dis": "medium preset, 1024x1024 gray",
+ "finished": "2026-11-17T15:40:23",
+ "rows": 9554,
+ "seconds": {
+  "raft": 770.1,
+  "dis": 278.7,
+  "pairs": 3827.0
+ }
+}

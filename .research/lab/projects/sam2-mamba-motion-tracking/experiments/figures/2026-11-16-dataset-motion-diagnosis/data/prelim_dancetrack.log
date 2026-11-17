@@ -1,0 +1,46 @@
+/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/.venv-sam2/lib/python3.12/site-packages/torch/cuda/__init__.py:65: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/.venv-sam2/lib/python3.12/site-packages/torchvision/transforms/functional.py:154: UserWarning: The given NumPy array is not writable, and PyTorch does not support non-writable tensors. This means writing to this tensor will result in undefined behavior. You may want to copy the array to protect its data or make it writable before converting it to a tensor. This type of warning will be suppressed for the rest of this program. (Triggered internally at /pytorch/torch/csrc/utils/tensor_numpy.cpp:213.)
+  img = torch.from_numpy(pic.transpose((2, 0, 1))).contiguous()
+[93mSAMURAI mode: False, motion_model_type: kalman[0m
+{"i": 0, "seq": "dancetrack0001", "frames": 703, "rows": 56, "elapsed_s": 8.4, "sam2": 1.3, "raft": 3.6, "dis": 0.6, "pairs": 8.0}
+{"i": 1, "seq": "dancetrack0002", "frames": 1203, "rows": 118, "elapsed_s": 16.3, "sam2": 2.3, "raft": 7.0, "dis": 1.1, "pairs": 16.0}
+{"i": 2, "seq": "dancetrack0006", "frames": 1202, "rows": 184, "elapsed_s": 24.3, "sam2": 3.4, "raft": 10.4, "dis": 1.8, "pairs": 24.0}
+{"i": 3, "seq": "dancetrack0008", "frames": 883, "rows": 241, "elapsed_s": 32.2, "sam2": 4.4, "raft": 13.9, "dis": 2.4, "pairs": 32.0}
+{"i": 4, "seq": "dancetrack0012", "frames": 1203, "rows": 335, "elapsed_s": 41.7, "sam2": 5.7, "raft": 17.3, "dis": 3.0, "pairs": 40.0}
+{"i": 5, "seq": "dancetrack0015", "frames": 1203, "rows": 401, "elapsed_s": 50.0, "sam2": 6.6, "raft": 20.8, "dis": 3.6, "pairs": 48.0}
+{"i": 6, "seq": "dancetrack0016", "frames": 2163, "rows": 449, "elapsed_s": 57.8, "sam2": 7.5, "raft": 24.2, "dis": 4.2, "pairs": 56.0}
+{"i": 7, "seq": "dancetrack0020", "frames": 583, "rows": 736, "elapsed_s": 75.0, "sam2": 10.8, "raft": 27.7, "dis": 4.8, "pairs": 64.0}
+{"i": 8, "seq": "dancetrack0023", "frames": 1483, "rows": 808, "elapsed_s": 83.2, "sam2": 12.0, "raft": 31.2, "dis": 5.4, "pairs": 72.0}
+{"i": 9, "seq": "dancetrack0024", "frames": 763, "rows": 856, "elapsed_s": 90.1, "sam2": 12.7, "raft": 34.6, "dis": 6.0, "pairs": 80.0}
+{"i": 10, "seq": "dancetrack0027", "frames": 403, "rows": 924, "elapsed_s": 97.9, "sam2": 13.6, "raft": 38.1, "dis": 6.6, "pairs": 88.0}
+{"i": 11, "seq": "dancetrack0029", "frames": 1263, "rows": 972, "elapsed_s": 105.0, "sam2": 14.5, "raft": 41.6, "dis": 7.2, "pairs": 96.0}
+{"i": 12, "seq": "dancetrack0032", "frames": 604, "rows": 1020, "elapsed_s": 112.0, "sam2": 15.4, "raft": 45.0, "dis": 7.8, "pairs": 104.0}
+{"i": 13, "seq": "dancetrack0033", "frames": 803, "rows": 1082, "elapsed_s": 119.9, "sam2": 16.5, "raft": 48.5, "dis": 8.4, "pairs": 112.0}
+{"i": 14, "seq": "dancetrack0037", "frames": 1203, "rows": 1138, "elapsed_s": 127.4, "sam2": 17.5, "raft": 52.0, "dis": 9.1, "pairs": 120.0}
+{"i": 15, "seq": "dancetrack0039", "frames": 1242, "rows": 1170, "elapsed_s": 134.4, "sam2": 18.2, "raft": 55.5, "dis": 9.7, "pairs": 128.0}
+{"i": 16, "seq": "dancetrack0044", "frames": 1203, "rows": 1242, "elapsed_s": 142.8, "sam2": 19.4, "raft": 58.9, "dis": 10.3, "pairs": 136.0}
+{"i": 17, "seq": "dancetrack0045", "frames": 1203, "rows": 1348, "elapsed_s": 152.0, "sam2": 20.6, "raft": 62.4, "dis": 10.9, "pairs": 144.0}
+{"i": 18, "seq": "dancetrack0049", "frames": 1203, "rows": 1408, "elapsed_s": 160.0, "sam2": 21.7, "raft": 65.9, "dis": 11.5, "pairs": 152.0}
+{"i": 19, "seq": "dancetrack0051", "frames": 1203, "rows": 1480, "elapsed_s": 168.5, "sam2": 22.9, "raft": 69.4, "dis": 12.2, "pairs": 160.0}
+{"i": 20, "seq": "dancetrack0052", "frames": 1203, "rows": 1506, "elapsed_s": 175.2, "sam2": 23.7, "raft": 72.9, "dis": 12.8, "pairs": 168.0}
+{"i": 21, "seq": "dancetrack0053", "frames": 1204, "rows": 1546, "elapsed_s": 181.7, "sam2": 24.4, "raft": 76.4, "dis": 13.4, "pairs": 176.0}
+{"i": 22, "seq": "dancetrack0055", "frames": 1203, "rows": 1583, "elapsed_s": 188.3, "sam2": 25.0, "raft": 79.9, "dis": 14.0, "pairs": 184.0}
+{"i": 23, "seq": "dancetrack0057", "frames": 622, "rows": 1621, "elapsed_s": 195.0, "sam2": 25.9, "raft": 83.3, "dis": 14.6, "pairs": 192.0}
+{"i": 24, "seq": "dancetrack0061", "frames": 1203, "rows": 1661, "elapsed_s": 201.8, "sam2": 26.7, "raft": 86.8, "dis": 15.2, "pairs": 200.0}
+{"i": 25, "seq": "dancetrack0062", "frames": 1203, "rows": 1703, "elapsed_s": 208.6, "sam2": 27.6, "raft": 90.3, "dis": 15.8, "pairs": 208.0}
+{"i": 26, "seq": "dancetrack0066", "frames": 1202, "rows": 1743, "elapsed_s": 215.3, "sam2": 28.5, "raft": 93.8, "dis": 16.4, "pairs": 216.0}
+{"i": 27, "seq": "dancetrack0068", "frames": 1203, "rows": 1783, "elapsed_s": 222.2, "sam2": 29.3, "raft": 97.3, "dis": 17.0, "pairs": 224.0}
+{"i": 28, "seq": "dancetrack0069", "frames": 1403, "rows": 1831, "elapsed_s": 229.5, "sam2": 30.1, "raft": 100.8, "dis": 17.7, "pairs": 232.0}
+{"i": 29, "seq": "dancetrack0072", "frames": 1203, "rows": 1869, "elapsed_s": 236.3, "sam2": 30.8, "raft": 104.3, "dis": 18.3, "pairs": 240.0}
+{"i": 30, "seq": "dancetrack0074", "frames": 1203, "rows": 1902, "elapsed_s": 243.5, "sam2": 31.7, "raft": 107.8, "dis": 18.9, "pairs": 248.0}
+{"i": 31, "seq": "dancetrack0075", "frames": 803, "rows": 1958, "elapsed_s": 251.1, "sam2": 32.5, "raft": 111.2, "dis": 19.5, "pairs": 256.0}
+{"i": 32, "seq": "dancetrack0080", "frames": 1201, "rows": 2042, "elapsed_s": 259.6, "sam2": 33.7, "raft": 114.7, "dis": 20.1, "pairs": 264.0}
+{"i": 33, "seq": "dancetrack0082", "frames": 603, "rows": 2208, "elapsed_s": 271.1, "sam2": 35.7, "raft": 118.2, "dis": 20.7, "pairs": 272.0}
+{"i": 34, "seq": "dancetrack0083", "frames": 603, "rows": 2407, "elapsed_s": 284.8, "sam2": 37.9, "raft": 121.7, "dis": 21.3, "pairs": 280.0}
+{"i": 35, "seq": "dancetrack0086", "frames": 603, "rows": 2533, "elapsed_s": 296.0, "sam2": 39.6, "raft": 125.1, "dis": 22.0, "pairs": 288.0}
+{"i": 36, "seq": "dancetrack0087", "frames": 1003, "rows": 2617, "elapsed_s": 305.1, "sam2": 40.7, "raft": 128.6, "dis": 22.6, "pairs": 296.0}
+{"i": 37, "seq": "dancetrack0096", "frames": 603, "rows": 2825, "elapsed_s": 318.3, "sam2": 43.2, "raft": 132.1, "dis": 23.2, "pairs": 304.0}
+{"i": 38, "seq": "dancetrack0098", "frames": 1203, "rows": 2878, "elapsed_s": 325.9, "sam2": 44.0, "raft": 135.6, "dis": 23.8, "pairs": 312.0}
+{"i": 39, "seq": "dancetrack0099", "frames": 603, "rows": 2954, "elapsed_s": 334.8, "sam2": 45.2, "raft": 139.0, "dis": 24.4, "pairs": 320.0}
+summary -> /mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-16-dataset-motion-diagnosis/data/prelim_dancetrack/summary.md

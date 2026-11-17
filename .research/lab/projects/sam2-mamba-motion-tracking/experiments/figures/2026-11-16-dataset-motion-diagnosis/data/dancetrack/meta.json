@@ -1,0 +1,41 @@
+{
+ "started": "2026-11-17T15:05:31",
+ "host": "142-X10DAi",
+ "gpu": "NVIDIA RTX A4000",
+ "torch": "2.10.0+cu128",
+ "argv": [
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-16-dataset-motion-diagnosis/motion_diag.py",
+  "--dataset",
+  "dancetrack",
+  "--out",
+  "/mnt/HDD10TB-2/aburatani/research-workspace/.research/lab/projects/sam2-mamba-motion-tracking/experiments/figures/2026-11-16-dataset-motion-diagnosis/data/dancetrack",
+  "--gaps",
+  "1",
+  "2",
+  "4",
+  "8",
+  "--pairs",
+  "12",
+  "--save-fields",
+  "runs/latent_corr/motion_diag/20261116/dancetrack_fields.pt"
+ ],
+ "dataset": "dancetrack",
+ "gaps": [
+  1,
+  2,
+  4,
+  8
+ ],
+ "pairs": 12,
+ "sequences": 40,
+ "raft": "torchvision raft_large, 12 updates, 1024x1024",
+ "dis": "medium preset, 1024x1024 gray",
+ "finished": "2026-11-17T15:42:17",
+ "rows": 17664,
+ "seconds": {
+  "sam2": 141.4,
+  "raft": 836.9,
+  "dis": 138.6,
+  "pairs": 1920.0
+ }
+}
