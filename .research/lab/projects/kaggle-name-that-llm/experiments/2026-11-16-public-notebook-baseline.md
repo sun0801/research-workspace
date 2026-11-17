@@ -42,4 +42,5 @@ status: preflight
 
 - 11:29 JST: v1の採点待ち中、準備済みSpectral v2をT4×2でprivate push。Kaggle CLIは「kernel title does not resolve to specified id」と警告し、元のbaseline slugではstatus/pullが404。タイトル由来slug `suntree0801/name-that-llm-private-two-stage-lora-spectral`でremote metadataを取得し、private、GPU有効、Internet無効、competition/dataset/model sources一致を確認。push応答はversion 2成功、canonical slugのstatusは`RUNNING`。実行中のため再起動・二重pushはしない。v1 submission ref `58452056`は直近確認（11:27 JST）で`PENDING`、採点結果なし。次の軽いpollは両方とも30分以上の間隔を空ける。
 - 11:33 JST: `kaggle quota`実測はGPU残量29.57h/30h、refresh 2026-11-21 09:00 JST（ユーザー提示の直前値29.79hから変化）。Codex rate guardは5h 96%・weekly 73%。新たなpush/submitは行わず、Spectral v2 runtimeとbaseline採点の完了待ち。
+- 11:38 JST: canonical slugから`kaggle kernels pull ... --metadata`でremote sourceを取得。ローカルv2とremoteの全7 code cell sourceが一致。remote metadataはcanonical id `suntree0801/name-that-llm-private-two-stage-lora-spectral`、private、GPU有効、Internet無効、competition `name-that-llm`、dataset source 1件。slug警告後も意図したコードが載っていることを独立確認した。
 
