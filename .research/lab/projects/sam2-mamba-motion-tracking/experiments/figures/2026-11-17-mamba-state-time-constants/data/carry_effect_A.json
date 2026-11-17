@@ -1,0 +1,198 @@
+{
+ "checkpoint": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3_nockpt/20261027T154219+0900_1895c45/checkpoints/checkpoint.pt",
+ "limit_videos": 8,
+ "rows": [
+  {
+   "level": "64",
+   "frames_carried": "0",
+   "calls": 22,
+   "residual_over_feature": 0.27566460045901214,
+   "carry_effect_over_feature": 0.0,
+   "carry_effect_over_residual": 0.0
+  },
+  {
+   "level": "64",
+   "frames_carried": "1",
+   "calls": 22,
+   "residual_over_feature": 0.19821706888350574,
+   "carry_effect_over_feature": 0.032540726560083305,
+   "carry_effect_over_residual": 0.16817928782918237
+  },
+  {
+   "level": "64",
+   "frames_carried": "2-3",
+   "calls": 44,
+   "residual_over_feature": 0.22299069640311328,
+   "carry_effect_over_feature": 0.06503440058705481,
+   "carry_effect_over_residual": 0.29476276141676033
+  },
+  {
+   "level": "64",
+   "frames_carried": "4-7",
+   "calls": 88,
+   "residual_over_feature": 0.20715616270899773,
+   "carry_effect_over_feature": 0.09274288834157315,
+   "carry_effect_over_residual": 0.44452274116602813
+  },
+  {
+   "level": "64",
+   "frames_carried": "8-15",
+   "calls": 176,
+   "residual_over_feature": 0.20901441286233338,
+   "carry_effect_over_feature": 0.09683514866893264,
+   "carry_effect_over_residual": 0.46138619005002757
+  },
+  {
+   "level": "64",
+   "frames_carried": "16-31",
+   "calls": 342,
+   "residual_over_feature": 0.22350181338557026,
+   "carry_effect_over_feature": 0.11587684077608307,
+   "carry_effect_over_residual": 0.4985236174356171
+  },
+  {
+   "level": "64",
+   "frames_carried": "32-63",
+   "calls": 291,
+   "residual_over_feature": 0.2891633445044973,
+   "carry_effect_over_feature": 0.15564605392694883,
+   "carry_effect_over_residual": 0.49260529670928355
+  },
+  {
+   "level": "64",
+   "frames_carried": "64+",
+   "calls": 175,
+   "residual_over_feature": 0.4282381006649562,
+   "carry_effect_over_feature": 0.24658404005425316,
+   "carry_effect_over_residual": 0.5194498619011471
+  },
+  {
+   "level": "128",
+   "frames_carried": "0",
+   "calls": 22,
+   "residual_over_feature": 0.3444034999067133,
+   "carry_effect_over_feature": 0.0,
+   "carry_effect_over_residual": 0.0
+  },
+  {
+   "level": "128",
+   "frames_carried": "1",
+   "calls": 22,
+   "residual_over_feature": 0.5585524236614053,
+   "carry_effect_over_feature": 0.06405298530378124,
+   "carry_effect_over_residual": 0.11626051264730367
+  },
+  {
+   "level": "128",
+   "frames_carried": "2-3",
+   "calls": 44,
+   "residual_over_feature": 0.6788194193081423,
+   "carry_effect_over_feature": 0.18793879296969285,
+   "carry_effect_over_residual": 0.27425474199381744
+  },
+  {
+   "level": "128",
+   "frames_carried": "4-7",
+   "calls": 88,
+   "residual_over_feature": 0.7596907595341856,
+   "carry_effect_over_feature": 0.27221623520282184,
+   "carry_effect_over_residual": 0.35624772615053435
+  },
+  {
+   "level": "128",
+   "frames_carried": "8-15",
+   "calls": 176,
+   "residual_over_feature": 0.819765105843544,
+   "carry_effect_over_feature": 0.32284312246536667,
+   "carry_effect_over_residual": 0.3918008618056774
+  },
+  {
+   "level": "128",
+   "frames_carried": "16-31",
+   "calls": 342,
+   "residual_over_feature": 0.9106676216013947,
+   "carry_effect_over_feature": 0.3860027873725222,
+   "carry_effect_over_residual": 0.4251094769838958
+  },
+  {
+   "level": "128",
+   "frames_carried": "32-63",
+   "calls": 291,
+   "residual_over_feature": 1.0336184462730826,
+   "carry_effect_over_feature": 0.45258830707917097,
+   "carry_effect_over_residual": 0.4394001729299932
+  },
+  {
+   "level": "128",
+   "frames_carried": "64+",
+   "calls": 175,
+   "residual_over_feature": 1.4822448938233512,
+   "carry_effect_over_feature": 0.7599366869245257,
+   "carry_effect_over_residual": 0.5183181667327881
+  },
+  {
+   "level": "256",
+   "frames_carried": "0",
+   "calls": 22,
+   "residual_over_feature": 0.1632030944932591,
+   "carry_effect_over_feature": 0.0,
+   "carry_effect_over_residual": 0.0
+  },
+  {
+   "level": "256",
+   "frames_carried": "1",
+   "calls": 22,
+   "residual_over_feature": 0.16209658980369568,
+   "carry_effect_over_feature": 0.01518631311641498,
+   "carry_effect_over_residual": 0.09298314323479479
+  },
+  {
+   "level": "256",
+   "frames_carried": "2-3",
+   "calls": 44,
+   "residual_over_feature": 0.16319317573850806,
+   "carry_effect_over_feature": 0.01871902635321021,
+   "carry_effect_over_residual": 0.11400997520170429
+  },
+  {
+   "level": "256",
+   "frames_carried": "4-7",
+   "calls": 88,
+   "residual_over_feature": 0.16447293809191746,
+   "carry_effect_over_feature": 0.02093077028720555,
+   "carry_effect_over_residual": 0.12667009581557728
+  },
+  {
+   "level": "256",
+   "frames_carried": "8-15",
+   "calls": 176,
+   "residual_over_feature": 0.164983478713442,
+   "carry_effect_over_feature": 0.020909274282695896,
+   "carry_effect_over_residual": 0.12615194628861817
+  },
+  {
+   "level": "256",
+   "frames_carried": "16-31",
+   "calls": 342,
+   "residual_over_feature": 0.16645358520293096,
+   "carry_effect_over_feature": 0.02105477144288128,
+   "carry_effect_over_residual": 0.12587087300785801
+  },
+  {
+   "level": "256",
+   "frames_carried": "32-63",
+   "calls": 291,
+   "residual_over_feature": 0.16837522955899387,
+   "carry_effect_over_feature": 0.020630626852825743,
+   "carry_effect_over_residual": 0.12167361890737134
+  },
+  {
+   "level": "256",
+   "frames_carried": "64+",
+   "calls": 175,
+   "residual_over_feature": 0.15686565595013754,
+   "carry_effect_over_feature": 0.01455150364765099,
+   "carry_effect_over_residual": 0.09281202520642962
+  }
+ ]
+}

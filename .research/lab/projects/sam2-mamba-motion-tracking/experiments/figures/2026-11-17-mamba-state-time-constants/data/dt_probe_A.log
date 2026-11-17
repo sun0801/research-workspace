@@ -1,0 +1,68 @@
+/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/.venv-sam2/lib/python3.12/site-packages/torch/cuda/__init__.py:65: FutureWarning: The pynvml package is deprecated. Please install nvidia-ml-py instead. If you did not install pynvml directly, please report this to the maintainers of the package that installed pynvml for you.
+  import pynvml  # type: ignore[import]
+[93mSAMURAI mode: False, motion_model_type: kalman[0m
+output directory: /tmp/claude-1123/-mnt-HDD10TB-2-aburatani-research-workspace/5560341d-adaf-40cd-81f7-a805553c8d2c/scratchpad/probe/evalA
+evaluated 20/22 objects
+{
+  "condition": "probe",
+  "split": "tuning",
+  "sam2_checkpoint": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/F0_step_002789.pt",
+  "sam2_checkpoint_sha256": "5d4cd955a177d40afddba65082df647a64bf6774a40dd210a9099543c8bc0ae9",
+  "adapter": {
+    "trainer_checkpoint": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/short_clip/A_v3_nockpt/20261027T154219+0900_1895c45/checkpoints/checkpoint.pt",
+    "trainer_checkpoint_sha256": "b2edc9e8f07809c60f1b4320562f0471beb7338fa466c87c0c4d91a14a91e82d",
+    "adapter_type": "v3",
+    "v3_levels": "64,128,256",
+    "reset_every_frame": false,
+    "reset_interval": 0,
+    "reset_levels": null
+  },
+  "memory_restriction": {
+    "max_mem_frames": null,
+    "no_obj_ptrs": false,
+    "num_maskmem": 7
+  },
+  "trajectory_index": "/mnt/HDD10TB-2/aburatani/2025_03_aburatani_sam2/runs/mose_temporal_mamba_20260930/tuning_trajectories.json",
+  "trajectory_index_sha256": "1cef53ce1e804e0ad8472c8f5c8a206b54652619173b993ecfef057a110b59ce",
+  "eval_script_sha256": "31f3684becb86fb0dd6016cdc14cc0af62943b15e8200c579a5c6c4027cd268f",
+  "evaluator_sha256": "7b98e0a1b97346ccc2d5a002d488d98f65cff591443e38a15ad7f74b12d4ee95",
+  "resolution": 1024,
+  "prompt_seed_base": 1000003,
+  "limit_videos": 8,
+  "videos_evaluated": 8,
+  "objects_evaluated": 22,
+  "metadata_objects_total": 313,
+  "objects_excluded_no_nonempty_mask": 0,
+  "video_mean_J": 0.8335572727801044,
+  "video_mean_F": 0.8865538883476878,
+  "video_mean_J&F": 0.8600555805638961,
+  "elapsed_seconds": 290.68909740448,
+  "frames_processed": 1160,
+  "seconds_per_frame": 0.2505940494866207,
+  "device_name": "NVIDIA RTX A4000"
+}
+段          持越  calls      dt/bias 10/50/90%     残る  (bias)        半減期 10/50/90%     持越分     今書いた分    D·x      射影  state rms
+64段         0     22   0.68/ 1.03/ 1.52    0.852   0.860    1.2/ 10.5/  78.7   0.000     0.038  1.031   0.000     0.0019
+64段         1     22   0.63/ 1.03/ 1.64    0.851   0.860    1.2/ 10.5/  80.1   0.015     0.054  1.046  -0.011     0.0032
+64段       2-3     44   0.65/ 1.02/ 1.61    0.851   0.860    1.2/ 10.6/  80.1   0.025     0.025  1.032  -0.018     0.0038
+64段       4-7     88   0.66/ 1.02/ 1.57    0.852   0.860    1.2/ 10.6/  80.1   0.024     0.017  1.013  -0.007     0.0043
+64段      8-15    176   0.65/ 1.03/ 1.58    0.852   0.860    1.2/ 10.6/  80.2   0.033     0.015  1.007  -0.002     0.0055
+64段     16-31    342   0.66/ 1.03/ 1.57    0.852   0.860    1.2/ 10.6/  80.1   0.051     0.014  0.986   0.017     0.0069
+64段     32-63    291   0.66/ 1.03/ 1.55    0.852   0.860    1.2/ 10.6/  80.1   0.081     0.012  0.956   0.050     0.0098
+64段       64+    175   0.64/ 1.03/ 1.60    0.851   0.860    1.2/ 10.6/  80.8   0.132     0.009  0.890   0.114     0.0178
+128段        0     22   0.89/ 0.99/ 1.12    0.870   0.871    1.5/ 11.1/  71.5   0.000     0.035  0.973   0.000     0.0018
+128段        1     22   0.87/ 0.99/ 1.13    0.870   0.871    1.5/ 11.1/  71.5   0.016     0.031  0.960   0.014     0.0035
+128段      2-3     44   0.86/ 0.99/ 1.14    0.870   0.871    1.5/ 11.1/  71.7   0.048     0.043  0.919   0.044     0.0063
+128段      4-7     88   0.86/ 1.00/ 1.15    0.870   0.871    1.5/ 11.1/  71.6   0.104     0.042  0.868   0.097     0.0109
+128段     8-15    176   0.86/ 1.00/ 1.15    0.870   0.871    1.5/ 11.1/  71.5   0.170     0.037  0.805   0.164     0.0163
+128段    16-31    342   0.86/ 1.00/ 1.15    0.870   0.871    1.5/ 11.1/  71.5   0.228     0.033  0.751   0.223     0.0223
+128段    32-63    291   0.87/ 1.00/ 1.14    0.870   0.871    1.5/ 11.1/  71.4   0.263     0.028  0.718   0.259     0.0273
+128段      64+    175   0.88/ 1.00/ 1.13    0.870   0.871    1.5/ 11.1/  71.0   0.345     0.024  0.643   0.339     0.0399
+256段        0     22   0.96/ 1.00/ 1.04    0.855   0.856    1.4/  9.8/  73.9   0.000     0.004  0.997   0.000     0.0006
+256段        1     22   0.96/ 1.01/ 1.04    0.855   0.856    1.4/  9.8/  73.8   0.002     0.004  0.995   0.002     0.0009
+256段      2-3     44   0.95/ 1.01/ 1.05    0.855   0.856    1.3/  9.8/  73.4   0.005     0.005  0.992   0.004     0.0013
+256段      4-7     88   0.95/ 1.01/ 1.05    0.855   0.856    1.3/  9.8/  73.4   0.009     0.005  0.989   0.007     0.0020
+256段     8-15    176   0.95/ 1.01/ 1.05    0.855   0.856    1.3/  9.8/  73.4   0.013     0.005  0.986   0.011     0.0027
+256段    16-31    342   0.95/ 1.01/ 1.05    0.855   0.856    1.3/  9.8/  73.5   0.016     0.005  0.983   0.014     0.0033
+256段    32-63    291   0.95/ 1.01/ 1.05    0.855   0.856    1.3/  9.8/  73.5   0.017     0.004  0.982   0.015     0.0039
+256段      64+    175   0.95/ 1.01/ 1.05    0.855   0.856    1.4/  9.8/  73.3   0.021     0.004  0.977   0.020     0.0046
