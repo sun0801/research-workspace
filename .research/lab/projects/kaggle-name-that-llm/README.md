@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 現bestはv13 Public`.560`。公開Notebook`.620`基準v1を提出済み（ref `58452056`、採点待ち）、Spectral v2をprivate実行中。
+summary: 現bestは公開Notebook private forkのPublic`.620`（ref `58452056`）。Spectral v2 add-onを提出済み（ref `58453689`、採点待ち）。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -18,13 +18,14 @@ last_updated: 2026-11-17
 
 ## 現在の状況
 
-- 現bestは基準blend＋Spectral補正。primary BA`.664952`／independent confirmation BA`.653828`、Public LB`.560`（v13 ref`58300703`、11/13）。補正なしv12 ref`58261829`はPublic`.541`。CVの改善`+.078`がLBでは`+.019`で、CV-LB対応は2点。公開首位`.776`（11/17確認、6,129 teams）。[v13ログ](experiments/2026-11-13-baseline-spectral-notebook-lb-check.md) · [公式状況](experiments/2026-11-16-official-competition-status.md) · [11/17提出ゲート](experiments/2026-11-16-public-notebook-baseline.md)
+- 現bestは公開Notebook private fork（Nishant Dahal Two-stage LoRA part two v2）のPublic`.620`（ref`58452056`、11/17 hidden scoring `COMPLETE`）。旧手元bestのv13は`.560`（ref`58300703`）で、差は`+.060`。以降のadd-onは`.620`と比較する。公開首位`.776`（11/17確認、6,129 teams）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-16-official-competition-status.md)
 - Mistral confirmation 5/5 fold・固定CPU gate・Host141 2×16GB pilot通過（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive、peak 6,776/7,222 MiB）。Private asset Dataset v2はReady・remote private。v14 v3はQwen解放後に5-fold 64-row inferenceを完了したが、Kaggle T4の10% VRAM reserve gate不通過（`ERROR`）。ピーク値がログに出ずprojection未実施、競技提出なし。追加runtimeは承認specの失敗条件により停止。[v14 push/runtime log](experiments/2026-11-16-mistral-v14-private-push-runtime.md)
-- Public LBとCVの対応はv12`.541`・v13`.560`の2点。新方針では手元best`.560`を候補比較基準とし、現首位`.774`未満は見送り理由にしない。公開Notebook候補は[Two-stage LoRA part two v2](experiments/2026-11-16-public-notebook-baseline.md)（Kaggle Public`.620`、CC BY-SA 4.0資産とApache/MITモデル）を選定。
+- Public LBとCVの対応は旧手元v12`.541`・v13`.560`の2点。公開Notebook系統はprivate提出で`.620`を再現し、新しい基準に更新。構成はCC BY-SA 4.0資産とApache/MITモデル。[基準ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/17監査一覧](experiments/2026-11-17-source-audit-log.md)・[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
-- 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。提出ref `58452056` は `PENDING`（当日1/5件、Public score未確定）。隠し全件runtimeとLB採点待ち。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
-- 次にすること: submission ref `58452056` とSpectral v2 kernelを30分以上の間隔で軽くpollする。v2はprivate canonical slug `suntree0801/name-that-llm-private-two-stage-lora-spectral`で、直近statusは`RUNNING`。runtime完了後に出力を検証し、提出直前に公式条件・quota・日次枠を再確認する。OLMoのinference-only assets（585 MiB）はローカルstaging済み。基準v1の隠し全件runtimeとSpectral比較を回収後、Notebook推論を加えた総runtimeが9時間以内と見込める場合にprivate upload・pilotへ進む。Mistral v14は現specで再実行しない。Host142 GPU1には触れない。
+- 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
+- 2026-11-17: Spectral v2をprivate kernel version 2としてT4×2で実行。runtime `COMPLETE`、preview 526秒、`submission.parquet`は3行・`id,model`・null/重複なし・有効label。previewでSpectralによる予測変更は0%。hidden全件LB比較としてref `58453689`を提出（当日2/5件、採点status未確認）。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
+- 次にすること: submission ref `58453689`を30分以上の間隔で軽くpollし、Public scoreを現best`.620`と比較する。OLMoのinference-only assets（585 MiB）はローカルstaging済み。OLMo追加は基準全件runtime・Spectral比較を回収し、全体9時間以内と見込める場合だけprivate upload・pilotへ進む。Mistral v14は現specで再実行しない。Host142 GPU1には触れない。
 
 ## 記録方針
 

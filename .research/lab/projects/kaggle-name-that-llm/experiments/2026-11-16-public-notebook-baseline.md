@@ -2,7 +2,7 @@
 date: 2026-11-16
 project: kaggle-name-that-llm
 type: experiment-log
-status: preflight
+status: in-progress
 ---
 
 # Public Notebook baseline — Two-stage LoRA part two
@@ -45,4 +45,8 @@ status: preflight
 - 11:38 JST: canonical slugから`kaggle kernels pull ... --metadata`でremote sourceを取得。ローカルv2とremoteの全7 code cell sourceが一致。remote metadataはcanonical id `suntree0801/name-that-llm-private-two-stage-lora-spectral`、private、GPU有効、Internet無効、competition `name-that-llm`、dataset source 1件。slug警告後も意図したコードが載っていることを独立確認した。
 - 11:50 JST: OLMo add-onはまだ実装・pushしない。v1の約549秒は対話用3行smoke runtimeで、submission ref `58452056`の隠し全件runtime・採点は未確定。9時間制限はNotebook全体に適用されるため、基準の全件runtimeとSpectral v2の結果を確認してから、追加推論分を含むruntime gateを判断する。
 - 11:57 JST: 既存fold checkpointからinference-only asset packageをローカル作成。`uv run --offline --no-project --with torch==2.9.0 -- python scripts/package_olmo_addon_assets.py`。5 foldのstage-2 adapter・classifier/norm head、sorted 18-label metadataを格納し、optimizer/RNG stateを除外（585 MiB）。headsは`weights_only=True`で全5件をロードし、各shape `(18,32768)`/`(32768,)`を確認。checksum一致: `sha256sum -c SHA256SUMS`（先頭file prefix `13335b34`）。private upload、Notebook推論実装、GPU pilot/runは未実施。基準全件runtimeとSpectral v2比較後にruntime gateを判断する。
+- 11:59 JST: authenticated `kaggle competitions submissions name-that-llm --format json --page-size 20`でref `58452056`が`COMPLETE`、Public score`.620`、Private score空欄を確認。旧best v13`.560`を`+.060`上回り、公開Notebookの主張scoreをprivate fork提出で再現。これを以降のPublic比較基準に更新する。CLIにはhidden scoringの正確なruntimeは表示されない。Spectral v2は別の30分monitor intervalを維持し、現時点で再poll・提出はしていない。
+- 12:00 JST: Spectral v2 canonical kernel `suntree0801/name-that-llm-private-two-stage-lora-spectral`が`COMPLETE`。log runtime `done in 526s`; preview output `submission.parquet`は3行、2列`id,model`、null 0、重複ID 0、有効labelのみ。frozen Spectral postprocessのpreview changed fractionは0.0で、hidden full testの効果は未確認。private/offline/T4 metadataとremote source/local 7 code cells一致は既確認。
+- 12:02 JST pre-submit gate: Kaggle MCPでcompetition/rules/evaluationを確認。Notebook-only、balanced accuracy、最大5件/日・最終選択2件、対話previewとhidden full testの違いを確認。`kaggle quota` GPU残量29.48h/30h（refresh 2026-11-21 09:00 JST）、Codex rate guard 5h 94%・weekly 73%、当日提出はref `58452056`の1件（1/5）。
+- 12:03 JST: `kaggle competitions submit name-that-llm --file submission.parquet --kernel suntree0801/name-that-llm-private-two-stage-lora-spectral --version 2 --message 'Private .620 public-notebook baseline + frozen Spectral postprocess'`が受理されref `58453689`。CLIは当日残り3件（計2/5）と報告。採点status/scoreはまだpollしていない。次回pollは30分以上空け、Public`.620`を比較基準とする。
 
