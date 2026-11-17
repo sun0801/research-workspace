@@ -14,7 +14,7 @@ status: preview-runtime-complete
 - Qwen3-8B: 64-row pilot completed in 15.3s; projected hidden inference was 1,994.6s, with GPU0 peak reserved memory 7,236 MiB.
 - Qwen3-1.7B: 64-row pilot completed in 2.7s; projected hidden inference was 2,202.1s, with GPU0 peak reserved memory 4,238 MiB.
 - OLMo2-7B: five fold probes completed; peak reserved memory was 6,450 MiB. For the 3-row preview, the notebook projected 10,253.8s for 4,000 hidden rows, below its 28,800s internal gate. Adapter loading took 125.1s. This is a runtime projection from the notebook's pilot, not a measured full hidden run.
-- This runtime supports the internal runtime/memory gate for the candidate pipeline. The downloaded preview `submission.parquet` has 3 rows and columns `id, model`, with no nulls or duplicate IDs. Its class-domain match and any improvement over `.626` on Public LB remain unverified; this preview is not the full hidden-scoring artifact.
+- This runtime supports the internal runtime/memory gate for the candidate pipeline. The downloaded preview `submission.parquet` has 3 rows and columns `id, model`, with no nulls or duplicate IDs. The three preview IDs and order match official `test.csv`; all predicted classes are within the 18-class `train.csv` domain. This preview is not the full hidden-scoring artifact, and improvement over `.626` on Public LB remains unverified.
 
 ## Next decision
 
