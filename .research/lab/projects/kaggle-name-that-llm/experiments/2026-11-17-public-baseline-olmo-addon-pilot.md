@@ -33,7 +33,7 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - Created private Dataset `suntree0801/name-that-llm-private-olmo-addon-assets`; authenticated CLI later reported `ready`, and it appeared in the account's `datasets list --mine`. It contains the five inference-only adapters/heads and helper; no optimizer or RNG state.
 - Pushed kernel version 1, `suntree0801/name-that-llm-private-olmo-add-on`, with `is_private=true`, GPU enabled, Internet disabled, selected baseline sources and the private OLMo Dataset attached. Initial status at 12:41 JST was `KernelWorkerStatus.RUNNING`.
 - No competition submission has been made for this add-on. Wait for runtime completion, collect the full-run runtime and `submission.parquet` validation, then report before deciding whether to submit against `.620`.
-- Host142 GPU1 remains reserved for `mistral-confirm`; no action was taken there. Local GPU0 was released after the pilot.
+- At this earlier checkpoint Host142 GPU1 was reserved for `mistral-confirm`; the user released that reservation on 2026-11-17 after all five confirmation folds finished and `tmux mistral-confirm` disappeared. No GPU1 action occurred at this earlier checkpoint. Local GPU0 was released after the pilot.
 
 ## Reproduction pointers
 
