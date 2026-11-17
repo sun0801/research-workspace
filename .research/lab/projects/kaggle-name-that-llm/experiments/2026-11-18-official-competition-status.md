@@ -17,3 +17,9 @@ type: official-competition-status
 - Authenticated `kaggle quota`: GPU used `2.64h`, remaining `27.36h / 30h`; refresh `2026-11-21 09:00 JST`.
 
 Sources: [competition overview](https://www.kaggle.com/competitions/name-that-llm), [rules](https://www.kaggle.com/competitions/name-that-llm/rules), [timeline](https://www.kaggle.com/competitions/name-that-llm/overview#timeline), [evaluation](https://www.kaggle.com/competitions/name-that-llm/overview#evaluation), [code requirements](https://www.kaggle.com/competitions/name-that-llm/overview#code-requirements).
+
+## 00:21 JST pre-submission refresh
+
+- Rechecked official metadata/pages and Public leaderboard immediately before the planned `.684` baseline submission: top remains `.776`; team count is now `6,203`. The 5/day and 2-final-submission limits, Notebook-only/offline/9-hour/output requirements, balanced-accuracy evaluation, and Jan 13 vs Jan 14 UTC deadline discrepancy are unchanged.
+- Authenticated submission list still shows the latest five refs dated 2026-11-17 UTC and no 11/18 UTC entry. The daily slot has not been confirmed as available; do not infer reset from JST date alone.
+- GPU quota is `27.36h/30h`, refresh `2026-11-21 09:00 JST`; rate guard passed at 00:21 JST (5-hour 85%, weekly 64%).
