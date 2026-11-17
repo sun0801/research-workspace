@@ -3,7 +3,7 @@ project: kaggle-name-that-llm
 status: active
 summary: Current bestはPublic`.626`（ref `58456880`）；Mistral NF4 v2のprivate runtimeを回収中、LB候補を優先順に整理。
 created: 2026-11-02
-last_updated: 2026-11-17
+last_updated: 2026-11-18
 ---
 
 # Kaggle — Name That LLM
@@ -18,7 +18,7 @@ last_updated: 2026-11-17
 
 ## 現在の状況
 
-- 現bestはPublic`.626`（OLMo add-on ref`58456880`、11/17 `COMPLETE`）。元の公開Notebook基準`.620`（ref`58452056`）から`+.006`でnoise threshold`.005`超のため採用。旧手元v13`.560`（ref`58300703`）との差は`+.066`。以降は`.626`と比較する。公開首位`.776`（11/17確認、metadata team count 6,190）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-17-official-competition-status.md)
+- 現bestはPublic`.626`（OLMo add-on ref`58456880`、11/17 `COMPLETE`）。元の公開Notebook基準`.620`（ref`58452056`）から`+.006`でnoise threshold`.005`超のため採用。旧手元v13`.560`（ref`58300703`）との差は`+.066`。以降は`.626`と比較する。公開首位`.776`（11/18確認、team count 6,201）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-18-official-competition-status.md)
 - Mistral confirmationは5/5 fold完了（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive）。v14 unquantized T4 pathは10% VRAM reserve gate不通過。11/17にユーザーがmistral-confirm完了・tmux消滅を確認し、Host142 GPU1予約を解除。Host141 GPU0〜2/Host142 GPU0〜1は空きとの申告あり。使用直前にspecのhost別gateを再確認する。NF4 v1はlabel列順checkでpilot前に`ERROR`; private v2は23:44 JSTに`RUNNING`へ変化、T4 gate回収中。[NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md) · [v14 log](experiments/2026-11-16-mistral-v14-private-push-runtime.md) · [NF4 spec](specs/2026-11-17-mistral-nf4-publicbest-addon-spec.md)
 - Public LBとCVの対応は旧手元v12`.541`・v13`.560`の2点。公開Notebook系統はprivate提出で`.620`を再現し、新しい基準に更新。構成はCC BY-SA 4.0資産とApache/MITモデル。[基準ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
