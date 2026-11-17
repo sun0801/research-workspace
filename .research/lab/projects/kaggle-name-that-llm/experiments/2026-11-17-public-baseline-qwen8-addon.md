@@ -28,6 +28,7 @@ status: in-progress
 - 15:05 JST: private Notebook v1を `kaggle kernels push --path notebooks/name-that-llm-private-two-stage-lora-qwen8-addon-v1 --accelerator NvidiaTeslaT4` でpush。CLIのtitle/metadata ID不一致警告後、Kaggle canonical slug `suntree0801/name-that-llm-private-two-stage-lora-qwen3-8b` version 1として受理。再pushはしていない。
 - 15:06 JST: canonical slugでstatus `RUNNING`。remote metadataは `is_private=true`, GPU有効, Internet無効, T4, competition/source/model/dataset inputs一致。CLI pullしたremote Notebookの16 cell sourceはlocal候補と完全一致。runtime完了・hidden scoring・提出は未確認/未実施。
 - 同日提出数は15:04直前確認時点で3/5（OLMo ref `58456880`を含む）。このQwen候補は未提出。
+- 15:16 JST resource checkpoint: `kaggle quota` GPU残量28.97h/30h、Codex rate guardは5時間残79%・weekly残71%。quota変化の内訳は特定せず、このQwen kernelの消費時間とは断定しない。
 
 ## 次
 
