@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`（ref `58456880`）；Qwen17 v3はprivate `QUEUED`、`.684`系はpreviewのみ。Mistral NF4 add-onの準備中。
+summary: Current bestはPublic`.626`（ref `58456880`）；Qwen17 v3 preview runtimeは完了、Mistral NF4 v2を回収中。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -26,8 +26,8 @@ last_updated: 2026-11-17
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。元基準`.620`との差`.002`はnoise threshold`.005`未満で単体では不採用。その後OLMo ref `58456880`が`.626`となり新baselineに更新。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入してruntime `COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`はPublic`.626`で完了し、新baselineに採用。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
-- 2026-11-17: Qwen3-8B+OLMo固定weight提出ref `58462545`は`COMPLETE`、Public`.621`で現best`.626`を更新せず。Qwen17 private v3は21:48 JSTに`RUNNING`へ遷移。[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
-- 次にすること: `.684`系は3行previewのみ完了しhidden runtime未検証、提出前に報告する。Qwen17 v3（最終確認 `RUNNING`）とMistral NF4 v2を回収。MistralのVRAM/runtime gates通過後、実測を報告してから提出する。[.684 runtime](experiments/2026-11-17-public-684-system-private-runtime.md) · [Mistral NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md)
+- 2026-11-17: Qwen3-8B+OLMo固定weight提出ref `58462545`は`COMPLETE`、Public`.621`で現best`.626`を更新せず。Qwen17 private v3は22:20 JSTの回収時に`COMPLETE`。preview sessionは約831秒、Qwen3-8B/1.7Bの64行pilotとOLMo2 5-fold runtime projectionが通過。Public LB未確認のため提出評価候補として保留。[実験ログ](experiments/2026-11-17-public-baseline-qwen17-addon.md) · [実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
+- 次にすること: `.684`系は3行previewのみ完了しhidden runtime未検証、提出前に報告する。Qwen17はpreview runtime完了・Public LB未確認。Mistral NF4 v2を回収し、VRAM/runtime gates通過後に提出前報告する。[.684 runtime](experiments/2026-11-17-public-684-system-private-runtime.md) · [Mistral NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md)
 
 ## 記録方針
 
