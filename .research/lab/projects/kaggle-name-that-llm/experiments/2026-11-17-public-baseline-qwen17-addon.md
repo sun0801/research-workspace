@@ -32,3 +32,7 @@ Keep the candidate pending one Public LB comparison against current best ref `58
 - With the NF4 Mistral runtime complete and submission slots not yet confirmed for the new UTC day, pushed the local `.626` + Qwen17 candidate as private T4 kernel v1. Canonical remote ref is `suntree0801/name-that-llm-private-olmo-qwen17-add-on`; CLI status is `QUEUED`. Metadata readback confirms private, GPU enabled, Internet disabled, T4, plus the Qwen17 private asset and Qwen3-1.7B base inputs. No competition submission was made.
 - Kaggle warned that the metadata ID did not resolve from the title. Remote readback established the canonical title-derived slug. The local builder and metadata now use that canonical slug for future pushes; the running v1 was not repushed.
 - This is a private preview/runtime check of an existing component, not a new model-training run. LB submission order remains `.684` baseline, then NF4 Mistral on the resulting baseline, then Qwen17.
+
+## 2026-11-18 01:57 JST — private preview status changed
+
+- After the 30-minute polling interval, authenticated `kaggle kernels status suntree0801/name-that-llm-private-olmo-qwen17-add-on` changed from `QUEUED` to `RUNNING`. Rate guard passed immediately before polling (5-hour remaining 100%, weekly remaining 63%). No output or runtime result is available yet; no duplicate push or competition submission was made.
