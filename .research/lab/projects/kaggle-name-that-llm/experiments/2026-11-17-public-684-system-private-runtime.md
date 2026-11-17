@@ -22,7 +22,9 @@ status: in-progress
 - Remote readback: `is_private=true`, GPU/T4有効、Internet無効、competition source `name-that-llm`。Remote Notebookの55 cell sourcesはpull元と一致。
 - 当日提出はref `58462545`を含め5/5使用済み。runtime検証が通っても、次の提出枠が空くまでは提出しない。submission ref `58462545`は19:29 JST時点で`PENDING`。
 
+- 20:02 JST 30-minute poll: private kernel v1 returned `KernelWorkerStatus.COMPLETE`. `kaggle kernels output` recovered `submission.parquet`, `submission.mode.json`, and the session log. The parquet passed Kaggle-environment checks: 3 rows, columns `id,model`, no nulls or duplicate IDs, all three labels valid (`claude-fable-5`). However, mode metadata explicitly says `exact_public_format_preview`, `model_weights_loaded=false`, and `hidden_runtime_verified=false`. Source inspection confirms the public test's known 3-row fixture bypasses model loading; non-fixture hidden input follows the full ensemble path. The preview session log ends after notebook setup/conversion at about 22 seconds and does not establish GPU usage, peak memory, full hidden-test output, or the 9-hour runtime gate. No score or competition submission is available for this candidate yet; all 5 daily slots were already used. Do not treat this as a full runtime pass.
+
 ## 次
 
-- Jobは30分以上の間隔で軽くpollする。完了時にruntime/error log、hidden full-test projection、`submission.parquet`の全ID・label・null・重複検査を記録する。
-- Gate通過後、利用可能な日次枠で一度提出し、Public LBを現在の`.626`と比較する。Public `.005`未満はnoise扱い。Private LBは別途記録する。
+- `submission.mode.json`のpreviewはartifact format確認のみ。hidden full-test runtimeは未確認なので、日次枠が空いたら提出前にユーザーへ報告し、ref/score/runtimeを回収して`.626`と比較する。Public差`.005`未満はnoise扱い。Private LBは別途記録する。
+- 他の実行中jobとsubmissionは30分以上の間隔で軽くpollし、状態変化時のみ記録する。

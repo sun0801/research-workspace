@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`（ref `58456880`）；private `.684`系kernel v1がruntime中、Qwen+OLMo ref `58462545`は採点待ち。
+summary: Current bestはPublic`.626`（ref `58456880`）；`.684`系private kernel v1は3行previewのみ完了、hidden runtime未検証。ref `58462545`は採点待ち。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -28,7 +28,7 @@ last_updated: 2026-11-17
 - 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入してruntime `COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`はPublic`.626`で完了し、新baselineに採用。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: Qwen3-8B add-on v1はprivate/offline T4 kernelで`COMPLETE`。3-row artifact gate pass、4,000-row＋1.25 margin runtime projection約32.2分、GPU peak reserved 7,236 MiB。Public `.620`基準のQwen単体ref `58459599`は16:46 JSTにPublic`.623`で`COMPLETE`（差`+.003`はnoise threshold`.005`未満、現best`.626`未満）。Qwen+OLMo固定weight併用kernel v2はprivate/offline T4でCOMPLETE（runtime 746s、4k projection 11,341.6s、8h gate pass）。提出ref `58462545`は17:29 JST時点で`PENDING`、本日5/5件提出済み。詳細は[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)。
 - 2026-11-17: Qwen8+OLMoに既存Qwen17を固定weight`.25`で加える候補のv1はPEFTがKaggleの未使用torchao 0.10.0を検出して互換性エラーとなり、Qwen17 adapter注入時に`ERROR`。Optional torchao dispatcherだけを無効化し、canonical slug修正後にprivate kernel v2をpush、現在`QUEUED`。full-test projection/artifact未確認、提出なし。追加学習なし。[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
-- 次にすること: `.684`系 private kernel v1 (`suntree0801/name-that-llm-ntl684-public-baseline`)のruntime・artifact gateを30分以上の間隔で確認し、pass後に空き提出枠で`.626`とLB比較する。Qwen17 v2とsubmission ref `58462545`も30分間隔で回収。Host142 GPU1には触れない。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
+- 次にすること: `.684`系 private kernel v1はpreview artifact gate pass、hidden full-test runtime未検証。提出枠が空き次第、提出前に報告してLB/runtimeを確認し`.626`と比較する。Qwen17 v2とref `58462545`は30分間隔で回収。Host142 GPU1には触れない。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
 
 ## 記録方針
 
