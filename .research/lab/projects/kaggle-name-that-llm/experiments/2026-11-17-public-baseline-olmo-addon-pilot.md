@@ -41,3 +41,12 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 - Private asset package: `/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/public-baseline-olmo-addon-assets-v3/`.
 - Pilot result: `/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/public-baseline-olmo-addon-staging-v2/local-pilot/inference-64-train-projection4000.json`.
 - Kaggle kernel: `suntree0801/name-that-llm-private-olmo-add-on`, version 1.
+
+## Kaggle runtime failure and dependency repair
+
+- 13:17 JST: the first private kernel version changed to `KernelWorkerStatus.ERROR`. Kaggle session output shows the baseline SVC, Qwen3-14B/Qwen2.5-14B LoRA and DeBERTa stages completed (last component at 543.7s); cell `In [6]` then failed when Transformers validated 4-bit quantization: `ImportError: Using bitsandbytes 4-bit quantization requires bitsandbytes>=0.46.1`. The OLMo model was not loaded and no competition submission was made.
+- Cause: the offline Kaggle image had no importable bitsandbytes package. The local builder invoked the OLMo helper without installing the dependency, and the private OLMo asset Dataset contained adapters/helper but no wheel. This is an environment packaging failure, not evidence about OLMo inference quality or its VRAM gate.
+- Downloaded the official PyPI `bitsandbytes==0.50.2` Linux x86-64 wheel. Its embedded package metadata declares `License-Expression: MIT` and includes `LICENSE` ([PyPI release](https://pypi.org/project/bitsandbytes/0.50.2/), [upstream license](https://github.com/bitsandbytes-foundation/bitsandbytes/blob/main/LICENSE)). Checksum verified with `sha256sum -c SHA256SUMS`: 一致、prefix `55348a9a`.
+- Created private Dataset `suntree0801/name-that-llm-private-bnb-wheel` (CLI default private; status `ready`) containing only the wheel, its license and provenance. Updated `scripts/build_olmo_addon_notebook.py` to create a separate v2 source and install the pinned wheel with `pip --no-index --no-deps` before OLMo model loading; Internet remains disabled.
+- 13:25 JST: pushed kernel version 2. Remote metadata confirms private, T4 GPU, Internet disabled, expected competition/model/data sources, and the wheel Dataset attached. Pulled remote source to `/tmp/ntl-olmo-kernel-v2-remote`; all cell sources match the local v2 Notebook. Initial remote status: `RUNNING`.
+- No OLMo competition submission has been made. If v2 completes, collect its runtime/log and validate the output artifact before reporting and submitting. Version 2 must be monitored no more often than every 30 minutes.
