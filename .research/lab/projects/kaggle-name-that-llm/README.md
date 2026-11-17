@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`（ref `58456880`）；Mistral NF4 v2のprivate runtimeを回収中、LB候補を優先順に整理。
+summary: Current bestはPublic`.626`（ref `58456880`）；Mistral NF4のT4 gate通過、次はライセンス確認済み`.684` baseline提出。
 created: 2026-11-02
 last_updated: 2026-11-18
 ---
@@ -19,7 +19,7 @@ last_updated: 2026-11-18
 ## 現在の状況
 
 - 現bestはPublic`.626`（OLMo add-on ref`58456880`、11/17 `COMPLETE`）。元の公開Notebook基準`.620`（ref`58452056`）から`+.006`でnoise threshold`.005`超のため採用。旧手元v13`.560`（ref`58300703`）との差は`+.066`。以降は`.626`と比較する。公開首位`.776`（11/18確認、team count 6,201）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-18-official-competition-status.md)
-- Mistral confirmationは5/5 fold完了（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive）。v14 unquantized T4 pathは10% VRAM reserve gate不通過。11/17にユーザーがmistral-confirm完了・tmux消滅を確認し、Host142 GPU1予約を解除。Host141 GPU0〜2/Host142 GPU0〜1は空きとの申告あり。使用直前にspecのhost別gateを再確認する。NF4 v1はlabel列順checkでpilot前に`ERROR`; private v2は23:44 JSTに`RUNNING`へ変化、T4 gate回収中。[NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md) · [v14 log](experiments/2026-11-16-mistral-v14-private-push-runtime.md) · [NF4 spec](specs/2026-11-17-mistral-nf4-publicbest-addon-spec.md)
+- Mistral confirmationは5/5 fold完了（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive）。v14 unquantized T4 pathは10% VRAM reserve gate不通過。Host142 GPU1予約は11/17解除済み。NF4 v2はT4×2 pilot・VRAM reserve・8h runtime projectionを通過（4k total projection 2.995h、peak 2,064/2,434 MiB）、preview artifactも整合。hidden LB未確認。[NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md) · [v14 log](experiments/2026-11-16-mistral-v14-private-push-runtime.md) · [NF4 spec](specs/2026-11-17-mistral-nf4-publicbest-addon-spec.md)
 - Public LBとCVの対応は旧手元v12`.541`・v13`.560`の2点。公開Notebook系統はprivate提出で`.620`を再現し、新しい基準に更新。構成はCC BY-SA 4.0資産とApache/MITモデル。[基準ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/17監査一覧](experiments/2026-11-17-source-audit-log.md)・[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
@@ -27,7 +27,7 @@ last_updated: 2026-11-18
 - 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。元基準`.620`との差`.002`はnoise threshold`.005`未満で単体では不採用。その後OLMo ref `58456880`が`.626`となり新baselineに更新。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入してruntime `COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`はPublic`.626`で完了し、新baselineに採用。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: Qwen3-8B+OLMo固定weight提出ref `58462545`は`COMPLETE`、Public`.621`で現best`.626`を更新せず。Qwen17 private v3は22:20 JSTの回収時に`COMPLETE`。source上はPublic`.620` blendにQwen8/OLMo/Qwen17を各`.25`追加。OOFのQwen17差`−.001491`（95% CI `[-.009310,+.006296]`）は明確な悪化でなく、LB確認候補。previewは約831秒、Qwen3-8B/1.7Bの64行pilotとOLMo2 5-fold runtime projectionが通過。preview `submission.parquet`は3行・`id, model`列、null/重複IDなし、test ID順とtrainの18クラスdomainも一致。23:24 JSTに既存Qwen17を現best`.626`（ref `58456880`）へ足す固定`.25` Notebookをローカル作成。学習なし、push/runtime/提出は未実施。[実験ログ](experiments/2026-11-17-public-baseline-qwen17-addon.md) · [Qwen17 source](../../../../../kaggle/name-that-llm/notebooks/name-that-llm-private-olmo-qwen17-addon/) · [Qwen8実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
-- 次にすること: Mistral NF4 v2のT4 gate/runtimeを回収。次の提出枠では、ライセンス確認済み`.684`系Notebookを先に提出して新基準のscore/runtimeを確かめる（事前報告）。その後、gate通過を条件にMistral NF4を新基準へ足してLBで検証し、次にローカル準備済み`.626`+Qwen17候補を試す。`.702`系はQ14 adapter権利が未確認のため保留。[.684 runtime](experiments/2026-11-17-public-684-system-private-runtime.md) · [Mistral NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md)
+- 次にすること: 提出枠が回復したら、license監査済み`.684`公開系Notebookを無変更で提出し、新baselineのscore/runtimeを測る（提出前に報告）。その後、今回T4 gateを通過したMistral NF4を新baselineへ固定weightで追加してLB確認し、続いてローカル準備済み`.626`+Qwen17候補を試す。`.702`系はQ14 adapter権利が未確認のため保留。[.684 runtime](experiments/2026-11-17-public-684-system-private-runtime.md) · [Mistral NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md)
 
 ## 記録方針
 

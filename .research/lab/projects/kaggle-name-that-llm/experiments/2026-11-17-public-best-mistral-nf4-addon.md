@@ -3,7 +3,7 @@ date: 2026-11-17
 project: kaggle-name-that-llm
 type: experiment-log
 spec: ../specs/2026-11-17-mistral-nf4-publicbest-addon-spec.md
-status: private-runtime-running
+status: runtime-gate-passed-awaiting-public-baseline
 ---
 
 # NF4 Mistral add-on to Public `.626`
@@ -39,3 +39,12 @@ Resume with the next scheduled Kaggle session poll. If the pilot passes, record 
 
 - The scheduled 30-minute session poll returned `RUNNING` for `suntree0801/name-that-llm-private-publicbest-mistral-nf4` (v2), changing from the prior authenticated CLI `QUEUED` state at 22:44 JST. No restart or duplicate push was made. Runtime gates, artifact checks, and submission remain pending.
 - Codex rate guard passed at 23:44 JST: 5-hour remaining 87%, weekly remaining 64%.
+
+## 2026-11-18 00:14 JST — NF4 runtime and preview gates passed
+
+- The scheduled session poll returned `COMPLETE`. Session log reports `done in 1024s`; the output bundle conversion finished by 1063s. This is the 3-row preview session, not a measured hidden run.
+- The 64-row, five-fold T4 pilot took 251.4s total. Per-fold peak reserved memory was 2,064 MiB on GPU0 and 2,434 MiB on GPU1 (both T4, 14,911 MiB each); the 10% reserve gate passed. The fixed `.626` + Mistral probability blend was `0.75 * P_626 + 0.25 * P_Mistral`.
+- For 4,000 rows the projected hidden Mistral inference was 5,721.7s; total projection with the 1.25× margin was 2.995 hours, below the internal 8-hour limit. The runtime gate passed. This is a pilot projection; the scoring run is still needed for actual hidden runtime and Public LB.
+- Downloaded `mistral-nf4-runtime.json` and `submission.parquet`. The preview artifact has 3 rows, columns `id, model`, exact local `test.csv` ID order, no nulls or duplicate IDs, and all predictions in the 18-label training domain. Predictions: `claude-opus-4-8`, `gpt-5.6-sol`, `gemini-3.1-pro-preview`.
+- No competition submission was made. Under the 2026-11-16 policy, first submit the license-audited `.684` public Notebook baseline; then add this passing NF4 Mistral branch to that new baseline for its LB check. At the latest CLI read, the five newest submissions were all dated 2026-11-17 UTC, so the UTC-day allowance had not reset at 00:14 JST. Report before the `.684` submission.
+- Current quota at 00:00 JST: 27.36 GPU hours remaining of 30; refresh `2026-11-21 09:00 JST`.
