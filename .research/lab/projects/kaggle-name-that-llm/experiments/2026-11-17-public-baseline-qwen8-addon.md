@@ -16,7 +16,7 @@ status: in-progress
 ## Notebook候補
 
 - Base source: 2026-11-17に提出済みのNishant Dahal “Two-stage LoRA, part two v2”をprivate copy。Qwen3-8B final-fitを固定log-probability weight `0.25`で追加し、元Notebookの既存weights・postprocessは変更しない。weight tuningなし。
-- 推論はoffline。公開Qwen3-8B Model v1（Apache-2.0）、既存private baseline assets（CC BY-SA 4.0）、pinned bitsandbytes 0.50.2 wheelを入力に使用。baseはNF4 4-bit、T4 GPU0にロード。model/license metadataの詳細取得はMCP `models.get`権限拒否だったが、base/licenseは保存済みcandidate configと既存asset provenanceで確認。
+- 推論はoffline。公開Qwen3-8B Model v1は公式[Kaggle model page](https://www.kaggle.com/refs/hf-model/Qwen/Qwen3-8B)記載のApache-2.0、Open Pool v15は[Kaggle dataset metadata](https://www.kaggle.com/datasets/crtproduction/name-that-llm-open-pool)記載のCC BY-SA 4.0。既存private baseline assets（CC BY-SA 4.0）とpinned bitsandbytes 0.50.2 wheelを入力に使用。baseはNF4 4-bit、T4 GPU0にロード。
 - Resource gate: load前に空きVRAMがtotal−4096 MiB以上、load後に4,096 MiB以上を要求。公式train textからラベルを読まず長さ層化64行をpilotし、hidden test 4,000行・margin 1.25で予測した総runtimeが8時間未満の場合のみfull inferenceへ進む。9時間超過を避ける内部余裕。
 - class orderをmetadataからNotebook `LABELS`へ明示的に並べ替え、finite probability・row sum・submissionのID/label checksを実行する。
 - 生成source: `/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/notebooks/name-that-llm-private-two-stage-lora-qwen8-addon-v1/`。Notebook JSON/code cell parse・private/offline/GPU metadata確認済み。
