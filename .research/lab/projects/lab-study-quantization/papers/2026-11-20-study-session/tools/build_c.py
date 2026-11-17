@@ -55,13 +55,15 @@ def _lead(s, text, h):
     d.textbox(s, text, LEFT, BODY_TOP, FULL_W, h, size=24)
 
 
-def lead_img(title, lead, path, minutes, src, notes, caption="", lead_h=900000):
+def lead_img(title, lead, path, minutes, src, notes, caption="", lead_h=900000, eq=None, eq_size=32):
     """文字（リード）が上，図が下．"""
     s = d._new(L_TITLEONLY)
     s.shapes.title.text = title
     _tag_runs(s.shapes.title.text_frame._txBody)
     _lead(s, lead, lead_h)
     top = BODY_TOP + lead_h
+    if eq:
+        top += d.equation(s, eq, LEFT, top, FULL_W, size=eq_size) + 60000
     cap_h = 420000 if caption else 0
     bottom = SRC_TOP - 40000
     d._place_image(s, path, LEFT, top, FULL_W, bottom - top - cap_h)
@@ -72,7 +74,7 @@ def lead_img(title, lead, path, minutes, src, notes, caption="", lead_h=900000):
     reg("figure", title, minutes, src, notes)
 
 
-def lead_table(title, lead, rows, minutes, src, notes, col_widths=None, size=18, highlight=None, lead_h=800000, row_h=470000):
+def lead_table(title, lead, rows, minutes, src, notes, col_widths=None, size=18, highlight=None, lead_h=800000, row_h=470000, eq=None, eq_size=32):
     s = d._new(L_TITLEONLY)
     s.shapes.title.text = title
     _tag_runs(s.shapes.title.text_frame._txBody)
@@ -80,6 +82,8 @@ def lead_table(title, lead, rows, minutes, src, notes, col_widths=None, size=18,
     if lead:
         _lead(s, lead, lead_h)
         top += lead_h
+    if eq:
+        top += d.equation(s, eq, LEFT, top, FULL_W, size=eq_size) + 80000
     nr, nc = len(rows), len(rows[0])
     from pptx.util import Pt
     gf = s.shapes.add_table(nr, nc, Emu(LEFT), Emu(top), Emu(FULL_W), Emu(row_h * nr))
@@ -102,6 +106,26 @@ def lead_table(title, lead, rows, minutes, src, notes, col_widths=None, size=18,
     d._notes(s, notes)
     reg("table", title, minutes, src, notes)
 
+
+
+def formula_slide(title, eqs, conds, lines, minutes, src, notes):
+    """主役の式（大きく）→ 条件の式（ラベル付き）→ 記号の説明（24pt）の順に置く．"""
+    s = d._new(L_TITLEONLY)
+    s.shapes.title.text = title
+    _tag_runs(s.shapes.title.text_frame._txBody)
+    y = BODY_TOP + 60000
+    for latex in eqs:
+        y += d.equation(s, latex, LEFT, y, FULL_W, size=46) + 60000
+    y += 120000
+    for label, latex in conds:
+        d.textbox(s, label, LEFT, y, 3900000, 560000, size=24)
+        h = d.equation(s, latex, LEFT + 3900000, y, FULL_W - 3900000, size=34, align="left")
+        y += max(h, 620000) + 30000
+    y += 120000
+    d.textbox(s, "\n".join(lines), LEFT, y, FULL_W, SRC_TOP - y - 80000, size=24)
+    d.source(s, src)
+    d._notes(s, notes)
+    reg("formula", title, minutes, src, notes)
 
 
 # =====================================================================================
@@ -204,19 +228,20 @@ lead_table("外れ値1つで誤差が増える", "x に値 20 を1個だけ混�
            "次に外れ値を1つだけ混ぜます。4096個のうち1個が20で，残りはほぼ正規分布です。対称4ビットのMSEは0.028から0.60に，約21倍に増えます。8ビットでも0.00009から0.0021に増えます。非対称は，同じ4ビットで0.215と，対称の約3分の1です。なぜこうなるのでしょうか。最大値が20になると，範囲が広がり，刻み幅のscaleが大きくなるからです。この理由を次のスライドから，式で説明します。覚えておいてほしいのは，たった1つの外れ値が，ほかの全部の値の精度を下げうるという事実です。",
            col_widths=[1, 1.6, 1.6, 1.6])
 
-bullets("式: 実数と整数の対応", [
-    "q = clamp( round( x / s ) + z，qmin，qmax )",
-    ("対称（符号付き）: qmin = −2^(b−1)，qmax = 2^(b−1) − 1", 1),
-    ("非対称（符号なし）: qmin = 0，qmax = 2^b − 1", 1),
-    "復元: x̂ = s ( q − z )",
-    "演習①のコード（quant/core.py）と1対1",
-], 2.0, "原典: 白書 [Nagel+, arXiv2021] §2.2 式(4)〜(7)，§2.2.1 式(8)，Jacob [Jacob+, CVPR2018] §2.1 式(1) r = S(q − Z)",
-    "用語を確認したので，演習①の結果を式で説明します。量子化は，実数xを，scale sで割って丸め，zero-point zを足し，qminからqmaxの範囲にclampします。これで整数qが得られます。対称の符号付きなら範囲はマイナス2の(b−1)乗から2の(b−1)乗マイナス1，非対称の符号なしなら0から2のb乗マイナス1です。元に戻すときは，q引くz，かけるs，でx̂です。zero-pointを持つのは，0を誤差なしで表すためです。ゼロパディングやReLUの0が誤差を持たなくなります。この式は，さっき動かした演習①のquant/core.pyの数行と対応しています。式はNagelの白書の式4から8です。")
+formula_slide("式: 実数と整数の対応",
+              [r"q=\operatorname{clamp}\!\left(\left\lfloor \frac{x}{s}\right\rceil+z,\; q_{\min},\; q_{\max}\right)",
+               r"\hat{x}=s\,(q-z)"],
+              [("対称（符号付き）", r"q_{\min}=-2^{\,b-1},\quad q_{\max}=2^{\,b-1}-1"),
+               ("非対称（符号なし）", r"q_{\min}=0,\quad q_{\max}=2^{\,b}-1")],
+              ["q: 整数値，q_min・q_max: 整数の範囲，s: scale，z: zero-point，⌊ ⌉: 四捨五入", "演習①のコード（quant/core.py）と1対1"],
+              2.0, "原典: 白書 [Nagel+, arXiv2021] §2.2 式(4)〜(7)，§2.2.1 式(8)，Jacob [Jacob+, CVPR2018] §2.1 式(1) r = S(q − Z)",
+              "用語を確認したので，演習①の結果を式で説明します。量子化は，実数xを，scale sで割って丸め，zero-point zを足し，qminからqmaxの範囲にclampします。これで整数qが得られます。対称の符号付きなら範囲はマイナス2の(b−1)乗から2の(b−1)乗マイナス1，非対称の符号なしなら0から2のb乗マイナス1です。元に戻すときは，q引くz，かけるs，でx̂です。zero-pointを持つのは，0を誤差なしで表すためです。ゼロパディングやReLUの0が誤差を持たなくなります。この式は，さっき動かした演習①のquant/core.pyの数行と対応しています。式はNagelの白書の式4から8です。ここでq_minとq_maxは整数側の範囲です。白書のq_min＝マイナスsz，q_max＝s(2のb乗マイナス1マイナスz)は，同じ範囲を実数側で書いたもので，別のものではありません。")
 
-lead_img("scale と zero-point", "範囲 [min, max] を 2^b − 1 等分して，刻み幅 s を決める",
+lead_img("scale と zero-point", "範囲を等分して，刻み幅 s を決める",
          os.path.join(FIG, "scale-zeropoint.png"), 2.0,
-         "説明用の計算例: 範囲 [−1, 3]，4bit，非対称（実測ではない），式は 白書 [Nagel+, arXiv2021] §2.2",
-         "数直線で見ます。この計算例では，範囲を−1から3，4ビットとします。4ビットは16個の整数です。範囲を15等分すると，刻み幅sは約0.267です。zero-pointは，実数0が対応する整数で，ここでは4です。青い縦線が，整数0から15が表す実数の位置です。0は赤線のところに，ちょうど乗っています。zero-pointは整数に丸めるので，最大の整数15が表す値は3ではなく2.93になります。この図は説明用の計算例で，実測ではありません。重要なのは，範囲が決まればscaleが決まり，格子の間隔が決まることです。範囲を広げれば，間隔は広がります。")
+         "説明用の計算例: 範囲 [−1, 3]，4bit，非対称（実測ではない），式は Jacob [Jacob+, CVPR2018] §3 式(12)（水準数 n = 2^b）",
+         "数直線で見ます。この計算例では，範囲を−1から3，4ビットとします。4ビットは16個の整数です。範囲を15等分すると，刻み幅sは約0.267です。この式はJacobらの式12で，水準数nが2のb乗です。zero-pointは，実数0が対応する整数で，ここでは4です。青い縦線が，整数0から15が表す実数の位置です。0は赤線のところに，ちょうど乗っています。zero-pointは整数に丸めるので，最大の整数15が表す値は3ではなく2.93になります。この図は説明用の計算例で，実測ではありません。重要なのは，範囲が決まればscaleが決まり，格子の間隔が決まることです。範囲を広げれば，間隔は広がります。",
+         lead_h=560000, eq=r"s=\frac{x_{\max}-x_{\min}}{2^{b}-1}", eq_size=40)
 
 lead_img("丸め誤差とクリップ誤差", "範囲を広げるとクリップ誤差は減るが，丸め誤差は増える",
          os.path.join(FIG, "round-clip-tradeoff.png"), 2.5,
@@ -357,10 +382,11 @@ lead_table("QAT の事前計算結果", "W4A8（fake-quant）: QAT が同回数�
            "QATの事前計算の結果を，先に見せます。重み4ビットper-channel，活性8ビットmseです。PTQのみだと，ResNet18は90.65，DeiT-Tinyは91.90。同じ390ステップ，約1エポックだけ通常のfine-tuneをしてからPTQした場合は，91.2と91.8。QATは93.1と93.7です。3つのseedすべてでQATが上回りました。FP32との差は，ResNet18がマイナス0.35ポイント，DeiT-Tinyがマイナス1.3ポイントまで戻りました。ただしこれは1つの設定の結果です。学習率もエポック数も調整していません。QATがPTQより優れる，という一般的な主張はしません。fake-quantの学習で，実際の低精度実行の話ではありません。",
            lead_h=1000000)
 
-lead_img("STE: 丸めの勾配を通す", "round の勾配はほぼ 0，逆伝播では ∂round(y)/∂y = 1 とみなす",
+lead_img("STE: 丸めの勾配を通す", "⌊y⌉ は四捨五入，勾配はほぼ 0，逆伝播では次のようにみなす",
          os.path.join(FIG, "ste.png"), 2.0,
          "原典: 白書 [Nagel+, arXiv2021] §4.1 式(36)，Bengio [Bengio+, arXiv2013] の STE は確率的ニューロンの文脈，図は説明用",
-         "なぜQATでは学習できるのでしょうか。丸めround関数の勾配は，ほぼ至る所で0か未定義なので，そのままでは勾配が伝わりません。そこでSTE，straight-through estimatorを使います。順伝播ではroundを通し，逆伝播ではroundの勾配を1とみなして，勾配をそのまま通します。式は，Nagelの白書の式36です。左の図が順伝播と逆伝播で別の関数と見なすこと，右が勾配です。STEの原典はBengioらですが，その論文は確率的なニューロンの文脈です。量子化のroundに当てはめたSTEは，KrishnamoorthiやNagelの白書，LSQが述べています。Jacobらの論文は，順伝播で量子化を模擬する方法を述べていますが，STEという語は使っていません。QATは，順伝播でfake-quantして，重みはFP32のまま更新する学習です。")
+         "なぜQATでは学習できるのでしょうか。丸めround関数の勾配は，ほぼ至る所で0か未定義なので，そのままでは勾配が伝わりません。そこでSTE，straight-through estimatorを使います。順伝播ではroundを通し，逆伝播ではroundの勾配を1とみなして，勾配をそのまま通します。式は，Nagelの白書の式36です。左の図が順伝播と逆伝播で別の関数と見なすこと，右が勾配です。STEの原典はBengioらですが，その論文は確率的なニューロンの文脈です。量子化のroundに当てはめたSTEは，KrishnamoorthiやNagelの白書，LSQが述べています。Jacobらの論文は，順伝播で量子化を模擬する方法を述べていますが，STEという語は使っていません。QATは，順伝播でfake-quantして，重みはFP32のまま更新する学習です。",
+         lead_h=560000, eq=r"\frac{\partial \lfloor y \rceil}{\partial y}=1", eq_size=44)
 
 bullets("LLM の外れ値と DeiT の違い", [
     "LLM: ごく少数のチャネルに桁違いの値が出る",
@@ -371,13 +397,14 @@ bullets("LLM の外れ値と DeiT の違い", [
 ], 2.0, "原典: LLM.int8() [Dettmers+, NeurIPS2022] §1，SmoothQuant [Xiao+, ICML2023] §3，PTQ4ViT [Yuan+, ECCV2022] §3.2 / 本環境の実測: 結果ログ §3",
     "外れ値の話を，LLMの話とDeiTの話に分けます。LLM.int8()の論文では，約6.7Bパラメータ以降，ごく少数の特徴次元に，ほかの20倍規模の値が全層で出て，通常の8ビット量子化が崩れると報告されています。SmoothQuantも，活性の外れ値は固定のチャネルに出て，全トークンで大きいと述べています。ただし，これはLLMの話です。ViTの活性分布を直接扱う原典は，今回のリストではPTQ4ViTだけで，post-softmaxとpost-GELUの分布に着目しています。そして演習③のDeiT-Tinyでは，極端な外れ値チャネルは観測されませんでした。だからLLMの外れ値の対策が，そのままこのDeiT-Tinyに効くとは言えません。そこは私の解釈です。")
 
-lead_table("SmoothQuant: 難しさを重みへ移す", "s_j = max(|X_j|)^α / max(|W_j|)^(1−α)，X を s で割り，W に s を掛ける",
-           [["チャネル j", "max|X_j|", "max|W_j|", "s_j（α=0.5）", "max|X_j|/s_j", "max|W_j|·s_j"],
+lead_table("SmoothQuant: 難しさを重みへ移す", "X を s_j で割り，W に s_j を掛ける（s_j は次式）",
+           [["チャネル j", "max(|X_j|)", "max(|W_j|)", "s_j（α=0.5）", "max(|X_j|)/s_j", "max(|W_j|)·s_j"],
             ["1", "20", "0.5", "6.32", "3.16", "3.16"],
             ["2", "2", "0.5", "2.00", "1.00", "1.00"]],
            2.5, "原典: SmoothQuant [Xiao+, ICML2023] §4 式(4)，表は説明用の計算例（数値は仮定）",
            "外れ値対策の代表として，SmoothQuantを詳しく見ます。活性のチャネルjを，平滑化係数s_jで割り，対応する重みの入力チャネルにs_jを掛けます。積は変わらないので，数学的に等価です。s_jは，活性の最大値のα乗を，重みの最大値の1−α乗で割ったもので，αは難しさをどれだけ重みに移すかを決めます。αは0.5が基本です。下の表は説明用の計算例で，数値は仮定です。チャネル1は活性の最大が20，重みが0.5。s_jは6.32で，割った後の活性も，掛けた後の重みも，最大が3.16にそろいます。チャネル2は両方1.0です。つまり，外れ値の大きさを活性と重みで分け合います。原典のOPT-175B，W8A8の結果は，素朴なW8A8が平均35.5%に崩れるところ，SmoothQuantの3つの設定は66.4から66.8%を保つ，というものです。これはLLMで，GPU上の原典の結果です。",
-           col_widths=[1.3, 1.3, 1.3, 1.6, 1.6, 1.6], size=18, row_h=520000)
+           col_widths=[1.1, 1.5, 1.5, 1.4, 1.9, 1.9], size=18, row_h=520000, lead_h=560000,
+           eq=r"s_j=\frac{\max(|X_j|)^{\alpha}}{\max(|W_j|)^{1-\alpha}}", eq_size=40)
 
 lead_table("分類表: 手法の位置づけ", "",
            [["軸", "手法の例", "今日の接点"],

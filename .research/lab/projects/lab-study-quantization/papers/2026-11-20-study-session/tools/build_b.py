@@ -9,7 +9,7 @@ from pptx.util import Emu
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from slidekit import BODY_TOP, FULL_W, LEFT, SRC_TOP, Deck  # noqa: E402
+from slidekit import BODY_TOP, FULL_W, LEFT, L_TITLEONLY, SRC_TOP, Deck, _tag_runs  # noqa: E402
 
 SESSION = os.path.dirname(HERE)
 PROJ = os.path.dirname(os.path.dirname(SESSION))
@@ -66,6 +66,41 @@ def table(title, rows, mins, notes, source="", **kw):
 
 def two_col(title, left, right, mins, notes, source="", size=24):
     s = d.two_col(T(title), left=left, right=right, notes=notes, source=source, size=size)
+    rec(title, mins)
+    return s
+
+
+def eq_slide(title, blocks, mins, notes, source="", size=None):
+    """タイトルのみの枚に，文字行（"t"）と数式オブジェクト（"e"）を上から順に置く．"""
+    s = d._new(L_TITLEONLY)
+    s.shapes.title.text = T(title)
+    _tag_runs(s.shapes.title.text_frame._txBody)
+    y = BODY_TOP + 30000
+    for kind, body, sz in blocks:
+        if kind == "t":
+            h = int(sz * 12700 * 1.5) * (body.count("\n") + 1)
+            d.textbox(s, body, LEFT, y, FULL_W, h, size=sz)
+        else:
+            h = d.equation(s, body, LEFT, y, FULL_W, size=sz)
+        y += h + 60000
+    assert y < SRC_TOP, (title, y, SRC_TOP)
+    d.source(s, source)
+    d._notes(s, notes)
+    d.main_count += 1
+    rec(title, mins)
+    return s
+
+
+def txt_eq_img(title, item, latex, img, mins, notes, source="", eq_size=38):
+    """1行の文字，その下に数式，その下に図．"""
+    s = d.bullets(T(title), [item], notes=notes, source=source)
+    ph = s.placeholders[1]
+    ph.height = Emu(700000)
+    top = BODY_TOP + 700000
+    h = d.equation(s, latex, LEFT, top, FULL_W, size=eq_size)
+    top += h + 40000
+    bottom = SRC_TOP - 50000
+    d._place_image(s, img, LEFT, top, FULL_W, bottom - top)
     rec(title, mins)
     return s
 
@@ -168,30 +203,32 @@ table("今日の流れと演習の地図", [
 section("1. 載せるために数を粗くする", "10–28分  問い: 14B を載せるには，数をどう粗くする？", 0.3, (
     "ここから第1節です。最初の困りごと，載らない，に答えるために，数を少ないビットで表す方法を学びます。"), "概念")
 
-bullets("4bit だと値は 16 通り", [
-    "b ビットで表せる値は 2^b 通り",
-    "INT8: 256 通り，INT4: 16 通り",
-    "連続値を 16 個の代表値に丸める",
-    "問い: 代表値をどう置くか",
+eq_slide("4bit だと値は 16 通り", [
+    ("t", "b ビットで表せる値の数", 28),
+    ("e", r"2^{b}", 44),
+    ("t", "INT8: 256 通り，INT4: 16 通り\n連続値を 16 個の代表値に丸める\n問い: 代表値をどう置くか", 28),
 ], 2.0, (
     "ビット数を減らすと，表せる値の数が2のb乗に減ります。INT8で256通り，INT4で16通りです。"
     "量子化とは，連続的な値をこの少数の代表値のどれかに丸めることです。問題は，16個の代表値をどこに置くかです。"
     "最も素直なのは等間隔に置く一様量子化で，今日はこれを扱います。"),
     "説明用の計算例（2^b）．整数グリッドは" + NAGEL + " §2.2")
 
-bullets("一様量子化の式", [
-    "**x_int = clamp(⌊x/s⌉ + z; 0, 2^b − 1)",
-    "**x̂ = s (x_int − z)",
-    "s: scale（刻み幅），z: zero-point，b: ビット数",
-    "対称・符号付き: z = 0，範囲は [−2^(b−1), 2^(b−1) − 1]",
-    "z があるので実数の 0 を誤差なく表せる",
+eq_slide("一様量子化の式", [
+    ("e", r"q = \operatorname{clamp}\left(\lfloor x/s \rceil + z,\; q_{\min},\; q_{\max}\right)", 40),
+    ("e", r"\hat{x} = s\,(q - z)", 40),
+    ("t", "s: scale（刻み幅），z: zero-point，q: b ビット整数，⌊·⌉: 最近傍への丸め", 24),
+    ("t", "z は実数の 0 に対応する整数で，これにより 0 を誤差なく表せる", 24),
+    ("t", "非対称（符号なし）:", 24),
+    ("e", r"q_{\min} = 0,\quad q_{\max} = 2^{b} - 1", 30),
+    ("t", "対称・符号付き: z = 0", 24),
+    ("e", r"q_{\min} = -2^{b-1},\quad q_{\max} = 2^{b-1} - 1", 30),
 ], 3.0, (
-    "一様量子化の式です。実数xをsで割って丸め，zero-pointのzを足し，0から2のb乗マイナス1の範囲にクリップして整数x_intにします。"
-    "元に戻すときは，x_intからzを引いてsを掛けます。sは刻み幅，zは実数の0に対応する整数で，"
+    "一様量子化の式です。実数xをsで割って丸め，zero-pointのzを足し，0から2のb乗マイナス1の範囲にクリップして整数qにします。"
+    "元に戻すときは，qからzを引いてsを掛けます。sは刻み幅，zは実数の0に対応する整数で，"
     "これがあるので，ゼロパディングやReLUの0が誤差なく表せます。ここまでの式は，符号なしの整数に写す形です。"
     "重みでよく使う対称・符号付きの量子化は，zを0に固定し，整数の範囲を符号付きの，マイナス2のb−1乗から2のb−1乗マイナス1にします。4bitなら−8から7です。"
-    "式はNagelらの白書の式(4)(6)と(8c)です。演習のコードは，この式と1対1に対応しています。"),
-    "原典: " + NAGEL + " §2.2 式(4)(6)，§2.2.1 式(8c)．z の役割も同 §2.2")
+    "式はNagelらの白書の式(4)(6)と(8c)で，白書の整数x_intを，この資料ではqと書いています。演習のコードは，この式と1対1に対応しています。"),
+    "原典: " + NAGEL + " §2.2 式(4)(6)，§2.2.1 式(8c)．z の役割も同 §2.2（白書の x_int = 本資料の q）")
 
 txt_img("誤差は2種類ある", [
     "丸め誤差: 最大 s/2，クリップ誤差: 範囲の外",
@@ -199,15 +236,16 @@ txt_img("誤差は2種類ある", [
 ], os.path.join(FIG, "grid_round_clip.png"), 1.5, 2.5, (
     "誤差は二種類あります。範囲の中の値は代表値に丸められ，その誤差は最大で刻み幅の半分です。範囲の外の値は端にクリップされ，そのぶんの誤差が出ます。"
     "範囲を広げればクリップは減りますが，sが大きくなって丸め誤差が増えます。このトレードオフが，後で出てくる較正の中心の話です。"
-    "図は4bit，範囲マイナス1から1の例で，説明のために私が描いたものです。"),
+    "図は4bit，範囲マイナス1から1の例で，説明のために私が描いたものです。図の両端の下端と上端は，実数の軸の上のグリッドの端で，前の枚の式にある整数のq_minやq_maxとは別のものです。白書では実数の側をq_minがマイナスsz，q_maxがs掛ける2のb乗マイナス1マイナスzと書いています。"),
     "原典: " + NAGEL + " §2.2．図は説明用の計算例（4bit，範囲 [−1, 1]）")
 
-bullets("計算例: 4bit で x = 0.37", [
-    "範囲 [−1, 1]，b = 4 → s = 2/15 ≈ 0.133，z = 8",
-    "x = 0.37: x/s = 2.78 → 3，x_int = 3 + 8 = 11",
-    ("x̂ = s(11 − 8) = 0.4，誤差 0.03（≤ s/2）", 1),
-    "x = 1.2: x_int = 9 + 8 = 17 → 15 にクリップ",
-    ("x̂ = s(15 − 8) ≈ 0.933，誤差 0.27", 1),
+eq_slide("計算例: 4bit で x = 0.37", [
+    ("t", "範囲 [−1, 1]，b = 4 のとき", 24),
+    ("e", r"s = \frac{2}{15} \approx 0.133,\quad z = \lfloor 1/s \rceil = \lfloor 7.5 \rceil = 8", 32),
+    ("t", "x = 0.37（範囲の内）: 0.37/s = 2.775 → 3，誤差 0.03（≤ s/2）", 24),
+    ("e", r"q = \lfloor 0.37/s \rceil + 8 = 3 + 8 = 11,\quad \hat{x} = s\,(11 - 8) = 0.4", 30),
+    ("t", "x = 1.2（範囲の外）: 17 が 15 にクリップされ，誤差 0.27", 24),
+    ("e", r"q = 9 + 8 = 17 \to 15,\quad \hat{x} = s\,(15 - 8) \approx 0.933", 30),
 ], 2.5, (
     "数値で確かめます。範囲をマイナス1から1，4bitとすると，刻み幅sは2/15で約0.133，zero-pointはマイナスの下限を表すために1/sの7.5を丸めて8にします。"
     "x=0.37は，sで割って約2.78，丸めて3，zを足して11になり，戻すと0.4で，誤差は0.03，つまりs/2以下です。"
@@ -340,7 +378,7 @@ section("3. 活性も量子化する", "45–62分  問い: 入力ごとに変�
 bullets("W と A: 量子化する演算", [
     "WxAy: 重み x bit，入力活性 y bit（fake-quant）",
     "対象: すべての Conv2d と Linear（最初・最後の層も）",
-    "FP32 のまま: Softmax，LayerNorm，GELU，残差，QK^T・AV",
+    "FP32 のまま: Softmax，LayerNorm，GELU，残差，Attention の行列積",
     "ResNet18 は BN を Conv に畳んでから重みを量子化",
     "活性は非対称・per-tensor・静的",
 ], 2.0, (
@@ -362,12 +400,11 @@ bullets("活性は較正でレンジを決める", [
     "較正方法とパラメータは事前に決め，testの結果で選び直していません。"),
     "原典: minmax・MSE は" + NAGEL + " §3.1，percentile は FP8 [Micikevicius+, arXiv2022] §4.2．設定はハンズオン README", size=24)
 
-bullets("BN を Conv に畳む", [
-    "推論時の BN は，チャネルごとの掛け算と足し算",
-    "**W̃_k = γ_k W_k / √(σ²_k + ε)",
-    "**b̃_k = β_k − γ_k μ_k / √(σ²_k + ε)",
-    "畳んだ後の重み W̃ を量子化する",
-    "ResNet18 の演習で使用（DeiT-Tiny は BN なし）",
+eq_slide("BN を Conv に畳む", [
+    ("t", "推論時の BN は，チャネルごとの掛け算と足し算", 24),
+    ("e", r"\tilde{W}_{k} = \frac{\gamma_k W_k}{\sqrt{\sigma_k^{2} + \epsilon}}", 36),
+    ("e", r"\tilde{b}_{k} = \beta_k - \frac{\gamma_k \mu_k}{\sqrt{\sigma_k^{2} + \epsilon}}", 36),
+    ("t", "畳んだ後の重みを量子化する\nResNet18 の演習で使用（DeiT-Tiny は BN なし）", 24),
 ], 2.0, (
     "ResNet18では，BatchNormをConvに畳み込んでから重みを量子化します。推論時のBNは，チャネルごとの掛け算と足し算なので，Convの重みとバイアスに吸収できます。"
     "吸収した後の重みはガンマ倍で，チャネルごとに範囲が変わります。畳んだ後の重みW̃を量子化するのが大事で，畳む前の重みを量子化しても推論時の実際の重みとは違います。"
@@ -423,10 +460,10 @@ txt_img("QAT: 量子化を含めて学習する", [
     "学習時間，ラベル付きデータ，ハイパーパラメータ探索というふつうの学習のコストがかかります。図は流れを模式的に描いたものです。"),
     "原典: " + JACOB + " §3，" + NAGEL + " §4．図は模式図")
 
-txt_img("round の勾配は STE で通す", [
-    "round の勾配は 0 か未定義 → そのままでは学習できない",
-    "STE: ∂⌊y⌉/∂y = 1 とみなして逆伝播",
-], os.path.join(FIG, "ste.png"), 1.5, 2.0, (
+txt_eq_img("round の勾配は STE で通す",
+    "round の勾配は 0 か未定義，STE では次のようにみなして逆伝播",
+    r"\frac{\partial \lfloor y \rceil}{\partial y} = 1",
+    os.path.join(FIG, "ste.png"), 2.0, (
     "なぜそのまま学習できないか。丸め関数はほとんど至る所で勾配が0で，微分できないところもあり，勾配法が使えません。"
     "そこでStraight-Through Estimator，STEで，丸めの勾配を1とみなして通します。式はNagel白書の式(36)です。"
     "STEの原典はBengioらですが，そこで扱われているのは確率的なバイナリニューロンです。量子化のroundに当てはめてSTEと明記しているのは，KrishnamoorthiとNagelの白書，それにLSQです。"
@@ -443,17 +480,15 @@ txt_img("W4A8 では QAT が PTQ を上回った", [
     "ただし，これは1つの設定，W4A8，短い学習，1つのデータセットでの観察です。学習率やエポック数は調整していません。QATが一般にPTQより優れるという主張はしません。"),
     f"{SRC_MEAS}" + EXP_LOG.format("5") + "，1設定（学習率・epoch 未調整），3 seed 平均，一般化しない，fake-quant")
 
-bullets("SmoothQuant: 難しさを重みへ移す", [
-    "活性を s_j で割り，重みに s_j を掛ける（等価変換）",
-    "**s_j = max(|X_j|)^α / max(|W_j|)^(1−α)",
-    "α: 移す量，OPT・BLOOM では 0.5 が基本",
-    "較正データで s を求め，変換はオフライン",
-    ("X_j: 活性の j 番目のチャネル，W_j: 重みの入力チャネル j", 1),
+eq_slide("SmoothQuant: 難しさを重みへ移す", [
+    ("t", "活性の各チャネル j を係数 s で割り，重みの入力チャネル j に s を掛ける", 24),
+    ("e", r"s_j = \frac{\max(|X_j|)^{\alpha}}{\max(|W_j|)^{1-\alpha}}", 38),
+    ("t", "X: 活性，W: 重み，j: チャネル番号（式の s の添字も j）\nα: 移す量，OPT・BLOOM では 0.5 が基本\n較正データで s を求め，変換はオフライン", 24),
 ], 2.5, (
     "外れ値への対策の一つがSmoothQuantです。活性のチャネルjをs_jで割り，重みの対応する入力チャネルにs_jを掛けると，線形層の出力は数学的に変わりません。"
     "このとき活性の外れ値が小さくなり，そのぶん重みが少し難しくなる，つまり量子化の難しさを活性から重みへ移します。"
     "s_jは活性と重みの最大値から式(4)で決め，アルファが移す量を決めます。0.5が基本で，外れ値が多いモデルでは大きくします。"
-    "較正サンプルでsを求め，変換は事前に済ませるので，実行時の追加コストはありません。式はSmoothQuant論文の式(4)です。Xのjは活性のj番目のチャネル，Wのjは重みの対応する入力チャネルです。"
+    "較正サンプルでsを求め，変換は事前に済ませるので，実行時の追加コストはありません。式はSmoothQuant論文の式(4)です。Xは活性，Wは重み，jはチャネル番号です。"
     "前の節で見たように，DeiT-Tinyでは外れ値チャネルが目立たなかったので，SmoothQuantがDeiT-Tinyで効くかどうかは測っていません。原典の数値はLLMでのものです。"),
     "原典: SmoothQuant [Xiao+, ICML2023] §4 式(3)(4)．α = 0.5 は OPT・BLOOM での記述")
 
@@ -687,6 +722,17 @@ def _fix_punct(prs):
 
 
 _fix_punct(d.prs)
+
+
+def _fix_notes(prs):
+    for sl in prs.slides:
+        if sl.has_notes_slide:
+            for p in sl.notes_slide.notes_text_frame.paragraphs:
+                for r in p.runs:
+                    r.text = r.text.replace("，", "、").replace("．", "。")
+
+
+_fix_notes(d.prs)
 d.save(OUT)
 
 main = [p for p in PLAN if not p[4]]

@@ -1,5 +1,8 @@
 """量子化勉強会スライド共通ビルダー（3案で共用）。
 
+数式（2026-11-16 追加）: `d.equation(slide, r"LaTeX", left, top, width, size=32)` で PowerPoint の数式オブジェクト（OMML，Fallback は画像）を置く．戻り値は置いた高さ（EMU）．
+
+
 使い方の例:
     from slidekit import Deck
     d = Deck()                                  # tools/template.pptx（研究室テンプレートのマスター）から開始
@@ -238,3 +241,111 @@ class Deck:
     def save(self, path):
         self.prs.save(path)
         return path
+
+
+# ---------------------------------------------------------------------------
+# 数式（PowerPoint の数式オブジェクト = OMML）。2026-11-16 追加。
+# LaTeX を pandoc で OMML に変換し，mc:AlternateContent（Choice: a14:m，Fallback: 画像）で埋め込む．
+# PowerPoint では編集できる数式として表示され，LibreOffice の画像化では Fallback の画像が使われる（検査③用）．
+# ---------------------------------------------------------------------------
+import hashlib
+import subprocess
+import tempfile
+import zipfile
+
+_NS_M = "http://schemas.openxmlformats.org/officeDocument/2006/math"
+_NS_A = "http://schemas.openxmlformats.org/drawingml/2006/main"
+_NS_A14 = "http://schemas.microsoft.com/office/drawing/2010/main"
+_NS_MC = "http://schemas.openxmlformats.org/markup-compatibility/2006"
+_NS_P = "http://schemas.openxmlformats.org/presentationml/2006/main"
+_NS_R = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
+_OMML_CACHE = {}
+_PNG_DIR = os.path.join(tempfile.gettempdir(), "quant_eq_png")
+
+
+def latex_to_omml(latex):
+    """LaTeX（数式部分のみ）を m:oMath の XML 文字列に変換（pandoc 経由）．"""
+    if latex in _OMML_CACHE:
+        return _OMML_CACHE[latex]
+    with tempfile.TemporaryDirectory() as d:
+        md = os.path.join(d, "e.md")
+        with open(md, "w", encoding="utf-8") as f:
+            f.write("$$" + latex + "$$\n")
+        out = os.path.join(d, "e.docx")
+        subprocess.run(["pandoc", md, "-o", out], check=True)
+        xml = zipfile.ZipFile(out).read("word/document.xml").decode("utf-8")
+    root = etree.fromstring(xml.encode("utf-8"))
+    om = root.find(".//{%s}oMath" % _NS_M)
+    s = etree.tostring(om).decode("utf-8")
+    _OMML_CACHE[latex] = s
+    return s
+
+
+def latex_png(latex, size_pt, dpi=300):
+    """Fallback 用の透明背景PNG（matplotlib mathtext）．(path, 幅EMU, 高さEMU) を返す．"""
+    import matplotlib
+
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    os.makedirs(_PNG_DIR, exist_ok=True)
+    key = hashlib.md5(f"{latex}|{size_pt}".encode()).hexdigest()[:16]
+    path = os.path.join(_PNG_DIR, key + ".png")
+    plt.rcParams["mathtext.fontset"] = "cm"
+    fig = plt.figure(figsize=(0.1, 0.1))
+    fig.text(0, 0, "$" + latex + "$", fontsize=size_pt, color="#222222")
+    fig.savefig(path, dpi=dpi, transparent=True, bbox_inches="tight", pad_inches=0.04)
+    plt.close(fig)
+    from PIL import Image
+
+    w, h = Image.open(path).size
+    return path, int(w / dpi * 914400), int(h / dpi * 914400)
+
+
+def equation(deck, slide, latex, left, top, width, size=32, align="center"):
+    """数式オブジェクトを置く．width はこの式が使える横幅（EMU）．置いた高さ（EMU）を返す．
+    size は pt（本編の本文 28pt と同程度か大きく）．"""
+    png, iw, ih = latex_png(latex, size * 0.82)  # OMML の Cambria Math と見た目の大きさを揃える係数
+    if iw > width:  # 幅に収まらないときは画像（と枠）を縮める
+        k = width / iw
+        iw, ih = int(iw * k), int(ih * k)
+    h = max(ih, int(size * 12700 * 1.5))
+    x = {"center": left + (width - iw) // 2, "left": left, "right": left + width - iw}[align]
+    shape_id = max([int(i) for i in slide.shapes._spTree.xpath("//p:cNvPr/@id")] + [1]) + 1
+    _, rid = slide.part.get_or_add_image_part(png)
+    omml = latex_to_omml(latex)
+    om = etree.fromstring(omml.encode("utf-8"))
+    for r in om.iter("{%s}r" % _NS_M):  # 各 run に文字サイズと数式フォントを付ける
+        rpr = etree.Element("{%s}rPr" % _NS_A, lang="en-US", sz=str(int(size * 100)))
+        etree.SubElement(rpr, "{%s}latin" % _NS_A, typeface="Cambria Math", panose="02040503050406030204")
+        etree.SubElement(rpr, "{%s}ea" % _NS_A, typeface="Cambria Math")
+        mrpr = r.find("{%s}rPr" % _NS_M)
+        if mrpr is not None:
+            mrpr.addnext(rpr)
+        else:
+            r.insert(0, rpr)
+    para = etree.Element("{%s}oMathPara" % _NS_M)
+    ppr = etree.SubElement(para, "{%s}oMathParaPr" % _NS_M)
+    etree.SubElement(ppr, "{%s}jc" % _NS_M).set("{%s}val" % _NS_M, {"center": "center", "left": "left", "right": "right"}[align])
+    para.append(om)
+    para_xml = etree.tostring(para).decode("utf-8")
+    name = f"数式 {shape_id}"
+    descr = latex.replace('"', "'")
+    xml = f"""<mc:AlternateContent xmlns:mc="{_NS_MC}" xmlns:p="{_NS_P}" xmlns:a="{_NS_A}" xmlns:r="{_NS_R}" xmlns:m="{_NS_M}">
+<mc:Choice xmlns:a14="{_NS_A14}" Requires="a14">
+<p:sp><p:nvSpPr><p:cNvPr id="{shape_id}" name="{name}" descr="{descr}"/><p:cNvSpPr txBox="1"/><p:nvPr/></p:nvSpPr>
+<p:spPr><a:xfrm><a:off x="{left}" y="{top}"/><a:ext cx="{width}" cy="{h}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom><a:noFill/></p:spPr>
+<p:txBody><a:bodyPr wrap="square" lIns="0" tIns="0" rIns="0" bIns="0" anchor="ctr"><a:noAutofit/></a:bodyPr><a:lstStyle/>
+<a:p><a:pPr algn="{ {'center': 'ctr', 'left': 'l', 'right': 'r'}[align] }"/><a14:m>{para_xml}</a14:m></a:p></p:txBody></p:sp>
+</mc:Choice>
+<mc:Fallback>
+<p:pic><p:nvPicPr><p:cNvPr id="{shape_id}" name="{name}" descr="{descr}"/><p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/></p:nvPicPr>
+<p:blipFill><a:blip r:embed="{rid}"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>
+<p:spPr><a:xfrm><a:off x="{x}" y="{top + (h - ih) // 2}"/><a:ext cx="{iw}" cy="{ih}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr></p:pic>
+</mc:Fallback></mc:AlternateContent>"""
+    slide.shapes._spTree.append(etree.fromstring(xml.encode("utf-8")))
+    return h
+
+
+Deck.equation = lambda self, slide, latex, left, top, width, size=32, align="center": equation(
+    self, slide, latex, left, top, width, size, align)

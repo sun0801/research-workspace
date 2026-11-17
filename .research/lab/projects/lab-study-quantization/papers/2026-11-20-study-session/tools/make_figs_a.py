@@ -183,7 +183,7 @@ ax.annotate("", xy=(3.0, 2.5), xytext=(2.1, 2.5), arrowprops=dict(arrowstyle="->
 ax.annotate("", xy=(6.3, 2.5), xytext=(5.0, 2.5), arrowprops=dict(arrowstyle="->", lw=3, color=RED))
 ax.text(5.6, 2.9, "畳み込む", ha="center", fontsize=15, color=RED)
 box(ax, 6.3, 2.0, 2.6, 1.0, "Conv\nW_fold, b_fold", fc="#fbe4e0", ec=RED, fs=16)
-ax.text(0.1, 1.2, "W_fold = γW / √(σ² + ε)（出力チャネルごとに異なるスケールが重みに入る）", fontsize=17)
+ax.text(0.1, 1.2, "出力チャネルごとに異なる γ・σ が重みに入る", fontsize=17)
 ax.text(0.1, 0.5, "→ 量子化は W_fold に対して行う", fontsize=17, color=RED, fontweight="bold")
 save(fig, f"{FIG}/a-bn-folding.png")
 

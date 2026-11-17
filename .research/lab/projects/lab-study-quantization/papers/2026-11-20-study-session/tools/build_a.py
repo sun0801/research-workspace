@@ -23,6 +23,8 @@ Q = {m: json.load(open(f"{RES}/qat_{m}.json"))["models"][m] for m in ("resnet18"
 SENS = json.load(open(f"{RES}/sensitivity.json"))
 
 d = Deck()
+_orig_notes = d._notes
+d._notes = lambda s_, notes: _orig_notes(s_, notes.replace("，", "、").replace("．", "。") if notes else notes)  # ノートは「、。」（見本に合わせる）
 SLIDES = []  # (番号, 節, タイトル, 分)
 
 
@@ -42,12 +44,32 @@ def lead_text(s, lines, size=24, top=BODY_TOP):
     return top + h + 110000
 
 
-def figure(title, lead, img, notes, source, sec, minutes, caption="", lead_size=24):
+def pre_items(items):
+    """数式・補助文を縦に並べる。items: ("eq", latex, size) / ("txt", text, size) / ("lab", label, latex, size)"""
+    def run(s, top):
+        for it in items:
+            if it[0] == "eq":
+                h = d.equation(s, it[1], LEFT, top, FULL_W, it[2])
+                top += h + 40000
+            elif it[0] == "txt":
+                top = lead_text(s, [it[1]], it[2], top) - 60000
+            else:  # lab: 左に見出し，右に左寄せの式
+                lw = 3000000
+                d.textbox(s, it[1], LEFT, top, lw, 460000, size=24)
+                h = d.equation(s, it[2], LEFT + lw, top, FULL_W - lw, it[3], align="left")
+                top += max(h, 460000) + 30000
+        return top + 60000
+    return run
+
+
+def figure(title, lead, img, notes, source, sec, minutes, caption="", lead_size=24, pre=None):
     """文字は上，図は下。"""
     s = d._new(L_TITLEONLY)
     s.shapes.title.text = title
     _tag_runs(s.shapes.title.text_frame._txBody)
-    top = lead_text(s, lead, lead_size)
+    top = lead_text(s, lead, lead_size) if lead else BODY_TOP
+    if pre:
+        top = pre(s, top)
     cap_h = 420000 if caption else 0
     bottom = SRC_TOP - 40000
     d._place_image(s, img, LEFT, top, FULL_W, bottom - top - cap_h)
@@ -60,11 +82,13 @@ def figure(title, lead, img, notes, source, sec, minutes, caption="", lead_size=
     return s
 
 
-def table(title, lead, rows, widths, notes, source, sec, minutes, size=20, row_h=560000, highlight=None):
+def table(title, lead, rows, widths, notes, source, sec, minutes, size=20, row_h=560000, highlight=None, pre=None):
     s = d._new(L_TITLEONLY)
     s.shapes.title.text = title
     _tag_runs(s.shapes.title.text_frame._txBody)
     top = lead_text(s, lead) if lead else BODY_TOP
+    if pre:
+        top = pre(s, top)
     nr, nc = len(rows), len(rows[0])
     gf = s.shapes.add_table(nr, nc, Emu(LEFT), Emu(top), Emu(FULL_W), Emu(row_h * nr))
     t = gf.table
@@ -152,16 +176,19 @@ table("数値表現とビット数",
       "説明用の計算例（2 の n 乗，FP32 は 2 の 32 乗 ≈ 43 億）／別枠: FP8 [Micikevicius+, arXiv2022]，NF4 QLoRA [Dettmers+, NeurIPS2023]", S1, 2.2)
 
 figure("scale と zero-point",
-       ["q = clamp(⌊x / s⌉ + z; q_min, q_max)，　x ≈ x̂ = s (q − z)",
-        "非対称: q は 0〜2^b − 1（z で範囲をずらす）",
-        "対称・符号付き: z = 0，q は −2^(b−1)〜2^(b−1) − 1，s = max|x|/q_max",
-        "s: scale，z: zero-point（実数 0 に対応する整数），b: ビット数"],
-       f"{FIG}/a-affine-grid.png",
-       "一様量子化の式です．実数 x を scale s で割って丸め，zero-point z を足し，q の下限と上限にクリップします．これが量子化です．非対称なら q は 0 から 2 の b 乗マイナス1，対称で符号付きなら z をゼロにして，マイナス2の b−1 乗からプラス2の b−1 乗マイナス1です．対称のときの s は，絶対値の最大を q の上限で割ります．演習のコードはこの形です．"
+       [],
+f"{FIG}/a-affine-grid.png",
+       "一様量子化の式です．実数 x を scale s で割って丸め，zero-point z を足し，q の下限と上限にクリップします．これが量子化です．非対称なら q は 0 から 2 の b 乗マイナス1，対称で符号付きなら z をゼロにして，マイナス2の b−1 乗からプラス2の b−1 乗マイナス1です．対称のときの s は，絶対値の最大を q の上限で割ります．演習のコードはこの形です．なお q_min と q_max は整数側の範囲で，白書の q_min = −sz は実数側の限界ですから，別のものです．"
        "戻すときは，整数から z を引いて s を掛けます．z は，実数の 0 に対応する整数で，0 を誤差なく表すために使います．"
        "下の数直線は計算例です．範囲を −1.0 から 3.0，4bit とすると，s は 4 割る 15 で約 0.267，z は 4 になります．"
        "z は，実数の 0 が来る整数ですから，マイナス min を s で割って丸めて4です．x が 0.5 なら整数は 6 になり，戻すと 0.533，誤差は 0.033 で，これが丸め誤差です．原典では，s は範囲から (b − a)/(n − 1) と決めます．",
-       "原典: 白書 [Nagel+, arXiv2021] §2.2 式(4)(6)(7)，整数演算のみの推論 [Jacob+, CVPR2018] §2.1 式(1)，§3 式(12)／図: 説明用の計算例（範囲 [−1.0, 3.0]，4bit）", S1, 3.0)
+       "原典: 白書 [Nagel+, arXiv2021] §2.2 式(4)(6)(7)，整数演算のみの推論 [Jacob+, CVPR2018] §2.1 式(1)，§3 式(12)／図: 説明用の計算例（範囲 [−1.0, 3.0]，4bit）", S1, 3.0,
+       pre=pre_items([
+           ("eq", r"q=\operatorname{clamp}\!\left(\operatorname{round}\!\left(\dfrac{x}{s}\right)+z,\ q_{\min},\ q_{\max}\right)", 34),
+           ("eq", r"\hat{x}=s\,(q-z)", 34),
+           ("lab", "非対称", r"q_{\min}=0,\quad q_{\max}=2^{b}-1", 26),
+           ("lab", "対称・符号付き", r"z=0,\ q_{\min}=-2^{b-1},\ q_{\max}=2^{b-1}-1,\ s=\dfrac{\max|x|}{q_{\max}}", 26),
+           ("txt", "s: scale，z: zero-point（実数 0 に対応する整数），b: ビット数", 24)]))
 
 figure("対称と非対称",
        ["対称: z = 0 に固定，非対称: z で範囲をずらし，片側の分布を無駄なく使う", "本演習: 重みは対称，活性は非対称（一般的な選択）"],
@@ -300,7 +327,8 @@ figure("BN folding",
        ["BN を前の Conv に畳み込んでから，重みを量子化する（ResNet18）"],
        f"{FIG}/a-bn-folding.png",
        "ResNet18 では，BN を前の Conv に畳み込んでから重みを量子化します．推論では BN は固定の掛け算と足し算なので，重みとバイアスに吸収できます．式は W_fold が γ W 割る ルート σ二乗プラスイプシロンです．これは Jacob らと白書にある式です．ここで大事なのは，出力チャネルごとに違う γ と σ が重みに掛かるので，畳み込んだあとの重みは，チャネル間で範囲が大きく変わりうることです．先ほどの粒度の話と，つながっています．folding の実装は，fp64 で前後の出力差が1.8e-14（単精度では1.1e-5）であることを確認しています．",
-       "原典: 整数演算のみの推論 [Jacob+, CVPR2018] §3.2 式(14)，白書 [Nagel+, arXiv2021] §2.3.1 式(11)(12)／検証: 本環境の実測: 結果ログ §2-3", S3, 2.2)
+       "原典: 整数演算のみの推論 [Jacob+, CVPR2018] §3.2 式(14)，白書 [Nagel+, arXiv2021] §2.3.1 式(11)(12)／検証: 本環境の実測: 結果ログ §2-3", S3, 2.2,
+       pre=pre_items([("eq", r"W_{\mathrm{fold}}=\dfrac{\gamma\,W}{\sqrt{\sigma^{2}+\varepsilon}}", 34)]))
 
 table("WxAy と量子化する演算",
       ["WxAy = 対象演算の重み x bit・入力活性 y bit（fake-quant）"],
@@ -366,13 +394,15 @@ figure("PTQ と QAT",
        "原典: 白書 [Nagel+, arXiv2021] Abstract，§4／整数演算のみの推論 [Jacob+, CVPR2018] §3（学習中の疑似量子化）", S4, 1.8)
 
 figure("QAT の勾配: STE",
-       ["round の勾配は 0 か未定義 → 逆伝播で ∂⌊y⌉/∂y = 1 とみなす（STE）", "STE の原典は確率的ニューロン，量子化への適用は白書（Krishnamoorthi・Nagel）"],
-       f"{FIG}/a-ste.png",
+       ["⌊y⌉ は y の四捨五入，その勾配は 0 か未定義 → 逆伝播では 1 とみなす（STE）"],
+f"{FIG}/a-ste.png",
        "QAT の鍵は STE，straight-through estimator です．丸めの勾配は，ほぼ至る所で0か未定義なので，そのままでは学習できません．"
        "そこで逆伝播のときだけ，丸めの勾配を1，つまり恒等とみなして通します．白書の式36です．"
        "注意として，STE の原典の Bengio らの論文は，確率的なバイナリニューロンの文脈で，量子化の丸めは扱っていません．"
        "量子化の丸めに当てはめて STE と明記しているのは，Krishnamoorthi と Nagel の白書です．Jacob らの論文は STE という語を使っていません．スライドでは，STE の原典と，量子化での使い方を分けて引用します．",
-       "原典: 白書 [Nagel+, arXiv2021] §4.1 式(36)，白書 [Krishnamoorthi, arXiv2018] §3.2，STE [Bengio+, arXiv2013] §4（確率的ニューロンの文脈）", S4, 2.0)
+       "原典: 白書 [Nagel+, arXiv2021] §4.1 式(36)，白書 [Krishnamoorthi, arXiv2018] §3.2，STE [Bengio+, arXiv2013] §4（確率的ニューロンの文脈）", S4, 2.0,
+       pre=pre_items([("eq", r"\dfrac{\partial\,\lfloor y\rceil}{\partial y}=1", 34),
+                      ("txt", "STE の原典は確率的ニューロン，量子化への適用は白書", 24)]))
 
 figure("QAT の結果（1 設定）",
        ["W4+A8，390 step，3 seed 平均: ResNet18 90.65→93.12，DeiT 91.90→93.70",
@@ -382,18 +412,21 @@ figure("QAT の結果（1 設定）",
        "本環境の実測: 結果ログ §5（fake-quant，3 seed 平均，学習率・epoch は未調整）", S4, 2.2)
 
 table("外れ値対策: SmoothQuant",
-      ["s_j = max(|X_j|)^α / max(|W_j|)^(1−α)", "X̂ = X diag(s)⁻¹，Ŵ = diag(s) W（出力は不変）", "活性の難しさを重みへ移す，α = 0.5 が基本"],
+      [],
       [["入力チャネル j", "1", "2", "3"],
-       ["max|X_j|（活性）", "2", "16", "4"],
-       ["max|W_j|（重み）", "2", "1", "4"],
+       ["max(|X_j|)（活性）", "2", "16", "4"],
+       ["max(|W_j|)（重み）", "2", "1", "4"],
        ["s_j（α = 0.5）", "1", "4", "1"],
-       ["変換後 max|X̂_j| / max|Ŵ_j|", "2 / 2", "4 / 4", "4 / 4"]],
+       ["変換後 max(|X̂_j|) / max(|Ŵ_j|)", "2 / 2", "4 / 4", "4 / 4"]],
       [3.4, 1.2, 1.2, 1.2],
       "外れ値への対策の代表として SmoothQuant を見ます．活性のチャネル j を s_j で割り，重みの対応する入力チャネルに s_j を掛けます．"
       "出力は数学的に変わりませんが，活性の外れ値を重み側へ移せます．重みは per-channel にして細かく量子化できますが，活性はそれが難しいので，難しさを重みへ移します．s_j は，活性の最大値の α 乗を，重みの最大値の 1 − α 乗で割ったものです．"
       "α は移す量で，0.5が基本です．下の表は3チャネルの計算例です．活性の最大が2，16，4，重みの最大が2，1，4のとき，s は1，4，1，"
       "変換後は活性も重みも最大が2，4，4にそろいます．数値は説明用で，実測ではありません．",
-      "原典: SmoothQuant [Xiao+, ICML2023] §4 式(3)(4)／数値: 説明用の計算例（α = 0.5，3 チャネル）", S4, 2.5)
+      "原典: SmoothQuant [Xiao+, ICML2023] §4 式(3)(4)／数値: 説明用の計算例（α = 0.5，3 チャネル）", S4, 2.5, size=18, row_h=440000,
+      pre=pre_items([("eq", r"s_j=\dfrac{\max(|X_j|)^{\alpha}}{\max(|W_j|)^{1-\alpha}}", 32),
+                     ("eq", r"\hat{X}=X\operatorname{diag}(s)^{-1},\quad \hat{W}=\operatorname{diag}(s)\,W", 28),
+                     ("txt", "出力は不変，活性の難しさを重みへ移す，α = 0.5 が基本", 24)]))
 
 table("SmoothQuant の結果と，本環境",
       ["OPT-175B（原典）: 素朴な W8A8 は崩れ，SmoothQuant は FP16 に近い", "本環境の DeiT-Tiny は外れ値チャネルが小さく，直接は当てはまらない（解釈）"],
