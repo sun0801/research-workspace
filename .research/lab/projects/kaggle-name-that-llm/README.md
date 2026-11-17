@@ -25,7 +25,7 @@ last_updated: 2026-11-17
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/17監査一覧](experiments/2026-11-17-source-audit-log.md)・[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - 2026-11-17: Spectral v2をprivate kernel version 2としてT4×2で実行。runtime `COMPLETE`、preview 526秒、`submission.parquet`は3行・`id,model`・null/重複なし・有効label。previewでSpectralによる予測変更は0%。hidden全件LB比較としてref `58453689`を提出（当日2/5件、採点status未確認）。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
-- 次にすること: submission ref `58453689`を30分以上の間隔で軽くpollし、Public scoreを現best`.620`と比較する。OLMoのinference-only assets（585 MiB）はローカルstaging済み。OLMo追加は基準全件runtime・Spectral比較を回収し、全体9時間以内と見込める場合だけprivate upload・pilotへ進む。Mistral v14は現specで再実行しない。Host142 GPU1には触れない。
+- 次にすること: submission ref `58453689`を30分以上の間隔で軽くpollし、Public scoreを現best`.620`と比較する。OLMoのinference-only assets（585 MiB）はローカルstaging済み。18ラベル集合は一致し、sorted OLMo列から基準Notebook順へのpermutationをpackage metadataに保存・検証した。OLMo追加は基準全件runtime・Spectral比較を回収し、全体9時間以内と見込める場合だけprivate upload・pilotへ進む。Mistral v14は現specで再実行しない。Host142 GPU1には触れない。
 
 ## 記録方針
 
