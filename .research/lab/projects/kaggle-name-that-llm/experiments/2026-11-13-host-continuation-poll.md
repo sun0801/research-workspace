@@ -39,7 +39,7 @@ type: host-continuation-poll
 ## 11/14 13:20 JST — 担当をClaude CodeからCodexへ戻す（引き継ぎ）
 
 - ユーザーの指示により、担当をCodexへ戻す（Codexの週間枠リセットのため）。Claude Codeの`/loop`の次回予約は解除済み。新しい実験・提出・実装は始めていない。
-- **実行中job**: tmux `mistral-confirm`（Host142 GPU1 `GPU-8a059266-...`、PID`2872240`、flock`artifacts/.gpu1-run.lock`）。`--split confirmation --resume`、ログ`artifacts/gpu03-mistral-7b-v0-1-openpool-v15/confirmation-run.log`。fold 0〜2完了（BA`.561`/`.583`/`.567`）、fold 3は11/14 19:15ごろ、fold 4を含む全5 fold完了は11/15 02時ごろ（1 fold約6.8h）。再開が要る場合は同じコマンドに`--resume`（コマンドは15:55の節）。**止めない・二重起動しない。** 停止中のCandidate09 watcher（PID`3748103`）は再開しない（GPU1のqueue判断はMistral完了後）。
+- **当時の実行中job（11/14時点。11/17に完了確認済み）**: tmux `mistral-confirm`（Host142 GPU1 `GPU-8a059266-...`、PID`2872240`、flock`artifacts/.gpu1-run.lock`）。`--split confirmation --resume`、ログ`artifacts/gpu03-mistral-7b-v0-1-openpool-v15/confirmation-run.log`。fold 0〜2完了（BA`.561`/`.583`/`.567`）、fold 3は11/14 19:15ごろ、fold 4を含む全5 fold完了は11/15 02時ごろ（1 fold約6.8h）。再開コマンドと「止めない・二重起動しない」は当時の状態に限る。停止中のCandidate09 watcher（PID`3748103`）についても当時の記録であり、現行GPU1予約ではない。
 - **次に確認すること**: (1) fold 3・4の完了を確認し、各fold完了を1回だけ追記。(2) 全5 fold完了後、[確認spec](../specs/2026-11-12-mistral-spectral-complementarity-confirmation-spec.md)のCPU評価（1スレッド。評価runnerはconfirmation OOF完成後に新規作成、出力は`artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/`）。(3) 通過した場合のみ、`.769`（11/13）とCV-LB対応（v12 `.541`・v13 `.560`、約1/4しか転移しない点）を踏まえてprivate Notebook runtime検証の要否を判断。通過しなければ棄却。
 - **承認待ち**: 16GB GPU（Host141 GPU0〜2、Host142 GPU0）で回せる未実施候補は、4-bit＋Open Pool二段階LoRA runnerの新規実装（OLMo2-7B等）のみ。runner新規実装・数日規模の学習を伴うため、ユーザーの実装開始承認が要る。official-only QLoRAは候補10（BA`.254`）で棄却済み、Qwen3-14B QLoRAはA4000でpilot不通過のため、同じ領域は繰り返さない。
 - **Claude Codeセッションで作ったもの**: spec — [`2026-11-13-baseline-spectral-notebook-lb-check-spec.md`](../specs/2026-11-13-baseline-spectral-notebook-lb-check-spec.md)、[`2026-11-13-qwen3-14b-qlora-a4000-spec.md`](../specs/2026-11-13-qwen3-14b-qlora-a4000-spec.md)。ログ — [`2026-11-13-baseline-spectral-notebook-lb-check.md`](2026-11-13-baseline-spectral-notebook-lb-check.md)、[`2026-11-13-qwen3-14b-qlora-a4000-pilot.md`](2026-11-13-qwen3-14b-qlora-a4000-pilot.md)。実装（`/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/`）— `notebooks/spectral-port/spectral_cell.py`（凍結Spectralの移植）、`notebooks/name-that-llm-private-baseline-v13-spectral-source/`（v13 Notebook、kernel`suntree0801/name-that-llm-private-baseline-blend-v13-spectral`）、`scripts/verify_spectral_port.py`・`scripts/check_spectral_pooled.py`、`configs/gpu17-qwen3-14b-qlora-a4000-prompt-grouped.json`。
@@ -80,3 +80,10 @@ type: host-continuation-poll
 - mild retention simulationは平均delta`+.020751`・20/20 positive、moderateは`+.017810`・20/20 positive。specの確認gateを通過し独立confirmation上の候補として採用。ただしNotebook push・提出は未承認で未実施。評価出力は`/mnt/HDD10TB-2/aburatani/kaggle/name-that-llm/artifacts/cpu-mistral-spectral-complementarity-confirmation-v1/`。
 - OLMo primaryはHost142 GPU0で継続（PID`3469081`、02:10時点で稼働）。同時点のGPU0は7,517 MiB使用・8,458 MiB空き、MemAvailable約208 GiB。最後に読めたcheckpointはfold 1 stage 1 step 425（02:01 JST）。次の軽量pollは02:30 JST。
 - rate guardは5h残93%・週間残96%で通過。runner SHA-256 prefixは`0c70e361`（評価summary記録）。
+
+## 11/17 23:08 JST — Host142 GPU1予約解除・候補準備の再開
+
+- ユーザー確認により、Mistral confirmationは5/5 fold完了し、tmux `mistral-confirm` も残っていない。Host142 GPU1の専用予約は解除。旧「止めない・二重起動しない」指示は完了済みjobに対する当時の履歴で、現在の予約を意味しない。
+- ユーザー申告ではHost141 GPU0〜2とHost142 GPU0/1がすべて空き。Host142はローカル確認のみ、Host141は利用直前に`ssh 141`で再確認する。既存runner等の資源gateは引き続き適用し、別作業の`view_bench`には触れない。
+- LB確認候補の優先順位: (1) 利用条件を確認済みPublic`.684`系のprivate baselineを提出し、新基準を測る（提出前に報告）。(2) NF4 Mistralを現Public`.626`に固定weightで追加する比較（private v2 runtime gate待ち、学習なし）。(3) 既存Qwen17部品を`.626`基準へ追加してLB比較（previewは`.620`起点で、`.626`起点の候補はまだ作成・提出していない）。いずれもLB差で採否を決める。新しい部品を学習する場合は、先に個別specを作成する。
+- 23:08 JST時点ではNF4 v2は前回CLI確認で`QUEUED`（22:44 JST）。状態確認は30分間隔に従う。ここでは実験状態に変化はなく、ユーザーによる予約解除と再開判断を記録した。
