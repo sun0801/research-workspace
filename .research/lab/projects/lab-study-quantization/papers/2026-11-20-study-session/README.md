@@ -14,4 +14,5 @@
 | [2026-11-14-quantization-study-comparison.md](2026-11-14-quantization-study-comparison.md) | 3案の比較メモと推奨 |
 | [2026-11-14-quantization-study-verification.md](2026-11-14-quantization-study-verification.md) | 検査記録（原本は `verification-raw/`） |
 | [2026-11-13-quantization-study-citations.md](2026-11-13-quantization-study-citations.md) / [existing-materials](2026-11-13-quantization-study-existing-materials.md) | 出典メモ／既存資料の調査 |
+| [2026-11-16-presenter-prereading.md](2026-11-16-presenter-prereading.md) | 発表者の予習用: 日本語の解説記事とA案の対応 |
 | `tools/` | スライド作成ライブラリ（slidekit.py），描画・はみ出し検査，各案のビルドスクリプト，作者・検査者向けの指示書 |
