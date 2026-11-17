@@ -1,0 +1,3 @@
+# 公開Notebook候補の日次監査 — 2026-11-18
+
+- 02:04 JST | https://www.kaggle.com/code/alexchilton/name-that-llm-0-702-all-public-what-failed v30 と `nuridudak/ntl-q14-lora-v4` v1 metadata を再確認。Notebook本文は11/17のPublic`.702`を主張するが、採点対象version/submission refは特定していない。dataset infoは`Other (specified in description)`・description空欄。公開`meta.json`にはQwen3-14B-Base、学習設定、prompt-disjoint public poolおよびofficial train利用の記載があるが、adapter再利用ライセンスは記載されていない。 | **(c) 保留** | `meta.json`と“All public”の説明だけでは明示的な再利用条件にならない。Q14 adapterの利用権と`.702`の採点version/refが確認できるか、またはQ14部品を利用条件確認済みの等価物に置換した版が公開されるまでfork・提出しない。
