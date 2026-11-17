@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 採用baselineは公開Notebook private forkのPublic`.620`（ref `58452056`）。Spectral ref `58453689`は`.622`（差`.002`はnoise）、OLMo add-on kernel v2はprivate runtime中。
+summary: 採用baselineは公開Notebook private forkのPublic`.620`（ref `58452056`）。Spectral ref `58453689`は`.622`（差`.002`はnoise）、OLMo v2は13:25にRUNNINGを確認し、import順を直すv3をlocal準備。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -25,7 +25,7 @@ last_updated: 2026-11-17
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/17監査一覧](experiments/2026-11-17-source-audit-log.md)・[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。基準`.620`との差`.002`はnoise threshold`.005`未満のため、採用baselineは`.620`のまま。提出2/5件。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
-- 2026-11-17: OLMo add-onの64 distinct-row/5-fold local pilot通過（56.5秒、peak reserved 7,322 MiB、4,000行投影約54分）。kernel v1はKaggle offline imageにbitsandbytesがなく失敗。公式MIT wheelをprivate Datasetから導入するv2をprivate/offline T4で再実行中。local projectionはhidden full-run実測ではない。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
+- 2026-11-17: OLMo add-onの64 distinct-row/5-fold local pilot通過（56.5秒、peak reserved 7,322 MiB、4,000行投影約54分）。kernel v1はoffline imageのbitsandbytes欠落で失敗。v2は13:25にRUNNING確認、wheel導入はTransformers import後でavailability cacheに残る可能性があり、import前導入のv3をlocal準備（未push）。local projectionはhidden full-run実測ではない。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 次にすること: OLMo kernelのruntime状態・出力を30分以上の間隔でpollし、変化時だけ記録する。full-run runtimeとsubmission file検査を回収し、候補の競技提出前にユーザーへ報告する。Host142 GPU1には触れない。
 
 ## 記録方針
@@ -161,7 +161,8 @@ last_updated: 2026-11-17
 
 ## 更新履歴
 
-- 2026-11-17: OLMo add-on private kernel v1はKaggle offline imageのbitsandbytes欠落で失敗。PyPI MIT wheelをprivate Datasetに分離してNotebook v2からoffline導入し、remote sourceのcell一致・private/offline metadataを確認。v2はT4で再実行中、提出未実施。[runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
+- 2026-11-17: OLMo add-on private kernel v1はKaggle offline imageのbitsandbytes欠落で失敗。PyPI MIT wheelをprivate Datasetに分離してNotebook v2からoffline導入し、remote sourceのcell一致・private/offline metadataを確認。v2の初期statusはRUNNING、提出未実施。[runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
+- 2026-11-17: Transformers v4.57.1のbitsandbytes availabilityはimport時に評価されるため、v2の遅い導入は不十分な可能性を確認。baseline import前に導入するv3をlocal生成。v2の30分monitor cadenceが満たされるまでpushせず、job重複を避ける。[runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 
 - 2026-11-17: 公式ルール・採点条件・公開順位を更新。OLMo add-onのsingle-base 5-fold pilotを通し、assetsをprivate Datasetへ作成してprivate T4 kernelをpush。hidden full-run runtimeとSpectral LBは採点待ち。[状況・根拠](experiments/2026-11-17-official-competition-status.md) · [実験ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 
