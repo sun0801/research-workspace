@@ -2,7 +2,7 @@
 date: 2026-11-17
 project: kaggle-name-that-llm
 type: experiment-log
-status: .626-rebased-private-runtime-running
+status: .626-rebased-private-preview-complete-hidden-runtime-unverified
 ---
 
 # Qwen17 add-on to the Public `.620` blend: private preview runtime
@@ -36,3 +36,7 @@ Keep the candidate pending one Public LB comparison against current best ref `58
 ## 2026-11-18 01:57 JST — private preview status changed
 
 - After the 30-minute polling interval, authenticated `kaggle kernels status suntree0801/name-that-llm-private-olmo-qwen17-add-on` changed from `QUEUED` to `RUNNING`. Rate guard passed immediately before polling (5-hour remaining 100%, weekly remaining 63%). No output or runtime result is available yet; no duplicate push or competition submission was made.
+
+## 2026-11-18 02:27 JST — private preview complete
+
+- Authenticated `kaggle kernels status suntree0801/name-that-llm-private-olmo-qwen17-add-on` changed to `COMPLETE`. Recovered output with `kaggle kernels output`; the session log ends at about 716 seconds. The downloaded `submission.parquet` has 3 rows, columns `id, model`, no nulls or duplicate IDs, and labels within the 18-class domain. This remains a public-format preview: the log reports `test (3, 2)` and does not verify the hidden full-test runtime. No competition submission or duplicate push was made.
