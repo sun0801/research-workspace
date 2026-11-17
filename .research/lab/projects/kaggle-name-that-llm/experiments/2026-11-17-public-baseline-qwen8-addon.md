@@ -49,5 +49,5 @@ status: in-progress
 
 ## 次
 
-- Qwen提出ref `58459599`とOLMo ref `58456880`を30分間隔の軽い1コマンドで監視し、状態変化時に結果を回収してこの日付ログとREADMEへ記録する。
+- Qwen ref `58459599`はPublic`.623`で完了、OLMo ref `58456880`はPublic`.626`で完了。併用kernel version 2のruntime projection・artifact gateを確認し、pass時は残り1枠でPublic LBへ提出、その結果を記録する。
 - Host142 GPU1の `mistral-confirm` には触れない。
