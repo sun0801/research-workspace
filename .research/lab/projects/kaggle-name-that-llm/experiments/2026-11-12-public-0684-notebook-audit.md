@@ -15,3 +15,8 @@ type: public-notebook-audit
 
 - Inspected [Krish Shah, `Dual Embedding LoRA Ensemble v16`](https://www.kaggle.com/code/krshs90/dual-embedding-lora-ensemble-v16): public v1, GPU enabled, internet disabled. Kaggle search indexed a Nov 12 run, while `get_notebook_info` reported Nov 9. Its source describes a six-backbone stack, two embedding heads, a GSQ-27B boundary head, semantic prompt clustering, and Sinkhorn balancing; metadata lists 17 dataset, 8 Notebook, and 9 model sources. No isolated prompt-grouped score or reproducible component gain is provided in the inspected source.
 - **Decision: (b) 試さない.** The source is a large, multi-asset stack with unresolved run-time metadata and no separable validation evidence; spending a GPU confirmation run on it is not justified against the current`.768` leader and the stronger local Mistral primary screen. No Notebook or submission was created.
+
+## 2026-11-17 disposition under the updated selection policy
+
+- The 2026-11-12 `(b)` rationale is historical and superseded where it relied on the candidate being below the then-current leaderboard or on the absence of independent CV improvement. The `.684` source family is now reconsidered under the 2026-11-16 policy.
+- Current audit classification: **(c) 保留**, because the `nuridudak/ntl-q14-lora` / `ntl-q14-lora-v4` assets used by the public mirrors have Kaggle license `Other`, blank descriptions, and no terms in their metadata files. The `.684` page attributes the best score to V23, whose source was pulled and pinned. See [2026-11-17 daily audit](2026-11-17-source-audit-log.md). This is a rights hold, not a comparison to the current leader.

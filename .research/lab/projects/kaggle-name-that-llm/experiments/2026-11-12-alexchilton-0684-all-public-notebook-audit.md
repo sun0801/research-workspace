@@ -23,3 +23,8 @@ tags: [public-notebook, ensemble, prompt-shape, leaderboard]
 ## Limits
 
 This is not an isolated candidate with foldwise OOF probabilities or a small transplantable component. The `.684` stack has substantial dependency/provenance scope and does not exceed the current leader. No source was executed locally; no dataset, weight, or prediction asset was downloaded; no Kaggle push/submission was made. The discussion-derived prompt-shape hypothesis was tested separately without adopting the Notebook ensemble.
+
+## 2026-11-17 disposition under the updated selection policy
+
+- The original `(b)` decision relied in part on the then-current leader being higher and is superseded by the 2026-11-16 policy. The original Alex Chilton page now returns 404 through Kaggle API.
+- A live `.684` mirror family was reviewed, including `xiewenwei29/name-that-llm` and `wadigongren/name-that-llm-0684-clean-baseline`. Current classification is **(c) 保留** because two Qwen14B adapter datasets used by the family have unverified reuse terms. Exact V23 source was pulled and pinned. Details: [2026-11-17 daily audit](2026-11-17-source-audit-log.md).

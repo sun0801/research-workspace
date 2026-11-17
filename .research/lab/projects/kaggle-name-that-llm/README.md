@@ -58,7 +58,7 @@ last_updated: 2026-11-17
 - (b) 試さない — [OsakanaTeishoku Qwen3-14B-Base score](experiments/2026-11-12-osakanateishoku-qwen14b-base-audit.md)（`.620`/`.622`は本人報告のみ、該当モデルsourceなし）
 - (b) 試さない — [Evgen Dvorkin forensic EDA / inference v28](experiments/2026-11-12-evgendvorkin-v28-notebook-audit.md)（既知`.684` ensemble系譜、現leader`.768`未満、multi-source）
 - (b) 試さない — [Heliosli Qwen3 embedding ensemble v14](experiments/2026-11-12-heliosli-v14-delta-audit.md)（target mix変更のみ、title`.683`、OOFなし）
-- (b) 試さない — [Alex Chilton all-public `.684` Notebook](experiments/2026-11-12-alexchilton-0684-all-public-notebook-audit.md)（複合stackは移植せず、Discussionの小prompt仮説は別screenで評価）
+- (c) 保留 — Alex Chilton/xiewenwei29 `.684` all-public系統。元Alex NotebookはAPIで404、公開mirrorには利用権の未確認なQwen14B adapter datasetsが残る。[11/17監査](experiments/2026-11-17-source-audit-log.md) · [旧調査](experiments/2026-11-12-alexchilton-0684-all-public-notebook-audit.md)
 - (b) 試さない — [Kirill fixed punctuation prior](experiments/2026-11-12-kirill-punctuation-prior-audit.md) · [screen result](experiments/2026-11-12-spectral-punctuation-prior-screen.md)（primaryでBA差0・予測変更0、confirmationなし）
 - (b) 試さない — [Hidden-rerun late post-processing Discussion](experiments/2026-11-12-hidden-rerun-postprocess-discussion-audit.md)（こちらのbaselineに同じCUDA subprocess方式なし）
 - (c) 保留 — [WeMM4 expanded LoRA component](experiments/2026-11-12-wemm4-expanded-lora-component-audit.md)（source dataset/license未確認、公開OOF splitが登録splitと不一致）
@@ -75,10 +75,10 @@ last_updated: 2026-11-17
 - [2026-11-12 Prompt-centered Twin SVC + Spectral screen](experiments/2026-11-12-prompt-centered-twin-spectral-complementarity-screen.md)
 - (b) 試さない — [top 1% validation Discussion](experiments/2026-11-12-top1-validation-discussion-audit.md)
 - (b) 試さない — [hidden rerun post-processing Discussion](experiments/2026-11-12-hidden-rerun-discussion-audit.md)
-- (b) 試さない — [Areeb Ali 0.684 public Notebook mirror](experiments/2026-11-12-public-0684-notebook-audit.md)
+- (c) 保留 — [`.684` public Notebook mirrors](experiments/2026-11-12-public-0684-notebook-audit.md) (11/17 update: shared Qwen14B adapter license/version not verified)
 - (b) 試さない — [The Prompt Is Not the Author v32](experiments/2026-11-12-prompt-is-not-author-audit.md)
 - (b) 試さない — 現leader NguyenThanhNhanのNotebook user/title searchと`.768`/team名のDiscussion検索で、再現可能な手法sourceは見つからず。[監査](experiments/2026-11-12-current-leader-public-notebook-search.md)
-- (b) 試さない — [Alex Chilton “0.684: All Public + What Failed”](experiments/2026-11-12-alexchilton-0684-all-public-audit.md)は本人報告`.684`で、現leader`.768`を超える根拠なし。
+- (c) 保留 — [Alex Chilton “0.684: All Public + What Failed”](experiments/2026-11-12-alexchilton-0684-all-public-audit.md)の当初判断は現leader未満を理由としており、2026-11-16方針でsuperseded。現行mirrorの利用権を確認できるまではforkしない。[11/17監査](experiments/2026-11-17-source-audit-log.md)
 - (b) 試さない — [whitegg “ntl fuse33 (0.668 fork + response corpus)”](https://www.kaggle.com/code/whitegg/ntl-fuse33-0-668-fork-response-corpus)はtitle上の`.668`が現leader`.768`未満で、21 dataset・8 kernel由来の大規模ensembleに独立CV/ablationの比較根拠がない。
 
 - [共同作業と自動化の設計メモ](../../../secretary/notes/brainstorm/2026-11-02-kaggle-collaboration-setup.md)
