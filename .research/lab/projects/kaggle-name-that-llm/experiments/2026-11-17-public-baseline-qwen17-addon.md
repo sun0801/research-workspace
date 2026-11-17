@@ -2,7 +2,7 @@
 date: 2026-11-17
 project: kaggle-name-that-llm
 type: experiment-log
-status: preview-runtime-complete
+status: .626-rebased-private-runtime-queued
 ---
 
 # Qwen17 add-on to the Public `.620` blend: private preview runtime
@@ -26,3 +26,9 @@ Keep the candidate pending one Public LB comparison against current best ref `58
 - Prepared `name-that-llm-private-olmo-qwen17-addon` from the exact local `.626` Notebook source for ref `58456880`, adding the existing Qwen3-1.7B inference cell at fixed log-probability weight `.25`. The `.626` baseline and OLMo branch, original final blend/Sinkhorn, offline setting, and private T4 metadata are preserved. Added only the already-used private Qwen17 assets and Qwen3-1.7B base model inputs.
 - The inserted cell reuses the prior 64-row probability pilot, 1.25× projection for 4,000 rows, 8-hour internal projection gate, label alignment, and T4 memory reserve. It does not train a model or tune weights. The previous `.620`-parent OOF result is only a weak screen; this exact `.626` composition has no OOF comparison and Public LB decides adoption.
 - Local source: [`name-that-llm-private-olmo-qwen17-addon`](../../../../../kaggle/name-that-llm/notebooks/name-that-llm-private-olmo-qwen17-addon/) and builder [`build_olmo_qwen17_addon_notebook.py`](../../../../../kaggle/name-that-llm/scripts/build_olmo_qwen17_addon_notebook.py). It is prepared but not pushed or run. Keep it behind the `.684` baseline submission and the in-flight NF4 Mistral runtime to avoid competing for Kaggle GPU quota.
+
+## 2026-11-18 00:25 JST — `.626` + Qwen17 private preview queued
+
+- With the NF4 Mistral runtime complete and submission slots not yet confirmed for the new UTC day, pushed the local `.626` + Qwen17 candidate as private T4 kernel v1. Canonical remote ref is `suntree0801/name-that-llm-private-olmo-qwen17-add-on`; CLI status is `QUEUED`. Metadata readback confirms private, GPU enabled, Internet disabled, T4, plus the Qwen17 private asset and Qwen3-1.7B base inputs. No competition submission was made.
+- Kaggle warned that the metadata ID did not resolve from the title. Remote readback established the canonical title-derived slug. The local builder and metadata now use that canonical slug for future pushes; the running v1 was not repushed.
+- This is a private preview/runtime check of an existing component, not a new model-training run. LB submission order remains `.684` baseline, then NF4 Mistral on the resulting baseline, then Qwen17.
