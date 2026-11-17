@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`（ref `58456880`）；`.684`系private kernel v1は3行previewのみ完了、hidden runtime未検証。ref `58462545`は採点待ち。
+summary: Current bestはPublic`.626`（ref `58456880`）；ref `58462545`はPublic`.621`で完了。Qwen17 v3はprivate `QUEUED`、`.684`系はpreviewのみ。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -26,9 +26,8 @@ last_updated: 2026-11-17
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。元基準`.620`との差`.002`はnoise threshold`.005`未満で単体では不採用。その後OLMo ref `58456880`が`.626`となり新baselineに更新。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入してruntime `COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`はPublic`.626`で完了し、新baselineに採用。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
-- 2026-11-17: Qwen3-8B add-on v1はprivate/offline T4 kernelで`COMPLETE`。3-row artifact gate pass、4,000-row＋1.25 margin runtime projection約32.2分、GPU peak reserved 7,236 MiB。Public `.620`基準のQwen単体ref `58459599`は16:46 JSTにPublic`.623`で`COMPLETE`（差`+.003`はnoise threshold`.005`未満、現best`.626`未満）。Qwen+OLMo固定weight併用kernel v2はprivate/offline T4でCOMPLETE（runtime 746s、4k projection 11,341.6s、8h gate pass）。提出ref `58462545`は17:29 JST時点で`PENDING`、本日5/5件提出済み。詳細は[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)。
-- 2026-11-17: Qwen8+OLMoに既存Qwen17を固定weight`.25`で加える候補のv1はPEFTがKaggleの未使用torchao 0.10.0を検出して互換性エラーとなり、Qwen17 adapter注入時に`ERROR`。Optional torchao dispatcherだけを無効化し、canonical slug修正後にprivate kernel v2をpush、現在`QUEUED`。full-test projection/artifact未確認、提出なし。追加学習なし。[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
-- 次にすること: `.684`系 private kernel v1はpreview artifact gate pass、hidden full-test runtime未検証。提出枠が空き次第、提出前に報告してLB/runtimeを確認し`.626`と比較する。Qwen17 v2とref `58462545`は30分間隔で回収。Host142 GPU1には触れない。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
+- 2026-11-17: Qwen3-8B+OLMo固定weight提出ref `58462545`は20:17 JSTに`COMPLETE`、Public`.621`。現best`.626`より`.005`低く、採用更新なし。Qwen17 add-on v2はpilot probability validationで`ERROR`、FP32 masked poolingへ直したprivate v3が`QUEUED`。[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
+- 次にすること: `.684`系 private kernel v1は3行previewのみ完了し、hidden full-test runtime未検証。次の提出枠でLB/runtimeを確かめる前に報告する。Qwen17 v3を30分間隔で回収。Host142 GPU1には触れない。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md) · [Qwen実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
 
 ## 記録方針
 
