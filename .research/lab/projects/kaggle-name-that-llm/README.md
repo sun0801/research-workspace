@@ -24,7 +24,7 @@ last_updated: 2026-11-17
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/17監査一覧](experiments/2026-11-17-source-audit-log.md)・[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。提出ref `58452056` は `PENDING`（当日1/5件、Public score未確定）。隠し全件runtimeとLB採点待ち。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
-- 次にすること: submission ref `58452056` とSpectral v2 kernelを30分以上の間隔で軽くpollする。v2はprivate canonical slug `suntree0801/name-that-llm-private-two-stage-lora-spectral`で、直近statusは`RUNNING`。runtime完了後に出力を検証し、提出直前に公式条件・quota・日次枠を再確認する。続くadd-on候補はOLMo（全test推論経路・private asset packageが未作成）。Mistral v14はreserve gate失敗のため、現specの再実行禁止を維持。Host142 GPU1には触れない。
+- 次にすること: submission ref `58452056` とSpectral v2 kernelを30分以上の間隔で軽くpollする。v2はprivate canonical slug `suntree0801/name-that-llm-private-two-stage-lora-spectral`で、直近statusは`RUNNING`。runtime完了後に出力を検証し、提出直前に公式条件・quota・日次枠を再確認する。OLMo追加はv1隠し全件runtimeとSpectral比較を回収後、Notebook全体9時間以内のruntime gateを通す場合に準備する。Mistral v14はreserve gate失敗のため現specで再実行しない。Host142 GPU1には触れない。
 
 ## 記録方針
 
