@@ -22,6 +22,7 @@ The candidate starts from private baseline ref `58456880` (Public `.626`) and us
 - Authenticated CLI showed today's five competition submissions already used. GPU quota was 28.03h/30h (refresh `2026-11-21 09:00 JST`). This candidate was **not** submitted to the competition.
 - Notebook JSON and every code cell passed local syntax parsing. Metadata is private, GPU enabled, Internet disabled, and `NvidiaTeslaT4`; the fixed blend feeds the original final Sinkhorn cell.
 - Private Kaggle kernel version 1 was pushed at 21:41 JST as `suntree0801/name-that-llm-private-publicbest-mistral-nf4`. Immediate session status: `RUNNING`. This is a preview runtime only; the T4 memory/runtime gates, submission artifact, and Public LB result remain pending.
+- 21:50 JST resource refresh: Kaggle GPU quota was 27.80h/30h remaining (refresh `2026-11-21 09:00 JST`). Host141 GPUs 0–2 and Host142 GPU1 showed no compute load; no local job was started. Host142 GPU0 retains its unrelated `view` tmux session and was left untouched.
 
 ## Decision and resume point
 
