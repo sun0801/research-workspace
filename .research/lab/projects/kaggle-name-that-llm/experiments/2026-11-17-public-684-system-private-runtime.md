@@ -9,7 +9,7 @@ status: in-progress
 
 ## 候補とライセンス監査
 
-- 2026-11-17: `lbjyang/ntl-684-ozertuu-mirror` current v4を確認。Notebook metadataは公開・T4・Internet off。タイトルは`.684`、本文は`.683` architectureと記載するが、版固定の提出refは確認できていない。source codeの`RUN_LIMIT_S`は8h。full hidden runtimeは未測定なので、候補スコアとして私側で確定扱いせずLBで検証する。
+- 2026-11-17: `lbjyang/ntl-684-ozertuu-mirror` current v4を確認。Notebook metadataは公開・T4・Internet off。タイトルは`.684`、本文は`.683` architectureと記載するが、版固定の提出refは確認できていない。SourceのWeMM fold workerに30,240秒（8時間24分）のdeadline設定があるが、Notebook全体の9時間以内を保証するgateではない。full hidden runtimeは未測定なので、候補スコアとして確定扱いせずLBで検証する。
 - Active model configはQwen3-14B/8BとLlama adaptersがMITの`dhruvtibarewal/nlm-l24-adapters-v5`、NishantのQwen3-14B/Qwen2.5-14B/DeBERTa assetsがCC BY-SA 4.0の`ntl-handwriting-blend`。OQ1/OQ4はsource metadataにはあるがactive model configでは使われていない。
 - `ntl636-updated-style/README.md`と`style-update.json`に記された5つの元CSVを取得して照合。`sha256sum -c /tmp/ntl636-style-audit/verified-style-sources.SHA256SUMS`は5件すべて`OK`。prefix: `ntl_extra_passages_claude.csv` `710dbe48`; `gen_passages.csv` `d037d212`; `ntl_generations.csv` `83003454`; `ntl_proxy_generations.csv` `593708f7`; `passages_clean.csv` `6ec42c0b`。対応元はCC BY 4.0の公開dataset version（Lucas v7、Abdullah v2、Prvsiyan v6を含む）。主要SVCのtraining poolは`ntl-handwriting-blend`由来でCC BY-SA 4.0。帰属情報をforkに残す。
 - `ntl-olmo2-native24-final-inference-assets`はKaggle上で`Other`だが、descriptionとcomponent noticesは各assetの元license scopeを保持。`ntl636-updated-style`のsource provenanceは上記manifest照合で対応付けた。Qwen3-Embedding-8B Kaggle model variation v1はApache 2.0、Tencent WeMM-Embedding-4B upstreamもApache 2.0 ([Qwen model card](https://huggingface.co/Qwen/Qwen3-Embedding-8B), [Tencent model card](https://huggingface.co/tencent/WeMM-Embedding-4B))。GSQ Qwen3.8 componentのlicense/attributionはbundle内noticeに従う。
@@ -28,3 +28,4 @@ status: in-progress
 
 - `submission.mode.json`のpreviewはartifact format確認のみ。hidden full-test runtimeは未確認なので、日次枠が空いたら提出前にユーザーへ報告し、ref/score/runtimeを回収して`.626`と比較する。Public差`.005`未満はnoise扱い。Private LBは別途記録する。
 - 他の実行中jobとsubmissionは30分以上の間隔で軽くpollし、状態変化時のみ記録する。
+- 22:08 JST source/runtime recheck: pulled private v1 and public `lbjyang` v4 have identical 55-cell sources. The public output artifact is also `exact_public_format_preview` (3 rows, model weights not loaded, hidden runtime unverified); its log ends after approximately 20 seconds of Notebook setup. Therefore the prior cached 10,863-second evidence belongs to a different public lineage and does not establish runtime for this candidate. The exact source has no Notebook-wide `RUN_LIMIT_S`; the 30,240-second setting only bounds the WeMM fold worker. Keep this kernel as a trial candidate, not a scored or runtime-verified baseline. No submission has been made.
