@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`（ref `58456880`）；Mistral NF4 v2のprivate runtimeを回収中、GPU候補は提出価値順に準備済み。
+summary: Current bestはPublic`.626`（ref `58456880`）；Mistral NF4 v2のprivate runtimeを回収中、LB候補を優先順に整理。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
