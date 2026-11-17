@@ -29,9 +29,12 @@ status: in-progress
 - 15:06 JST: canonical slugでstatus `RUNNING`。remote metadataは `is_private=true`, GPU有効, Internet無効, T4, competition/source/model/dataset inputs一致。CLI pullしたremote Notebookの16 cell sourceはlocal候補と完全一致。runtime完了・hidden scoring・提出は未確認/未実施。
 - 同日提出数は15:04直前確認時点で3/5（OLMo ref `58456880`を含む）。このQwen候補は未提出。
 - 15:16 JST resource checkpoint: `kaggle quota` GPU残量28.97h/30h、Codex rate guardは5時間残79%・weekly残71%。quota変化の内訳は特定せず、このQwen kernelの消費時間とは断定しない。
+- 15:37 JST: Kaggle kernel v1 `COMPLETE`。取得したruntime logではQwen3-8Bロード94秒、64-row pilot 13.7秒、4,000-row予測＋1.25 marginのprojection 1,929秒（約32.2分）、GPU0 peak reserved 7,236 MiB。preview runは約714秒。3-row `submission.parquet`は`id,model`、nullなし、ID重複なし、valid labelのみでartifact gateを通過。public baseline previewと3/3予測が一致（hidden full testへの効果を示すものではない）。
+- 15:40 JST: `codex_rate_limit.py --guard 15` pass（5時間枠77%、weekly 70%）。ユーザー指定quota commandはGPU 28.93h/30h、refresh 2026-11-21 09:00 JST。CLI提出一覧は当日3件、Rules/Evaluationを提出直前に再確認し、private/GPU/Internet-offのkernel metadataとCOMPLETE statusを確認。
+- 15:43 JST: 最初の提出CLI呼び出しはHTTP 400 (`CreateCodeSubmission`)。Kaggle CLI実装を調べ、`--file`値はローカル絶対パスではなくkernel出力artifact名をAPIへ渡す仕様と確認。提出一覧に新規refがなく、Kaggle側提出は作成されていなかった。source/configは変更せず、file nameを`submission.parquet`に直して再実行。
+- 15:43 JST: Qwen3-8B add-on v1をPublic `.620`基準として提出成功、ref `58459599`。提出一覧では`PENDING`・score未確定、当日残り枠1件。
 
 ## 次
 
-- Kernel v1のstatus/outputを30分間隔でpollし、変化があれば既存のこのログへ追記する。`COMPLETE`後はruntime log、GPU reserve、preview `submission.parquet`のschema/rows/null/ID/label、runtime projectionを回収する。失敗ならremote errorを記録し、source構成を変える前に原因を報告する。
-- Runtime gate通過後、当日枠・quota・private/offline metadata・official Rules/Evaluationを提出直前に再確認し、Qwen3-8B + Public `.620` baselineを1件提出する。
-- OLMo ref `58456880`は直近14:38 JST pollから30分以上の間隔でstatusを回収する。Host142 GPU1の `mistral-confirm` には触れない。
+- Qwen提出ref `58459599`とOLMo ref `58456880`を30分間隔の軽い1コマンドで監視し、状態変化時に結果を回収してこの日付ログとREADMEへ記録する。
+- Host142 GPU1の `mistral-confirm` には触れない。

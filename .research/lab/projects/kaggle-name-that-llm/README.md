@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 採用baselineはPublic`.620`（ref `58452056`）。Qwen3-8B add-on private kernel v1がT4 runtime中、OLMo ref `58456880`は採点待ち。
+summary: 採用baselineはPublic`.620`（ref `58452056`）。Qwen3-8B add-on ref `58459599`とOLMo ref `58456880`が採点待ち。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -26,7 +26,8 @@ last_updated: 2026-11-17
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。基準`.620`との差`.002`はnoise threshold`.005`未満のため、採用baselineは`.620`のまま。提出2/5件。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入して`COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`は`PENDING`。local full-test projectionは約54分で、hidden runtimeは未計測。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
-- 次にすること: Qwen3-8B add-on v1とOLMo ref `58456880`を30分間隔で監視し、状態変化時に結果を回収する。Qwen runtime gate通過後にLB提出へ進む。Host142 GPU1には触れない。
+- 2026-11-17: Qwen3-8B add-on v1はprivate/offline T4 kernelで`COMPLETE`。3-row artifact gate pass、4,000-row＋1.25 margin runtime projection約32.2分、GPU peak reserved 7,236 MiB。Public `.620`基準に提出ref `58459599`を作成し、OLMo ref `58456880`とともに`PENDING`。最初のCLI提出は絶対path指定で400となったが、APIが期待するartifact basenameに直して成功。詳細は[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)。
+- 次にすること: Qwen ref `58459599`とOLMo ref `58456880`を30分間隔の軽い1コマンドで監視し、状態変化時に結果を回収する。Host142 GPU1には触れない。
 
 ## 記録方針
 
