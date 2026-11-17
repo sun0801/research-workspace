@@ -11,7 +11,7 @@ spec: ../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md
 
 - ユーザーの2026-11-14承認に基づき、NF4 + double quantization + BF16 computeの二段階LoRA実験specを作成。対象はOLMo 2 1124 7B、Open Pool v15 stage 1、各official fold stage 2。変更範囲・16GB GPU gate・pilot・primary/independent confirmation・採用条件・既存runnerとの差を登録した。[spec](../specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)
 - 実装先は新規`src/gpu_openpool_qlora.py`と`configs/gpu18-olmo2-1124-7b-4bit-openpool-v15.json`のみ。既存candidate14 config、generic BF16 runner、Qwen3-14B QLoRA runnerは変更しない。依存環境はbitsandbytes 0.50.2、PEFT 0.17.1、Transformers 4.57.1、Accelerate 1.10.1、PyTorch 2.9.0。OLMo重みの有無・pilot・学習は未確認/未実行。
-- rate guardは13:56:21 JSTに通過（5h残97%、週間残100%）。13:56 Host142ローカル確認ではGPU0が空き、GPU1で既存`mistral-confirm` PID`2872240`が継続。GPU1には触れない。pilot起動直前に選択GPUのsnapshot・process・lock・RAM・disk gateを取り直す。
+- rate guardは13:56:21 JSTに通過（5h残97%、週間残100%）。13:56 Host142ローカル確認ではGPU0が空き、当時GPU1で既存`mistral-confirm` PID`2872240`が継続していたため触れなかった。この予約はユーザーにより11/17 23:08 JSTに解除済み（[継続ログ](2026-11-13-host-continuation-poll.md#1117-2308-jst-host142-gpu1予約解除候補準備の再開)）。pilot起動直前に選択GPUのsnapshot・process・lock・RAM・disk gateを取り直す。
 - 次: 新規runner/configを実装して静的確認。pilotの直前に再度rate guardと資源gateを実行し、条件を満たす16GB GPU一つだけでpilotする。Mistralは30分pollで継続監視。
 
 ## 14:15 JST — 新規runner/config実装、静的確認完了
