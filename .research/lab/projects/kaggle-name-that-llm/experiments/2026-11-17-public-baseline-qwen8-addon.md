@@ -34,6 +34,15 @@ status: in-progress
 - 15:43 JST: 最初の提出CLI呼び出しはHTTP 400 (`CreateCodeSubmission`)。Kaggle CLI実装を調べ、`--file`値はローカル絶対パスではなくkernel出力artifact名をAPIへ渡す仕様と確認。提出一覧に新規refがなく、Kaggle側提出は作成されていなかった。source/configは変更せず、file nameを`submission.parquet`に直して再実行。
 - 15:43 JST: Qwen3-8B add-on v1をPublic `.620`基準として提出成功、ref `58459599`。提出一覧では`PENDING`・score未確定、当日残り枠1件。
 
+## Combined Qwen3-8B + OLMo2-7B add-on (2026-11-17)
+
+- OOF complementarity screen (fixed 0.25/0.25 weights; same 2,699 rows, 150 prompt groups, 5 folds, label order checked): Qwen `.566431`, OLMo `.582727`, pair `.596428` (`+.013701` vs stronger single). This is pair-only evidence, not a CV estimate for the public `.620` Notebook; use Public LB for the decision.
+- OLMo-only public ref `58456880` completed at `.626`, `+.006` over `.620`, exceeding the `.005` noise threshold; adopted `.626` as current baseline. Qwen-only ref `58459599` was still `PENDING` at 16:16 JST. A 30-minute poll was not yet due by the time the combined Notebook was pushed.
+- Candidate merges the private `.620` baseline with the existing Qwen3-8B and OLMo2-7B full-fit inference packages at fixed log-prob weights `.25` each. No retraining or weight tuning. Inputs include the baseline/blend assets, pinned bitsandbytes wheel, Qwen3-8B, and OLMo2-7B; Notebook is private, GPU-enabled, Internet-disabled, T4.
+- Pre-push official gate (16:20 JST): Notebook-only competition, Internet-disabled execution, up to 5 submissions/day, 9-hour runtime limit, Parquet output / 18 valid labels; public top `.776`, 6,159 teams. CLI showed four submissions for the day, leaving one slot. At 16:19 JST the rate guard passed (5-hour 98%, weekly 70%) and user-specified quota command showed GPU 28.93/30h (refresh 2026-11-21 09:00 JST).
+- Static source checks passed: all 18 cell IDs unique, code cells parse, fixed weights/votes present, private/GPU/offline metadata and OLMo asset/model inputs attached, test discovery and `submission.parquet` output path present.
+- Push first returned HTTP 400 because Kaggle limits Notebook titles to 50 characters. No model/configuration change; shortened title and matching slug, then version 1 was accepted as `suntree0801/name-that-llm-qwen8-olmo7-addon`. Status immediately after push: `RUNNING` (16:24 JST). Implementation repo commits: `35575ae`, `97b539d`, `30c5c2d`. Runtime output/artifact and hidden score are not yet checked.
+
 ## 次
 
 - Qwen提出ref `58459599`とOLMo ref `58456880`を30分間隔の軽い1コマンドで監視し、状態変化時に結果を回収してこの日付ログとREADMEへ記録する。

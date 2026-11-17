@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: 採用baselineはPublic`.620`（ref `58452056`）。Qwen3-8B add-on ref `58459599`とOLMo ref `58456880`が採点待ち。
+summary: 採用baselineはPublic`.626`（OLMo add-on ref `58456880`）。Qwen単体ref `58459599`は採点待ち、Qwen+OLMo併用Notebookはruntime中。
 created: 2026-11-02
 last_updated: 2026-11-17
 ---
@@ -18,16 +18,16 @@ last_updated: 2026-11-17
 
 ## 現在の状況
 
-- 現bestは公開Notebook private fork（Nishant Dahal Two-stage LoRA part two v2）のPublic`.620`（ref`58452056`、11/17 hidden scoring `COMPLETE`）。旧手元bestのv13は`.560`（ref`58300703`）で、差は`+.060`。以降のadd-onは`.620`と比較する。公開首位`.776`（11/17確認、6,138 teams）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-17-official-competition-status.md)
+- 現bestはPublic`.626`（OLMo add-on ref`58456880`、11/17 `COMPLETE`）。元の公開Notebook基準`.620`（ref`58452056`）から`+.006`でnoise threshold`.005`超のため採用。旧手元v13`.560`（ref`58300703`）との差は`+.066`。以降は`.626`と比較する。公開首位`.776`（11/17確認、6,159 teams）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-17-official-competition-status.md)
 - Mistral confirmation 5/5 fold・固定CPU gate・Host141 2×16GB pilot通過（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive、peak 6,776/7,222 MiB）。Private asset Dataset v2はReady・remote private。v14 v3はQwen解放後に5-fold 64-row inferenceを完了したが、Kaggle T4の10% VRAM reserve gate不通過（`ERROR`）。ピーク値がログに出ずprojection未実施、競技提出なし。追加runtimeは承認specの失敗条件により停止。[v14 push/runtime log](experiments/2026-11-16-mistral-v14-private-push-runtime.md)
 - Public LBとCVの対応は旧手元v12`.541`・v13`.560`の2点。公開Notebook系統はprivate提出で`.620`を再現し、新しい基準に更新。構成はCC BY-SA 4.0資産とApache/MITモデル。[基準ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
 - DeBERTa-v3-large固定additionはprimary gate不通過で棄却済み。公開候補の日次見送り・保留は[11/17監査一覧](experiments/2026-11-17-source-audit-log.md)・[11/16監査一覧](experiments/2026-11-16-source-audit-log.md)と下の関連記録を参照。古い状況は[README整理アーカイブ](experiments/2026-11-12-readme-status-archive.md)・[11/14アーカイブ](experiments/2026-11-14-readme-status-archive.md)。
 - 2026-11-17: Nishant Dahal v2をprivate kernel v1としてT4×2で実行。offline runtimeは約549秒で`COMPLETE`、対話用3行の`submission.parquet`はschema/null/重複ID/label検査を通過。hidden scoringも`COMPLETE`、Public`.620`（ref`58452056`、当日1/5件）。全件runの正確な所要時間はsubmission CLIに表示されず、9時間以内の終了のみ確認。[実験ログ](experiments/2026-11-16-public-notebook-baseline.md)
-- 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。基準`.620`との差`.002`はnoise threshold`.005`未満のため、採用baselineは`.620`のまま。提出2/5件。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
-- 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入して`COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`は`PENDING`。local full-test projectionは約54分で、hidden runtimeは未計測。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
-- 2026-11-17: Qwen3-8B add-on v1はprivate/offline T4 kernelで`COMPLETE`。3-row artifact gate pass、4,000-row＋1.25 margin runtime projection約32.2分、GPU peak reserved 7,236 MiB。Public `.620`基準に提出ref `58459599`を作成し、OLMo ref `58456880`とともに`PENDING`。最初のCLI提出は絶対path指定で400となったが、APIが期待するartifact basenameに直して成功。詳細は[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)。
-- 次にすること: Qwen ref `58459599`とOLMo ref `58456880`を30分間隔の軽い1コマンドで監視し、状態変化時に結果を回収する。Host142 GPU1には触れない。
+- 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。元基準`.620`との差`.002`はnoise threshold`.005`未満で単体では不採用。その後OLMo ref `58456880`が`.626`となり新baselineに更新。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
+- 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入してruntime `COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`はPublic`.626`で完了し、新baselineに採用。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
+- 2026-11-17: Qwen3-8B add-on v1はprivate/offline T4 kernelで`COMPLETE`。3-row artifact gate pass、4,000-row＋1.25 margin runtime projection約32.2分、GPU peak reserved 7,236 MiB。Public `.620`基準のQwen単体ref `58459599`は16:16 JST時点で`PENDING`（30分poll待ち）。Qwen+OLMo固定weight併用kernel v1は16:24 JSTにprivate/offline T4 runtimeを開始。詳細は[実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)。
+- 次にすること: Qwen単体ref `58459599`と併用kernel `suntree0801/name-that-llm-qwen8-olmo7-addon`を30分間隔の軽い1コマンドで監視し、runtime完了後にartifact gate・公式条件・quota・日次枠を確認して提出する。Host142 GPU1には触れない。
 
 ## 記録方針
 
