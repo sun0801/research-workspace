@@ -2,7 +2,7 @@
 date: 2026-11-17
 project: kaggle-name-that-llm
 type: experiment-log
-status: .626-rebased-private-runtime-queued
+status: .626-rebased-private-runtime-running
 ---
 
 # Qwen17 add-on to the Public `.620` blend: private preview runtime
