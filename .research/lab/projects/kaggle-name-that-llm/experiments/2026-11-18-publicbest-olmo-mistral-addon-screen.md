@@ -32,3 +32,18 @@ At the initial local-screen checkpoint, no Kaggle push, competition submission, 
 At 12:32 JST on 2026-11-18, pushed private kernel v1. Kaggle canonicalized the slug from the title to `suntree0801/name-that-llm-ntl684-olmo2-mistral-nf4-add-on`; remote readback confirms private, GPU enabled, Internet disabled, and T4. Remote cells 1–54 match the unchanged parent and cells 56–57 contain OLMo2 then Mistral. The initial slug warning was resolved locally by aligning `id` and `code_file` to that canonical slug (implementation commit `5cb827a`); the already-running remote version was not restarted.
 
 Preview reached `COMPLETE`. `submission.parquet` has three rows, columns `id,model`, no nulls or duplicate IDs, valid label `claude-fable-5`, and exactly matches the unchanged baseline preview. The session reaches notebook conversion/output in about 22.75 seconds. `submission.mode.json` says `exact_public_format_preview`, `model_weights_loaded=false`, and `hidden_runtime_verified=false`; therefore the T4 pilot, add-on inference, resource gate, and hidden runtime have not run. The candidate remains pending the unchanged `.684` baseline score/runtime before its scoring submission.
+
+## 2026-11-18 13:24 JST — supplementary k=2 OOF screen
+
+Audited [Yuki Kaneko's validation-design Notebook v1](https://www.kaggle.com/code/yukikanek0/name-that-llm-validation-design). It samples two held-out responses per prompt from already prompt-grouped OOF predictions. The Notebook reports leaderboard-correlation `.13` for full-group CV versus `.91` for k=2 across its own 15 submissions; this self-reported correlation was not independently reproduced. We used the k=2 sampler only as a secondary sensitivity screen; it does not replace the existing prompt-grouped OOF gate or Public LB adoption check.
+
+Reconstructed the fixed `.586408` base/Mistral/OLMo probabilities from saved fold artifacts. All 2,699 IDs, five fold assignments, class orders, and component argmax predictions matched; the standard full OOF scores reproduced the existing screen. For 150 prompts (17–18 rows each), 1,000 paired draws sampled two rows per prompt without replacement (seed 123):
+
+| Candidate | Full OOF BA | k=2 mean BA (draw SD) | Paired delta vs base (draw SD) | Positive draws |
+|---|---:|---:|---:|---:|
+| Base | `.586408` | `.586332` (`.024830`) | — | — |
+| Mistral | `.599769` | `.600795` (`.024984`) | `+.014463` (`.017149`) | 800/1000 |
+| OLMo2 | `.595309` | `.595754` (`.025322`) | `+.009422` (`.012991`) | 756/1000 |
+| OLMo2 + Mistral | `.602724` | `.603425` (`.024489`) | `+.017093` (`.016366`) | 851/1000 |
+
+Draw SD is sampling variability, not a confidence interval. This confirms that the fixed composite remains the strongest of these old-base OOF screens under the k=2 view. It still does not estimate performance on the `.684` parent or establish an LB gain; retain the prepared candidate order pending the baseline's hidden runtime and score.
