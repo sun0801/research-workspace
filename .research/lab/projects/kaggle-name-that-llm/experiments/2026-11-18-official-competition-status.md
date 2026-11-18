@@ -23,3 +23,10 @@ Sources: [competition overview](https://www.kaggle.com/competitions/name-that-ll
 - Rechecked official metadata/pages and Public leaderboard immediately before the planned `.684` baseline submission: top remains `.776`; team count is now `6,203`. The 5/day and 2-final-submission limits, Notebook-only/offline/9-hour/output requirements, balanced-accuracy evaluation, and Jan 13 vs Jan 14 UTC deadline discrepancy are unchanged.
 - Authenticated submission list still shows the latest five refs dated 2026-11-17 UTC and no 11/18 UTC entry. The daily slot has not been confirmed as available; do not infer reset from JST date alone.
 - GPU quota is `27.36h/30h`, refresh `2026-11-21 09:00 JST`; rate guard passed at 00:21 JST (5-hour 85%, weekly 64%).
+
+## 12:27 JST pre-submission refresh
+
+- Rechecked official metadata/pages and Public leaderboard: top `.776`, team count `6,249`; Notebook-only, Internet disabled, ≤9-hour runtime, `submission.parquet`, max 5/day and 2 final entries. Metadata deadline remains Jan 14 UTC while Timeline says Jan 13 UTC; retain the earlier Timeline date operationally.
+- Authenticated CLI showed the latest competition submission was still ref `58462545` from 11/17 UTC, so the 11/18 UTC daily slot had recovered. GPU quota was `27.16h/30h`, refresh `2026-11-21 09:00 JST`; rate guard was 96% five-hour / 62% weekly.
+- Baseline kernel `suntree0801/name-that-llm-ntl684-public-baseline` v1 was `COMPLETE`, but its output is only the 3-row interactive preview; hidden runtime is not measured there.
+- At 12:30:59 JST, unchanged private baseline v1 was accepted as submission ref `58492917`. The first attempt using the local absolute path as `--file` returned HTTP 400 without creating a ref; the retry using the Notebook output basename `submission.parquet` was accepted. Immediate status: `PENDING`, four daily slots remain.
