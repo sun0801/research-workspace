@@ -66,4 +66,4 @@ Prepared and pushed private kernel v1 `suntree0801/name-that-llm-ntl684-tf-idf-p
 
 Initial kernel status was `RUNNING`. The remote execution has not yet been polled on its 30-minute cadence; preview completion, hidden runtime, and artifact checks are not established. No competition submission was made for this candidate. The unchanged `.684` baseline remains submission ref `58492917`, accepted at 12:30:59 JST and last observed `PENDING` at 13:34 JST; do not duplicate it. Next status check is due at/after 14:04 JST, then use the baseline score/runtime to choose the next candidate.
 
-The CPU pairing probe took `1.238 s` on 2,699 rows; scaling by row count estimates about `2.72 s` for 4,000 rows. This covers only the TF-IDF pair postprocess and does not establish Kaggle T4 runtime for the full Notebook.
+The CPU pairing probe took `1.238 s` on 2,699 rows; scaling by row count estimates about `1.83 s` for 4,000 rows (arithmetic corrected on 2026-11-18). This covers only the TF-IDF pair postprocess and does not establish Kaggle T4 runtime for the full Notebook.
