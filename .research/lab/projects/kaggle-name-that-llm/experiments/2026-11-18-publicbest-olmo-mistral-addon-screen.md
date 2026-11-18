@@ -47,3 +47,15 @@ Reconstructed the fixed `.586408` base/Mistral/OLMo probabilities from saved fol
 | OLMo2 + Mistral | `.602724` | `.603425` (`.024489`) | `+.017093` (`.016366`) | 851/1000 |
 
 Draw SD is sampling variability, not a confidence interval. This confirms that the fixed composite remains the strongest of these old-base OOF screens under the k=2 view. It still does not estimate performance on the `.684` parent or establish an LB gain; retain the prepared candidate order pending the baseline's hidden runtime and score.
+
+## 2026-11-18 13:35 JST — TF-IDF sibling-pair postprocess screen
+
+From the same public Notebook v1, tested its batch-only postprocess: build TF-IDF cosine neighbors, greedily pair top-5 links, then zero the lower-confidence class when both rows in a pair share the same top-1. On each of 100 seed-777 k=2 samples, prompt IDs were used only to draw/evaluate the two-row pairs; the pairing algorithm saw only text. Mean pair recovery was precision `.9723`, recall `.9563` over about 147.5 greedy pairs per 150 true pairs.
+
+| Base OOF probabilities | Raw k=2 BA | After pair postprocess | Paired delta (draw SD) | Positive draws |
+|---|---:|---:|---:|---:|
+| `.586408` base | `.583159` | `.586977` | `+.003818` (`.005998`) | 77/100 |
+| Base + Mistral | `.596763` | `.601345` | `+.004582` (`.007335`) | 70/100 |
+| Base + OLMo2 + Mistral | `.598969` | `.603591` | `+.004622` (`.006842`) | 73/100 |
+
+The draw SD is sampling variability, not a confidence interval. This is an old-base simulation, and its `.684` interaction/runtime is unknown. Keep it as a separate low-cost LB-check candidate after the unchanged baseline and highest-priority fixed OLMo2+Mistral candidate; Public LB decides adoption.

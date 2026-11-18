@@ -31,7 +31,7 @@ last_updated: 2026-11-18
 - `.684`+Mistral NF4単独のprivate T4 preview v2はcanonical slug `suntree0801/name-that-llm-ntl684-mistral-nf4-add-on`で`COMPLETE`。artifactは基準previewと一致したが3行fixtureでweights未読込、hidden runtimeは未確認。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
 - `.684`+OLMo2単独のprivate T4 preview v1 `suntree0801/name-that-llm-ntl684-olmo2-add-on`は`COMPLETE`。artifactは基準previewと一致したが3行fixtureでweights未読込、hidden runtimeは未確認。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
 - `.684`+Qwen17単独のprivate T4 preview v1 `suntree0801/name-that-llm-ntl684-qwen17-add-on`は`COMPLETE`。artifactは基準previewと一致したが3行fixtureでweights未読込、hidden runtimeは未確認。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
-- 次にすること: baseline ref `58492917`を30分間隔で確認し、Public scoreとhidden runtimeを回収する。完了後、実測parent時間込み8時間gateを通るadd-onをLB比較する。候補優先は`.684`+OLMo2+Mistral NF4（旧`.586` OOF fixed screen delta`+.016316`、k=2補助screenでもdelta`+.017093`/1000 draw中851 positive。新parent上では未確認）、Mistral NF4単独、OLMo2単独、Qwen17。[k=2詳細](experiments/2026-11-18-publicbest-olmo-mistral-addon-screen.md)
+- 次にすること: baseline ref `58492917`を30分間隔で確認し、Public scoreとhidden runtimeを回収する。完了後、実測parent時間込み8時間gateを通るadd-onをLB比較する。候補優先は`.684`+OLMo2+Mistral NF4（旧`.586` OOF fixed screen delta`+.016316`、k=2補助screenでもdelta`+.017093`/1000 draw中851 positive。新parent上では未確認）、Mistral NF4単独、OLMo2単独、Qwen17。続けてTF-IDF pair後処理を旧OOFでscreen（k=2 delta`+.0046`、pair precision/recall`.972/.956`）。[k=2詳細](experiments/2026-11-18-publicbest-olmo-mistral-addon-screen.md)
 
 ## 記録方針
 
