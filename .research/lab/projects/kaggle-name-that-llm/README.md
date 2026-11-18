@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`；`.684`基準ref `58492917`採点中、Qwen17 preview実行中、他3候補preview完了。
+summary: Current bestはPublic`.626`；`.684`基準ref `58492917`採点中、優先済み4 add-on候補のprivate preview完了。
 created: 2026-11-02
 last_updated: 2026-11-18
 ---
@@ -30,7 +30,7 @@ last_updated: 2026-11-18
 - `.684`無変更基準ref `58492917`は`PENDING`。複合候補private preview v1は`COMPLETE`だが、3行fixtureでモデル未読込、hidden runtime・T4 pilot未確認。[.684 runtime](experiments/2026-11-17-public-684-system-private-runtime.md) · [複合候補screen](experiments/2026-11-18-publicbest-olmo-mistral-addon-screen.md)
 - `.684`+Mistral NF4単独のprivate T4 preview v2はcanonical slug `suntree0801/name-that-llm-ntl684-mistral-nf4-add-on`で`COMPLETE`。artifactは基準previewと一致したが3行fixtureでweights未読込、hidden runtimeは未確認。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
 - `.684`+OLMo2単独のprivate T4 preview v1 `suntree0801/name-that-llm-ntl684-olmo2-add-on`は`COMPLETE`。artifactは基準previewと一致したが3行fixtureでweights未読込、hidden runtimeは未確認。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
-- `.684`+Qwen17単独のprivate T4 preview v1 `suntree0801/name-that-llm-ntl684-qwen17-add-on`は`RUNNING`。remote privacy/offline metadata確認済み。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
+- `.684`+Qwen17単独のprivate T4 preview v1 `suntree0801/name-that-llm-ntl684-qwen17-add-on`は`COMPLETE`。artifactは基準previewと一致したが3行fixtureでweights未読込、hidden runtimeは未確認。[runtime log](experiments/2026-11-17-public-684-system-private-runtime.md)
 - 次にすること: baseline ref `58492917`を30分間隔で確認し、Public scoreとhidden runtimeを回収する。完了後、実測parent時間込み8時間gateを通るadd-onをLB比較する。候補優先は`.684`+OLMo2+Mistral NF4（旧`.586` OOF fixed screen delta`+.016316`、新parent上では未確認）、Mistral NF4単独、OLMo2単独、Qwen17。
 
 ## 記録方針
