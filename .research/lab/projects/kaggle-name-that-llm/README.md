@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`（ref `58456880`）；`.684`無変更基準を提出（ref `58492917`）、hidden scoring待ち。
+summary: Current bestはPublic`.626`；`.684`無変更基準ref `58492917`の採点中、OLMo2+Mistral複合候補のprivate preview完了。
 created: 2026-11-02
 last_updated: 2026-11-18
 ---
@@ -27,7 +27,8 @@ last_updated: 2026-11-18
 - 2026-11-17: Spectral v2提出ref `58453689`はPublic`.622`。元基準`.620`との差`.002`はnoise threshold`.005`未満で単体では不採用。その後OLMo ref `58456880`が`.626`となり新baselineに更新。[提出・回収ログ](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17: OLMo v1はoffline imageのbitsandbytes欠落で失敗。v2はMIT wheelをprivate Datasetから導入してruntime `COMPLETE`（preview runtime 676s; session 703.6s）。3-row artifact検査pass、base previewから予測変更なし。hidden scoring ref `58456880`はPublic`.626`で完了し、新baselineに採用。[pilot/runtime log](experiments/2026-11-17-public-baseline-olmo-addon-pilot.md)
 - 2026-11-17/18: Qwen3-8B+OLMo固定weight提出ref `58462545`はPublic`.621`で現best`.626`を更新せず。元Qwen17 v3は`.620` parentにQwen8/OLMo/Qwen17各`.25`を足し、22:20 JSTに`COMPLETE`。OOFのQwen17差`−.001491`（95% CI `[-.009310,+.006296]`）は明確な悪化でなく、LB確認候補。preview約831秒、64行pilotとOLMo2 5-fold runtime projectionは通過、3行artifactはID順・null/重複なし・18クラスdomainを確認。11/17 23:24に`.626`（ref `58456880`）+既存Qwen17固定`.25`のNotebookをローカル準備し、11/18 00:25にprivate T4 preview v1をpush。canonical slug `suntree0801/name-that-llm-private-olmo-qwen17-add-on`は02:27 JSTに`COMPLETE`（session log 約716秒、3-row preview artifact整合）。hidden full-test runtime未確認。学習なし、competition提出なし。[実験ログ](experiments/2026-11-17-public-baseline-qwen17-addon.md) · [Qwen17 source](../../../../../kaggle/name-that-llm/notebooks/name-that-llm-private-olmo-qwen17-addon/) · [Qwen8実験ログ](experiments/2026-11-17-public-baseline-qwen8-addon.md)
-- 次にすること: `.684`無変更基準のref `58492917`が`PENDING`。30分間隔で状態を確認し、Public scoreとhidden runtimeを回収する。完了後、実測parent時間込み8時間gateを通る事前準備済みadd-onをLB比較する。優先候補は`.684`+OLMo2+Mistral NF4（旧`.586` OOF fixed screen delta`+.016316`、新parent上では未確認）、Mistral NF4単独、OLMo2単独、Qwen17。[.684 runtime](experiments/2026-11-17-public-684-system-private-runtime.md) · [複合候補screen](experiments/2026-11-18-publicbest-olmo-mistral-addon-screen.md) · [Mistral NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md)
+- `.684`無変更基準ref `58492917`は`PENDING`。複合候補private preview v1は`COMPLETE`だが、3行fixtureでモデル未読込、hidden runtime・T4 pilot未確認。[.684 runtime](experiments/2026-11-17-public-684-system-private-runtime.md) · [複合候補screen](experiments/2026-11-18-publicbest-olmo-mistral-addon-screen.md)
+- 次にすること: baseline ref `58492917`を30分間隔で確認し、Public scoreとhidden runtimeを回収する。完了後、実測parent時間込み8時間gateを通るadd-onをLB比較する。候補優先は`.684`+OLMo2+Mistral NF4（旧`.586` OOF fixed screen delta`+.016316`、新parent上では未確認）、Mistral NF4単独、OLMo2単独、Qwen17。
 
 ## 記録方針
 
