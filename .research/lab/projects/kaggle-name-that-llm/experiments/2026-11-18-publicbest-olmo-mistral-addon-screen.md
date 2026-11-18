@@ -59,3 +59,9 @@ From the same public Notebook v1, tested its batch-only postprocess: build TF-ID
 | Base + OLMo2 + Mistral | `.598969` | `.603591` | `+.004622` (`.006842`) | 73/100 |
 
 The draw SD is sampling variability, not a confidence interval. This is an old-base simulation, and its `.684` interaction/runtime is unknown. Keep it as a separate low-cost LB-check candidate after the unchanged baseline and highest-priority fixed OLMo2+Mistral candidate; Public LB decides adoption.
+
+## 2026-11-18 13:50 JST — `.684` + TF-IDF sibling-pair private candidate
+
+Prepared and pushed private kernel v1 `suntree0801/name-that-llm-ntl684-tf-idf-pair-add-on`, using the already-screened TF-IDF sibling postprocess. The unchanged first 55 source cells match the `.684` + OLMo2/Mistral candidate; the final cell adds only the batch pairing postprocess. Authenticated remote pull confirms `is_private=true`, GPU enabled, Internet disabled, and `NvidiaTeslaT4`; pulled source-cell text matches the local source exactly. Local implementation commits: `9fa3e49` and slug alignment `2ddc493`.
+
+Initial kernel status was `RUNNING`. The remote execution has not yet been polled on its 30-minute cadence; preview completion, hidden runtime, and artifact checks are not established. No competition submission was made for this candidate. The unchanged `.684` baseline remains submission ref `58492917`, accepted at 12:30:59 JST and last observed `PENDING` at 13:34 JST; do not duplicate it. Next status check is due at/after 14:04 JST, then use the baseline score/runtime to choose the next candidate.

@@ -1,7 +1,7 @@
 ---
 project: kaggle-name-that-llm
 status: active
-summary: Current bestはPublic`.626`；`.684`基準ref `58492917`採点中、優先済み4 add-on候補のprivate preview完了。
+summary: Current bestはPublic`.626`；`.684`基準ref `58492917`採点中、TF-IDF pair候補をprivate preview中。
 created: 2026-11-02
 last_updated: 2026-11-18
 ---
@@ -18,7 +18,7 @@ last_updated: 2026-11-18
 
 ## 現在の状況
 
-- 現bestはPublic`.626`（OLMo add-on ref`58456880`、11/17 `COMPLETE`）。元の公開Notebook基準`.620`（ref`58452056`）から`+.006`でnoise threshold`.005`超のため採用。旧手元v13`.560`（ref`58300703`）との差は`+.066`。以降は`.626`と比較する。公開首位`.776`（11/18確認、team count 6,203）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-18-official-competition-status.md)
+- 現bestはPublic`.626`（OLMo add-on ref`58456880`、11/17 `COMPLETE`）。元の公開Notebook基準`.620`（ref`58452056`）から`+.006`でnoise threshold`.005`超のため採用。旧手元v13`.560`（ref`58300703`）との差は`+.066`。`.684`基準ref`58492917`は12:30提出、13:34時点で採点中。TF-IDF pair候補はprivate v1をpushし、初回status`RUNNING`（preview/artifact/runtime未確認）。次pollは14:04 JST以降。以降は`.626`と比較する。公開首位`.776`（11/18確認、team count 6,203）は文脈のみ。[基準・提出ログ](experiments/2026-11-16-public-notebook-baseline.md) · [公式状況](experiments/2026-11-18-official-competition-status.md) · [add-on screen](experiments/2026-11-18-publicbest-olmo-mistral-addon-screen.md)
 - Mistral confirmationは5/5 fold完了（BA`.676823`、delta`+.022995`、CI下限`+.011596`、simulation各20/20 positive）。v14 unquantized T4 pathは10% VRAM reserve gate不通過。Host142 GPU1予約は11/17解除済み。NF4 v2はT4×2 pilot・VRAM reserve・8h runtime projectionを通過（4k total projection 2.995h、peak 2,064/2,434 MiB）、preview artifactも整合。hidden LB未確認。[NF4 log](experiments/2026-11-17-public-best-mistral-nf4-addon.md) · [v14 log](experiments/2026-11-16-mistral-v14-private-push-runtime.md) · [NF4 spec](specs/2026-11-17-mistral-nf4-publicbest-addon-spec.md)
 - Public LBとCVの対応は旧手元v12`.541`・v13`.560`の2点。公開Notebook系統はprivate提出で`.620`を再現し、新しい基準に更新。構成はCC BY-SA 4.0資産とApache/MITモデル。[基準ログ](experiments/2026-11-16-public-notebook-baseline.md)
 - Qwen3-14B QLoRA（Host142 A4000）はpilot資源gate不通過で棄却。OLMo2-7B NF4＋Open Pool二段階runnerは[承認spec](specs/2026-11-14-olmo2-7b-4bit-openpool-lora-spec.md)に従い実装し、Host142 GPU0でprimary 5fold/2,699 OOF行を完了。BA`.582727` vs baseline`.586408`（delta`−.003681`、5,000 prompt bootstrap 95% CI `[−.019627,+.011852]`）。明確な悪化とは判定せず、単体採用ではなく公開Notebook基準への後段LB追加候補として保留。[実験ログ](experiments/2026-11-14-olmo2-7b-4bit-openpool-lora.md)
